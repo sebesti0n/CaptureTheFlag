@@ -1,5 +1,5 @@
 const mongoose =require('mongoose')
-const validator =require('validator')
+const validator = require('validator');
 
 const user = mongoose.Schema({
     FirstName:{
@@ -30,7 +30,7 @@ const user = mongoose.Schema({
     },
     password:{
         type:String,
-        required:this
+        required:true
     },
     cnfpassword:{
         type:String,
