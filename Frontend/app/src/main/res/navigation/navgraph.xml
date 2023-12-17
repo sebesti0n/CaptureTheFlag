@@ -18,5 +18,20 @@
         <action
             android:id="@+id/action_login_to_homefragment"
             app:destination="@id/homefragment" />
+        <action
+            android:id="@+id/action_login_to_registerFragment"
+            app:destination="@id/registerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.capturetheflag.RegisterFragment"
+        android:label="fragment_register"
+        tools:layout="@layout/fragment_register" >
+        <action
+            android:id="@+id/action_registerFragment_to_login"
+            app:destination="@id/login" />
+        <action
+            android:id="@+id/action_registerFragment_to_homefragment"
+            app:destination="@id/homefragment" />
     </fragment>
 </navigation>
