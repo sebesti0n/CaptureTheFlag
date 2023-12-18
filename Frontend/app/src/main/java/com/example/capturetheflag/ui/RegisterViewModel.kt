@@ -1,4 +1,4 @@
-package com.example.capturetheflag
+package com.example.capturetheflag.ui
 
 import androidx.lifecycle.ViewModel
 

@@ -10,11 +10,6 @@ import com.example.capturetheflag.ui.HomeFragmentViewModel
 import com.example.capturetheflag.R
 
 class HomeFragment : Fragment() {
-
-    companion object {
-        fun newInstance() = HomeFragment()
-    }
-
     private lateinit var viewModel: HomeFragmentViewModel
 
     override fun onCreateView(
