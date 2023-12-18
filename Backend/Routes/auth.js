@@ -29,7 +29,7 @@ router.post('/register',registrationMiddleware, (req, res) => {
 
 router.post('/login',loginMiddleware, (req, res) => {
     const { finduser } = req;
-    return res.status(200).json({success: true,userDetails:finduser});
+    return res.status(200).json({success: true,message:"ok",userDetails:finduser});
 });
 
 router.get('/validate',validationMiddleware , (req, res) => {

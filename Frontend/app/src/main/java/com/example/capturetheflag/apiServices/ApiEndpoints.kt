@@ -1,5 +1,6 @@
 package com.example.capturetheflag.apiServices
 
+import com.example.capturetheflag.models.LoginReponse
 import com.example.capturetheflag.models.User
 import com.example.capturetheflag.models.UserLoginDetails
 import org.json.JSONObject
@@ -18,6 +19,6 @@ interface ApiEndpoints {
     fun login(
         @Body
         userCredentials:UserLoginDetails?
-    ) : Call<JSONObject>
+    ) : Call<LoginReponse>
 
 }
