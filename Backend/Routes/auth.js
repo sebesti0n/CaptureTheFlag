@@ -19,11 +19,11 @@ router.post('/register',registrationMiddleware, (req, res) => {
             const {newUser , token } = req;
             newUser.save().then(() => {
                 console.log("all is well");
-                return res.status(200).json({token:token, user: newUser});
+                return res.status(200).json({success:true, message:token, user: newUser});
             }).catch((e) => {
                 console.log("dikkat");
                 console.log(e);
-                return res.status(400).send(e);
+                return res.status(400).json({success:false, message:e, user: null});
             })
 });
 

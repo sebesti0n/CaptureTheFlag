@@ -1,6 +1,7 @@
 package com.example.capturetheflag.apiServices
 
 import com.example.capturetheflag.models.LoginReponse
+import com.example.capturetheflag.models.RegisterResponse
 import com.example.capturetheflag.models.User
 import com.example.capturetheflag.models.UserLoginDetails
 import org.json.JSONObject
@@ -13,7 +14,7 @@ interface ApiEndpoints {
     fun register(
         @Body
         users:User?
-    ) : Call<JSONObject>
+    ) : Call<RegisterResponse>
 
     @POST("/login")
     fun login(

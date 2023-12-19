@@ -1,7 +1,7 @@
 package com.example.capturetheflag.models
 
 data class User(
-    val collegeName: String,
+    val CollegeName: String,
     val Email: String,
     val FirstName: String,
     val LastName: String,

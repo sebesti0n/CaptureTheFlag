@@ -5,12 +5,11 @@ const User = require('../models/user');
 const registrationMiddleware = async(req,res,next)=>{
     try {
         const newUser = new User(req.body);
+        console.log(newUser);
         const alreadyPresent = await User.findOne({ Email: newUser.Email });
 
-        if (newUser.password !== newUser.cnfpassword) {
-            return res.status(200).json({ success: false, message: 'confirm password does not match with password' });
-        } else if (alreadyPresent) {
-            return res.status(200).json({ success: false, message: 'user already registered' });
+      if (alreadyPresent) {
+            return res.status(200).json({ success: false, message: 'user already registered',user:null });
         } else {
             bcrypt.hash(newUser.password, 10, (err, hashedpassword) => {
                 if (err) return next(err);
