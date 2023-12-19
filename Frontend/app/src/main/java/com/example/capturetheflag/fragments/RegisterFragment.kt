@@ -1,5 +1,6 @@
 package com.example.capturetheflag.fragments
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,15 +9,28 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
+import androidx.navigation.Navigation
+import com.example.capturetheflag.R
 import com.example.capturetheflag.databinding.FragmentRegisterBinding
 import com.example.capturetheflag.models.User
+import com.example.capturetheflag.sharedprefrences.userPreferences
 import com.example.capturetheflag.ui.RegisterViewModel
 
 class RegisterFragment : Fragment() {
 
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding!!
+    private lateinit var sharedPref:userPreferences
     private lateinit var viewModel: RegisterViewModel
+    private lateinit var firstName:String
+    private lateinit var lastName:String
+    private lateinit var email:String
+    private lateinit var mobileNo:String
+    private lateinit var collegeName:String
+    private lateinit var password:String
+    private lateinit var cnfPassword:String
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,39 +40,55 @@ class RegisterFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("SuspiciousIndentation")
     private fun checkCredentials(): Boolean {
-    if(binding.etCnfpassword.text.toString().isEmpty()
-        ||binding.etCollege.text.toString().isEmpty()
-        ||binding.etEmail.text.toString().isEmpty()
-        ||binding.etFirstname.text.toString().isEmpty()
-        ||binding.etMobileNo.text.toString().isEmpty()||
-        binding.etPassword.text.toString().isEmpty())return true
-        return binding.etPassword.text.toString() != binding.etCnfpassword.text.toString()
+    if(cnfPassword.isEmpty() || collegeName.isEmpty() || email.isEmpty() || firstName.isEmpty() || mobileNo.isEmpty() || password.isEmpty())
+        return true
+        return password != cnfPassword
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        sharedPref = userPreferences(requireActivity())
         viewModel = ViewModelProvider(this)[RegisterViewModel::class.java]
+
+
+
+
         binding.btnLogin.setOnClickListener {
+
+            email = binding.etEmail.text.toString()
+            firstName = binding.etFirstname.text.toString()
+            lastName =binding.etLastname.text.toString()
+            collegeName = binding.etCollege.text.toString()
+            mobileNo = binding.etMobileNo.text.toString()
+            password = binding.etPassword.text.toString()
+            cnfPassword = binding.etCnfpassword.text.toString()
+
             if(checkCredentials()){
                 showToastMessage("fill all details")
-            }else {
-                val newUser = User(binding.etCollege.text.toString(),
-                    binding.etEmail.text.toString(),binding.etFirstname.text.toString(),
-                    binding.etLastname.text.toString(),
-                    binding.etMobileNo.text.toString(),
-                    binding.etCnfpassword.text.toString(),
-                    binding.etPassword.text.toString())
+            }
+            else if(!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                showToastMessage("Enter Correct Email")
+            }else
+             {
+                val newUser = User(collegeName,email,firstName,lastName,mobileNo,cnfPassword,password)
                 viewModel.register(newUser)
                 viewModel.get()?.observe(requireActivity(), Observer {
                     if(it.success){
-                        showToastMessage(it.user.password.toString())
+                       sharedPref.saveUserCredentials(it.user.Email,false,it.message)
+                        moveToHome()
+
                     }else{
                         showToastMessage(it.message)
                     }
                 })
             }
         }
+    }
+
+    private fun moveToHome() {
+        Navigation.findNavController(requireView()).navigate(R.id.action_registerFragment_to_homefragment)
     }
 
     private fun showToastMessage(msg: String) {

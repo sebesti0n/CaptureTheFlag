@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -18,6 +19,7 @@ import com.example.capturetheflag.apiServices.RetrofitInstances
 import com.example.capturetheflag.databinding.FragmentLoginBinding
 import com.example.capturetheflag.models.LoginReponse
 import com.example.capturetheflag.models.UserLoginDetails
+import com.example.capturetheflag.sharedprefrences.userPreferences
 import com.example.capturetheflag.ui.LoginViewModel
 import com.google.android.material.textfield.TextInputEditText
 import org.json.JSONObject
@@ -30,6 +32,7 @@ class Login : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: LoginViewModel
+    private lateinit var sharedPref:userPreferences
     private lateinit var emailEditText: TextInputEditText
     private lateinit var passwordEditText: TextInputEditText
     private lateinit var registerTextView: TextView
@@ -46,11 +49,16 @@ class Login : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        sharedPref = userPreferences((requireActivity()))
         emailEditText = binding.etEmail
         passwordEditText = binding.etPassword
         registerTextView = binding.tvRegisternow
         loginButton = binding.btnLogin
         googleButton = binding.btnGoogle
+
+        if (sharedPref.getUserFirstTime()==false){
+            moveToHome()
+        }
 
         googleButton.setOnClickListener{
             googleRegistration()
@@ -71,6 +79,7 @@ class Login : Fragment() {
         }
     }
 
+
     private fun toastMessage(s: String) {
     Toast.makeText(requireActivity(),s,Toast.LENGTH_SHORT).show();
     }
@@ -89,7 +98,9 @@ class Login : Fragment() {
                     if (receivedata != null  ) {
                         if(receivedata.success == true){
                             toastMessage("Login successfully")
-                            Navigation.findNavController(requireView()).navigate(R.id.action_login_to_homefragment)
+                            sharedPref.logOut()
+                            sharedPref.saveUserCredentials(receivedata.userDetails.Email,false,"token")
+                            moveToHome()
                         } else {
                             toastMessage(receivedata.message);
                         }
@@ -112,7 +123,9 @@ class Login : Fragment() {
     private fun googleRegistration() {
         TODO("Not yet implemented")
     }
-
+    private fun moveToHome(){
+        Navigation.findNavController(requireView()).navigate(R.id.action_login_to_homefragment)
+    }
     @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

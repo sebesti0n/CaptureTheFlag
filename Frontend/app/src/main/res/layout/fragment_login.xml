@@ -60,6 +60,7 @@
                     android:layout_height="52dp"
                     android:hint="E-mail ID"
                     android:textSize="15dp"
+                    android:inputType="textEmailAddress"
 
                     />
 
@@ -84,6 +85,7 @@
                     android:layout_height="52dp"
                     android:textSize="15dp"
                     android:hint="Password"
+                    android:inputType="textPassword"
 
                     />
 

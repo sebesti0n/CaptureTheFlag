@@ -3,7 +3,7 @@ package com.example.capturetheflag.sharedprefrences
 import android.content.Context
 import android.content.SharedPreferences
 
-class userPreferences private constructor(context: Context) {
+class userPreferences constructor(context: Context) {
 
     companion object{
         private const val SP_NAME = "ctfSharedPreference"
@@ -11,11 +11,13 @@ class userPreferences private constructor(context: Context) {
         private const val FIRST_TIME = "first_time"
         private const val TOKEN = "token"
     }
+
     private val sharedPreferences: SharedPreferences =
-        context.getSharedPreferences("UserPreferences", Context.MODE_PRIVATE)
+        context.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE)
+    private val editor: SharedPreferences.Editor = sharedPreferences.edit()
 
     fun saveUserCredentials(email: String, firstTime:Boolean, token: String) {
-        val editor = sharedPreferences.edit()
+
         editor.putString(EMAIL, email)
         editor.putBoolean(FIRST_TIME,firstTime)
         editor.putString(TOKEN, token)
@@ -32,8 +34,13 @@ class userPreferences private constructor(context: Context) {
         return sharedPreferences.getString(TOKEN, null)
     }
 
-    fun getUserFirstTime():Boolean?{
+    fun getUserFirstTime(): Boolean {
         return sharedPreferences.getBoolean(FIRST_TIME,true);
+    }
+
+    fun logOut(){
+        editor.clear()
+        editor.apply()
     }
 
 }
