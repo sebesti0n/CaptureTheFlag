@@ -1,5 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const dotenv =require('dotenv');
-const DB = require('../Configuration/dbConnect');
+const knex = require('knex')(require('../Configuration/knexfile')['development']);
+const eventcontroller = require('../Controllers/eventController');
+
+router.get('/upcoming',eventcontroller.upcomingEvents);
+router.get('/live',eventcontroller.liveEvents);
+router.post('/create',eventcontroller.addEvents);
+
+module.exports = router;
 

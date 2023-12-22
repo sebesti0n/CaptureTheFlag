@@ -12,7 +12,6 @@ exports.up = function(knex) {
         table.timestamp('end_time').notNullable();
         table.integer('owner_id').references('user_id').inTable('users').notNullable();
         table.integer('No_of_questions').defaultTo(0);
-        table.integer('total_participation').defaultTo(0);
       });
 };
 
