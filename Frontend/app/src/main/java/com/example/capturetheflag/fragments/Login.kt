@@ -43,6 +43,7 @@ class Login : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        activity?.actionBar?.hide()
         _binding = FragmentLoginBinding.inflate(inflater, container ,false)
         return binding.root
     }
@@ -56,7 +57,7 @@ class Login : Fragment() {
         loginButton = binding.btnLogin
         googleButton = binding.btnGoogle
 
-        if (sharedPref.getUserFirstTime()==false){
+        if (!sharedPref.getUserFirstTime()){
             moveToHome()
         }
 

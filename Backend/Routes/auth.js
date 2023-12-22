@@ -1,12 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const dotenv =require('dotenv');
-const DB = require('../connections/dbConnect');
+const DB = require('../Configuration/dbConnect');
 const loginMiddleware = require('../middlewares/loginMiddleware');
 const registrationMiddleware = require('../middlewares/registrationMiddleware');
 const validationMiddleware = require('../middlewares/validationMiddleware');
+const client = require('../Configuration/pSqlConfig');
+client.connect();
 
-
+                                            
 dotenv.config()
 
 
@@ -18,11 +20,11 @@ router.get('/', (req, res) => {
 router.post('/register',registrationMiddleware, (req, res) => {
             const {newUser , token } = req;
             newUser.save().then(() => {
-                console.log("all is well");
+                // console.log("all is well");
                 return res.status(200).json({success:true, message:token, user: newUser});
             }).catch((e) => {
-                console.log("dikkat");
-                console.log(e);
+                // console.log("dikkat");
+                // console.log(e);
                 return res.status(400).json({success:false, message:e, user: null});
             })
 });

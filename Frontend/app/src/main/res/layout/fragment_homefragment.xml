@@ -1,13 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragments.HomeFragment">
+    android:layout_height="match_parent">
 
-    <TextView
+    <!-- ViewPager for the top part of the screen -->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
+        <!-- Add ViewPager content here -->
+
+    </androidx.viewpager2.widget.ViewPager2>
+
+    <!-- RecyclerView for the list below the ViewPager -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Hello" />
+        android:layout_below="@id/viewPager"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp">
+        <!-- Add RecyclerView content here -->
+    </androidx.recyclerview.widget.RecyclerView>
 
-</FrameLayout>
+</RelativeLayout>

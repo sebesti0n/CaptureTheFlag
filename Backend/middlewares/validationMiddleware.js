@@ -6,7 +6,7 @@ dotenv.config()
 const validationMiddleware = async(req,res,next)=>{
     try {
         let jwtSecretKey = process.env.JWT_SECRET_KEY;
-        console.log("Headers:", req.headers);
+        // console.log("Headers:", req.headers);
         const token = req.header('sebestian');
         if (!token) {
           return res.status(401).send("Token not provided");
@@ -16,7 +16,7 @@ const validationMiddleware = async(req,res,next)=>{
         if (verified) {
           next();
         } else {
-          console.log("Token not verified");
+          // console.log("Token not verified");
           return res.status(401).send("Token not verified");
         }
       } catch (error) {

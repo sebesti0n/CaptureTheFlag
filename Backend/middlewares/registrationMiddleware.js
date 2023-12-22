@@ -5,7 +5,7 @@ const User = require('../models/user');
 const registrationMiddleware = async(req,res,next)=>{
     try {
         const newUser = new User(req.body);
-        console.log(newUser);
+        // console.log(newUser);
         const alreadyPresent = await User.findOne({ Email: newUser.Email });
 
       if (alreadyPresent) {
@@ -26,7 +26,7 @@ const registrationMiddleware = async(req,res,next)=>{
             });
         }
     } catch (error) {
-        console.log("Error in registration middleware:", error);
+        // console.log("Error in registration middleware:", error);
         return res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
 };
