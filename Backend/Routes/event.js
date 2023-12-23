@@ -6,6 +6,7 @@ const eventcontroller = require('../Controllers/eventController');
 router.get('/upcoming',eventcontroller.upcomingEvents);
 router.get('/live',eventcontroller.liveEvents);
 router.post('/create',eventcontroller.addEvents);
+router.post('/addTask',eventcontroller.addQuestion);
 
 module.exports = router;
 
