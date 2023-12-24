@@ -35,8 +35,13 @@
             app:destination="@id/homefragment" />
     </fragment>
     <fragment
-        android:id="@+id/pagerFragment"
-        android:name="com.example.capturetheflag.fragments.PagerFragment"
-        android:label="fragment_pager"
-        tools:layout="@layout/fragment_pager" />
+        android:id="@+id/registerHuntFragment"
+        android:name="com.example.capturetheflag.fragments.RegisterHuntFragment"
+        android:label="fragment_register_hunt"
+        tools:layout="@layout/fragment_register_hunt" />
+    <fragment
+        android:id="@+id/historyHuntFragment"
+        android:name="com.example.capturetheflag.fragments.HistoryHuntFragment"
+        android:label="fragment_history_hunt"
+        tools:layout="@layout/fragment_register_hunt" />
 </navigation>

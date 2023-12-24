@@ -1,38 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+<include layout="@layout/appbar"
+    android:id="@+id/appbar"
+    />
 
-    <!-- ViewPager for the top part of the screen -->
-    <androidx.viewpager2.widget.ViewPager2
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager2"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:id="@+id/viewPager2"
         android:layout_gravity="bottom"
+        android:layout_below="@+id/appbar"
         android:clipToPadding="false"
         android:overScrollMode="never"
-        android:paddingBottom="30dp"
-        android:paddingEnd="60dp"
-        android:paddingLeft="60dp"
-        android:paddingRight="60dp"
-        android:paddingStart="60dp"
-        />
-    <com.example.capturetheflag.util.CircularViewPager
-        android:id="@+id/viewPager"
-        android:layout_width="match_parent"
-        android:layout_height="200dp">
+        android:paddingStart="10dp"
+        android:paddingLeft="10dp"
+        android:paddingEnd="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="2dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Upcoming Hunts"
+        android:textStyle="bold"
+        android:paddingLeft="10dp"
+        android:textSize="18sp"
+        android:layout_below="@+id/viewPager2"
+        android:layout_marginTop="8dp"
+        android:layout_margin="1dp"
+        android:textColor="@color/black"/>
 
-    </com.example.capturetheflag.util.CircularViewPager>
-
-    <!-- RecyclerView for the list below the ViewPager -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/viewPager"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp">
+        android:layout_marginTop="1dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="10dp">
         <!-- Add RecyclerView content here -->
     </androidx.recyclerview.widget.RecyclerView>
 
-</RelativeLayout>
+</LinearLayout>

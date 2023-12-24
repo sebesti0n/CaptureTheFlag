@@ -42,7 +42,7 @@ class Login : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         activity?.actionBar?.hide()
         _binding = FragmentLoginBinding.inflate(inflater, container ,false)
         return binding.root
