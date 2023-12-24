@@ -34,4 +34,9 @@
             android:id="@+id/action_registerFragment_to_homefragment"
             app:destination="@id/homefragment" />
     </fragment>
+    <fragment
+        android:id="@+id/pagerFragment"
+        android:name="com.example.capturetheflag.fragments.PagerFragment"
+        android:label="fragment_pager"
+        tools:layout="@layout/fragment_pager" />
 </navigation>

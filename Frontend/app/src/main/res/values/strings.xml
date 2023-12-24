@@ -11,4 +11,6 @@
     <string name="or">or</string>
     <string name="google">Google</string>
     <string name="registerbanner">RegisterBanner</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

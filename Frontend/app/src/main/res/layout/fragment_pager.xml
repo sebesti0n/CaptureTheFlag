@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="2dp"
+    android:background="@color/black">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#60000000">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/img_viewpager"
+        android:scaleType="centerCrop"/>
+    <View
+        android:id="@+id/redDot"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:background="@drawable/red_dot"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="19dp"
+        android:layout_marginEnd="57dp"/>
+    <TextView
+        android:id="@+id/tv_liveStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/img_viewpager"
+        android:text="Live"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_alignParentRight="true"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+
+</RelativeLayout>
+</androidx.cardview.widget.CardView>
