@@ -1,22 +1,26 @@
 package com.example.capturetheflag.activities
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+//import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
-import com.example.capturetheflag.R
-import com.example.capturetheflag.databinding.ActivityMainBinding
-import com.example.capturetheflag.sharedprefrences.userPreferences
+//import androidx.navigation.NavController
+//import androidx.navigation.fragment.NavHostFragment
+//import com.example.capturetheflag.R
+//import com.example.capturetheflag.databinding.ActivityMainBinding
+//import com.example.capturetheflag.sharedprefrences.userPreferences
 
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMainBinding
-    private lateinit var navController: NavController
-    private lateinit var sharedPref: userPreferences
+//    private lateinit var binding: ActivityMainBinding
+//    private lateinit var navController: NavController
+//    private lateinit var sharedPref: userPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val intent = Intent(this,HomeActivity::class.java)
+        startActivity(intent)
+        /*
         supportActionBar?.hide()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -59,7 +63,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
+*/
     }
 
 }
