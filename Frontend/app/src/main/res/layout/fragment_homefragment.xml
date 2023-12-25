@@ -3,9 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-<include layout="@layout/appbar"
-    android:id="@+id/appbar"
-    />
+<!--<include layout="@layout/appbar"-->
+<!--    android:id="@+id/appbar"-->
+<!--    />-->
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager2"
