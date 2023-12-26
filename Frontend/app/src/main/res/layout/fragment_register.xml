@@ -4,11 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/_d_render_grunge_style_interior_design">
+    android:background="@drawable/bg_login">
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="180dp"
-        android:src="@drawable/screenshot_from_2023_12_13_20_30_07_removebg_preview"
+        android:src="@drawable/banner_login"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -53,8 +53,6 @@
                     app:boxStrokeWidth="3dp"
                     app:boxStrokeColor="@color/white"
                     >
-
-
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_firstname"
                     android:layout_width="match_parent"
@@ -63,7 +61,6 @@
                     android:hint="@string/first_name"
                     android:textSize="15sp"
                     android:inputType="text"
-
                     />
                 </com.google.android.material.textfield.TextInputLayout>
 

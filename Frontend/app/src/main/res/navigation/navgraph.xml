@@ -44,4 +44,9 @@
         android:name="com.example.capturetheflag.fragments.HistoryHuntFragment"
         android:label="fragment_history_hunt"
         tools:layout="@layout/fragment_register_hunt" />
+    <fragment
+        android:id="@+id/createEventFragment"
+        android:name="com.example.capturetheflag.fragments.CreateEventFragment"
+        android:label="fragment_create_event"
+        tools:layout="@layout/fragment_create_event" />
 </navigation>

@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import com.example.capturetheflag.ui.HomeFragmentViewModel
 import com.example.capturetheflag.R
@@ -38,7 +37,6 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (requireActivity() as AppCompatActivity).supportActionBar?.hide()
 //        val viewPager: CircularViewPager = binding.viewPager
 //
 //        val pageContents = listOf(
@@ -58,7 +56,7 @@ class HomeFragment : Fragment() {
     private fun loadcards() {
         mList= ArrayList()
         mList.add(PagerContent(R.drawable.login_prev_ui,"text 1"))
-        mList.add(PagerContent(R.drawable._d_render_grunge_style_interior_design,"text 2"))
+        mList.add(PagerContent(R.drawable.bg_login,"text 2"))
         mList.add(PagerContent(R.drawable.login,"text 3"))
         viewPagerAdapter = context?.let { ViewPagerAdapter(it,mList) }!!
         viewPager.adapter=viewPagerAdapter
