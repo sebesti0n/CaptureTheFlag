@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:background="@color/light_yellow"
     android:layout_height="match_parent"
     tools:context=".fragments.CreateEventFragment">
 <LinearLayout
@@ -10,9 +11,19 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingHorizontal="20dp"
-    android:paddingBottom="10dp">
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp">
+    <com.google.android.material.imageview.ShapeableImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginBottom="10dp"
+        android:id="@+id/Event_poster"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/upload_banner"
+        android:scaleType="centerCrop"
+        />
+
     <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginTop="5dp"
@@ -22,6 +33,7 @@
         app:boxCornerRadiusTopEnd="7dp"
         app:hintAnimationEnabled="true"
         android:autofillHints="text"
+        app:startIconDrawable="@drawable/ic_title"
         app:boxStrokeWidth="3dp"
         app:boxStrokeColor="@color/green"
         >
@@ -36,7 +48,6 @@
             />
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginTop="5dp"
@@ -46,6 +57,7 @@
         app:boxCornerRadiusTopEnd="7dp"
         app:hintAnimationEnabled="true"
         android:autofillHints="text"
+        app:startIconDrawable="@drawable/ic_organisations"
         app:boxStrokeWidth="3dp"
         app:boxStrokeColor="@color/green"
         >
@@ -60,7 +72,6 @@
             />
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
@@ -70,6 +81,7 @@
         app:boxCornerRadiusTopEnd="7dp"
         app:hintAnimationEnabled="true"
         android:autofillHints="text"
+        app:startIconDrawable="@drawable/ic_description"
         app:boxStrokeWidth="3dp"
         app:boxStrokeColor="@color/green"
         >
@@ -85,7 +97,6 @@
             />
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginTop="5dp"
@@ -96,6 +107,7 @@
         app:hintAnimationEnabled="true"
         android:autofillHints="text"
         app:boxStrokeWidth="3dp"
+        app:startIconDrawable="@drawable/ic_location"
         app:boxStrokeColor="@color/green"
         >
         <com.google.android.material.textfield.TextInputEditText
@@ -105,12 +117,10 @@
             android:layout_height="52dp"
             android:hint="Location"
             android:textSize="15sp"
-
             android:inputType="text"
             />
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginTop="5dp"
@@ -122,6 +132,7 @@
         android:autofillHints="text"
         app:boxStrokeWidth="3dp"
         app:boxStrokeColor="@color/green"
+        app:startIconDrawable="@drawable/ic_prize"
         >
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_prizes"
@@ -133,6 +144,151 @@
             android:inputType="text"
             />
     </com.google.android.material.textfield.TextInputLayout>
-    
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="From"
+        android:layout_marginBottom="7dp"
+        android:layout_marginTop="7dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_startDate"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="5dp"
+            app:boxCornerRadiusTopStart="7dp"
+            app:boxCornerRadiusBottomEnd="7dp"
+            app:boxCornerRadiusBottomStart="7dp"
+            app:boxCornerRadiusTopEnd="7dp"
+            app:hintAnimationEnabled="true"
+            android:autofillHints="text"
+            app:boxStrokeWidth="3dp"
+            app:boxStrokeColor="@color/green"
+            android:layout_weight="1"
+            android:layout_marginRight="5dp"
+            app:startIconDrawable="@drawable/ic_date"
+
+            >
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_startDate"
+                android:layout_width="match_parent"
+                android:paddingHorizontal="5dp"
+                android:layout_height="52dp"
+                android:hint="Start Date"
+                android:textSize="15sp"
+                android:inputType="text"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            app:boxCornerRadiusTopStart="7dp"
+            app:boxCornerRadiusBottomEnd="7dp"
+            app:boxCornerRadiusBottomStart="7dp"
+            app:boxCornerRadiusTopEnd="7dp"
+            app:hintAnimationEnabled="true"
+            android:autofillHints="text"
+            app:boxStrokeWidth="3dp"
+            app:boxStrokeColor="@color/green"
+            android:layout_weight="1"
+            app:startIconDrawable="@drawable/ic_clock"
+            >
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_startTime"
+                android:layout_width="match_parent"
+                android:paddingHorizontal="5dp"
+                android:layout_height="52dp"
+                android:hint="Start Time"
+                android:textSize="15sp"
+                android:inputType="text"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="To"
+        android:layout_marginTop="7dp"
+        android:layout_marginBottom="7dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="5dp"
+            app:boxCornerRadiusTopStart="7dp"
+            app:boxCornerRadiusBottomEnd="7dp"
+            app:boxCornerRadiusBottomStart="7dp"
+            app:boxCornerRadiusTopEnd="7dp"
+            app:hintAnimationEnabled="true"
+            android:autofillHints="text"
+            app:boxStrokeWidth="3dp"
+            app:boxStrokeColor="@color/green"
+            android:layout_weight="1"
+            app:startIconDrawable="@drawable/ic_date"
+            android:layout_marginRight="5dp"
+            >
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_endDate"
+                android:layout_width="match_parent"
+                android:paddingHorizontal="5dp"
+                android:layout_height="52dp"
+                android:hint="End Date"
+                android:textSize="15sp"
+                android:inputType="date"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            app:boxCornerRadiusTopStart="7dp"
+            app:boxCornerRadiusBottomEnd="7dp"
+            app:boxCornerRadiusBottomStart="7dp"
+            app:boxCornerRadiusTopEnd="7dp"
+            app:hintAnimationEnabled="true"
+            android:autofillHints="text"
+            app:boxStrokeWidth="3dp"
+            app:boxStrokeColor="@color/green"
+            android:layout_weight="1"
+            app:startIconDrawable="@drawable/ic_clock"
+            >
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_endTime"
+                android:layout_width="match_parent"
+                android:paddingHorizontal="5dp"
+                android:layout_height="52dp"
+                android:hint="End Time"
+                android:textSize="15sp"
+                android:inputType="time"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Question"
+        android:id="@+id/btn_addQuestion"
+        android:backgroundTint="@color/green"
+        android:textColor="@color/light_yellow"
+        android:textStyle="bold"
+        app:cornerRadius="5dp"
+        android:layout_gravity="center"
+        android:layout_margin="15dp"/>
+
+
 </LinearLayout>
 </ScrollView>

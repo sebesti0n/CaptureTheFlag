@@ -37,6 +37,7 @@ class HomeActivity : AppCompatActivity() {
         navController = findNavController(R.id.nav_host_fragment_content_home)
         appBarConfiguration = AppBarConfiguration(
             setOf(
+                R.id.createEventFragment,
                 R.id.homefragment, R.id.registerHuntFragment, R.id.historyHuntFragment, R.id.login
             ), drawerLayout
         )
@@ -44,6 +45,11 @@ class HomeActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
         navView.setNavigationItemSelectedListener {
             when(it.itemId){
+                R.id.nav_create->{
+                    navController.navigate(R.id.createEventFragment)
+                    drawerLayout.closeDrawer(GravityCompat.START)  // Close the drawer
+                    true
+                }
                     R.id.nav_home->{
                     navController.navigate(R.id.homefragment)
                         drawerLayout.closeDrawer(GravityCompat.START)  // Close the drawer

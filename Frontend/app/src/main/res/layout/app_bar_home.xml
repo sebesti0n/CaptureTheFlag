@@ -19,7 +19,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/yellow"
+            android:background="@color/green"
             app:popupTheme="@style/Theme.CaptureTheFlag.PopupOverlay" />
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -43,6 +43,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:scrollIndicators="left"
+        android:background="@color/green"
+        app:itemIconTint="@color/light_yellow"
+        app:itemTextColor="@color/light_yellow"
         app:menu="@menu/nav_menu"
         />
 
