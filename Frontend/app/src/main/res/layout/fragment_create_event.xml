@@ -89,11 +89,14 @@
             android:id="@+id/et_description"
             android:layout_width="match_parent"
             android:paddingHorizontal="5dp"
+            android:lineBreakStyle="normal"
+            android:maxLines="10"
             android:minHeight="52dp"
+            android:scrollbars="vertical"
             android:layout_height="wrap_content"
             android:hint="Description of Hunt(e.g- contact Details)"
             android:textSize="15sp"
-            android:inputType="text"
+            android:inputType="textMultiLine"
             />
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
@@ -180,6 +183,10 @@
                 android:layout_height="52dp"
                 android:hint="Start Date"
                 android:textSize="15sp"
+                android:focusable="false"
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:focusableInTouchMode="false"
                 android:inputType="text"
                 />
         </com.google.android.material.textfield.TextInputLayout>
@@ -208,7 +215,11 @@
                 android:layout_height="52dp"
                 android:hint="Start Time"
                 android:textSize="15sp"
-                android:inputType="text"
+                android:inputType="time"
+                android:focusable="false"
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:focusableInTouchMode="false"
                 />
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
@@ -247,6 +258,10 @@
                 android:hint="End Date"
                 android:textSize="15sp"
                 android:inputType="date"
+                android:focusable="false"
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:focusableInTouchMode="false"
                 />
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
@@ -274,9 +289,40 @@
                 android:hint="End Time"
                 android:textSize="15sp"
                 android:inputType="time"
+                android:focusable="false"
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:focusableInTouchMode="false"
                 />
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="5dp"
+        app:boxCornerRadiusTopStart="7dp"
+        app:boxCornerRadiusBottomEnd="7dp"
+        app:boxCornerRadiusBottomStart="7dp"
+        app:boxCornerRadiusTopEnd="7dp"
+        app:hintAnimationEnabled="true"
+        android:autofillHints="text"
+        app:boxStrokeWidth="3dp"
+        app:boxStrokeColor="@color/green"
+        app:startIconDrawable="@drawable/ic_prize"
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_flagCount"
+            android:layout_width="match_parent"
+            android:paddingHorizontal="5dp"
+            android:layout_height="52dp"
+            android:hint="Number of Flags"
+            android:textSize="15sp"
+            android:inputType="number"
+            
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
     <com.google.android.material.button.MaterialButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -288,7 +334,5 @@
         app:cornerRadius="5dp"
         android:layout_gravity="center"
         android:layout_margin="15dp"/>
-
-
 </LinearLayout>
 </ScrollView>
