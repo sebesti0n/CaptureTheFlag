@@ -9,7 +9,11 @@
         android:id="@+id/homefragment"
         android:name="com.example.capturetheflag.fragments.HomeFragment"
         android:label="fragment_homefragment"
-        tools:layout="@layout/fragment_homefragment" />
+        tools:layout="@layout/fragment_homefragment" >
+        <action
+            android:id="@+id/action_homefragment_to_eventFragment"
+            app:destination="@id/eventFragment" />
+    </fragment>
     <fragment
         android:id="@+id/login"
         android:name="com.example.capturetheflag.fragments.Login"
@@ -38,15 +42,28 @@
         android:id="@+id/registerHuntFragment"
         android:name="com.example.capturetheflag.fragments.RegisterHuntFragment"
         android:label="fragment_register_hunt"
-        tools:layout="@layout/fragment_register_hunt" />
+        tools:layout="@layout/fragment_register_hunt" >
+        <action
+            android:id="@+id/action_registerHuntFragment_to_eventFragment"
+            app:destination="@id/eventFragment" />
+
+    </fragment>
     <fragment
         android:id="@+id/historyHuntFragment"
         android:name="com.example.capturetheflag.fragments.HistoryHuntFragment"
         android:label="fragment_history_hunt"
-        tools:layout="@layout/fragment_register_hunt" />
+        tools:layout="@layout/fragment_register_hunt" >
+        <action
+            android:id="@+id/action_historyHuntFragment_to_eventFragment"
+            app:destination="@id/eventFragment" />
+    </fragment>
+
     <fragment
-        android:id="@+id/createEventFragment"
-        android:name="com.example.capturetheflag.fragments.CreateEventFragment"
-        android:label="fragment_create_event"
-        tools:layout="@layout/fragment_create_event" />
+        android:id="@+id/eventFragment"
+        android:name="com.example.capturetheflag.fragments.EventFragment"
+        android:label="fragment_event"
+        tools:layout="@layout/fragment_event" >
+
+
+    </fragment>
 </navigation>

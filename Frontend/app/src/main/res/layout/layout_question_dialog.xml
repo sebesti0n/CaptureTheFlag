@@ -62,7 +62,7 @@
         android:layout_height="52dp"
         android:hint="Correct Answers"
         android:textSize="15sp"
-        android:inputType="number"
+        android:inputType="textMultiLine"
 
         />
     </com.google.android.material.textfield.TextInputLayout>
@@ -96,7 +96,7 @@
                 android:cursorVisible="false"
                 android:focusableInTouchMode="false"
                 android:textSize="15sp"
-                android:inputType="number"
+                android:inputType="text"
 
                 />
 

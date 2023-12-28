@@ -5,34 +5,32 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.capturetheflag.R
 import com.example.capturetheflag.databinding.FragmentCreateEventBinding
 import com.example.capturetheflag.models.QuestionModel
 import com.example.capturetheflag.ui.CreateEventViewModel
+import com.example.capturetheflag.util.QuestionAdapter
+import com.example.capturetheflag.util.QuestionItemClickListner
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.util.Calendar
 import kotlin.random.Random
 
 
-class CreateEventFragment : Fragment() {
+class CreateEventFragment : Fragment(),QuestionItemClickListner {
     private var _binding:FragmentCreateEventBinding?=null
     private val binding get() = _binding!!
     private lateinit var viewModel: CreateEventViewModel
@@ -47,14 +45,16 @@ class CreateEventFragment : Fragment() {
     private lateinit var etEndTime:TextInputEditText
     private lateinit var etFlagCount:TextInputEditText
     private lateinit var problemList:ArrayList<QuestionModel>
+    private lateinit var qAdapter:QuestionAdapter
+    private lateinit var listner: QuestionItemClickListner
     private var posterUri:Uri?=null
     private var flagCount = 0
-    private var itr = 0
-
-
-
-    //    private late init var decodeBase64ImageTask: DecodeBase64ImageTask
-
+//    private var itr = 0
+//    private late init var decodeBase64ImageTask: DecodeBase64ImageTask
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    listner = this
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -101,6 +101,7 @@ class CreateEventFragment : Fragment() {
         binding.EventPoster.setOnClickListener {
             uploadPoster()
         }
+        setUpQuestionRecyclerView()
         binding.btnAddQuestion.setOnClickListener {
             val title = etTitle.text.toString()
             val des = etDescription.text.toString()
@@ -115,40 +116,39 @@ class CreateEventFragment : Fragment() {
                 Toast.makeText(requireContext(), "Fill all the details!", Toast.LENGTH_SHORT).show()
             } else {
                 flagCount = flgCnt.toInt()
-                itr = flagCount
-                Log.w("sebastion","${itr.toString()} loop se pahele")
-               addQuestionDialog(flagCount ,"Next")
-                Log.w("Sebastion",problemList.size.toString())
-                Log.w("Sebastion",problemList.toString())
+                if (problemList.size<flagCount)
+                addQuestionDialog()
+                else{
+                    binding.btnAddQuestion.setText("Submit")
+                    Toast.makeText(requireContext(),"submit it",Toast.LENGTH_SHORT).show()
+                }
 
             }
         }
 
     }
-    var isDialogBoxShowing = true
+
+    private fun setUpQuestionRecyclerView() {
+        qAdapter = QuestionAdapter(problemList,listner)
+        binding.rvQuestionList.adapter = qAdapter
+        binding.rvQuestionList.layoutManager = LinearLayoutManager(requireContext())
+    }
+
     @SuppressLint("MissingInflatedId")
-    private fun addQuestionDialog(n: Int, bt: String) {
-        runBlocking {
-            // Launching a coroutine to handle each question dialog
-            for (i in 1..n) {
-                val qNo = i.toString()
+    private fun addQuestionDialog() {
+                val qNo = (problemList.size+1).toString()
                 val headingText = "Add Question $qNo"
-
-                // Delay added for demonstration (simulating network call, etc.)
-                delay(500) // Replace with your actual async task or remove this delay
-
-                // Launching a coroutine to handle each question dialog
-                launch(Dispatchers.Main) {
                     val dialogLayout = layoutInflater.inflate(R.layout.layout_question_dialog, null)
+        dialogLayout.findViewById<TextView>(R.id.heading).text = headingText
                     val etQuestion = dialogLayout.findViewById<TextInputEditText>(R.id.et_ques)
                     val etAnswer = dialogLayout.findViewById<TextInputEditText>(R.id.et_correctAnswer)
                     val etUniqueCode = dialogLayout.findViewById<TextInputEditText>(R.id.et_uniqueCode)
                     val btn = dialogLayout.findViewById<MaterialButton>(R.id.btn_generateCode)
                     btn.setOnClickListener{
-                        etUniqueCode.setText("666666")
+                        val code = generateRandomCode(6)
+                        etUniqueCode.setText(code)
                     }
                     val builder = MaterialAlertDialogBuilder(requireActivity())
-                        .setTitle(headingText)
                         .setView(dialogLayout)
                         .setNegativeButton("Cancel") { _, _ ->
                             // Handle cancellation if needed
@@ -161,6 +161,7 @@ class CreateEventFragment : Fragment() {
                             if (quesString.isNotEmpty() && correctAnswer.isNotEmpty() && unqCode.isNotEmpty()) {
                                 val question = QuestionModel(quesString, correctAnswer, unqCode)
                                 problemList.add(question)
+                                qAdapter.notifyDataSetChanged()
                             } else {
                                 Toast.makeText(requireActivity(), "Fill all the details!", Toast.LENGTH_LONG).show()
                             }
@@ -169,10 +170,7 @@ class CreateEventFragment : Fragment() {
                     val dialog = builder.create()
                     dialog.show()
                 }
-            }
-        }
 
-    }
     private fun generateRandomCode(length: Int): String {
         val alphanumericChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
         val random = Random.Default
@@ -241,4 +239,24 @@ class CreateEventFragment : Fragment() {
             posterUri=data.data
         }
     }
+
+    override fun onQuestionClickListner(ques: QuestionModel) {
+        showQuestionDialog(ques)
+    }
+    private fun showQuestionDialog(currQues:QuestionModel){
+
+        val builder = MaterialAlertDialogBuilder(requireActivity())
+            .setMessage("Q$- ${currQues.question}\nAns- ${currQues.cAnswer}\nCode- ${currQues.unqCode}")
+            .setNegativeButton("Cancel") { _, _ ->
+                // Handle cancellation if needed
+            }
+            .setPositiveButton("Okay") { _, _ ->
+
+            }
+
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+
 }

@@ -37,6 +37,9 @@ class EventAdapter(private val context:Context,private val listner: EventItemCli
         holder.month.text = currEvent.start_time.month.toString()
         holder.location.text = currEvent.location
         holder.organiser.text = currEvent.organisation
+        holder.itemView.setOnClickListener {
+            listner.onEventClickListner()
+        }
     }
 
     override fun getItemCount(): Int {

@@ -15,6 +15,11 @@
         android:theme="@style/Theme.CaptureTheFlag"
         tools:targetApi="31">
         <activity
+            android:name=".activities.AdminActivity"
+            android:exported="false"
+            android:label="@string/title_activity_admin"
+            android:theme="@style/Theme.CaptureTheFlag" />
+        <activity
             android:name=".activities.HomeActivity"
             android:exported="false"
             android:label="@string/title_activity_home"
