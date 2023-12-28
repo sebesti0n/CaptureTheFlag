@@ -6,9 +6,9 @@ module.exports = {
       client: 'pg',
       connection: {
         host:'localhost',
-        user:process.env.POSTGRES_USER,
-        database:process.env.POSTGRES_DB,
-        password:process.env.POSTGRES_PWD,
+        user:'postgres',
+        database:'postgres',
+        password:'new_password',
         port:5432,
       },
       migrations: {

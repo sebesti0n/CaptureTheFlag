@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/FirstFragment"
-        android:name="com.example.capturetheflag.models.AdminHomeFragment"
+        android:name="com.example.capturetheflag.fragments.AdminHomeFragment"
         android:label="@string/first_fragment_label"
         tools:layout="@layout/fragment_admin_home">
 

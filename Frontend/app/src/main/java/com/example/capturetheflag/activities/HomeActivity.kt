@@ -1,5 +1,6 @@
 package com.example.capturetheflag.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -46,8 +47,8 @@ class HomeActivity : AppCompatActivity() {
         navView.setNavigationItemSelectedListener {
             when(it.itemId){
                 R.id.nav_create->{
-                    navController.navigate(R.id.createEventFragment)
-                    drawerLayout.closeDrawer(GravityCompat.START)  // Close the drawer
+                    val intent = Intent(this,AdminActivity::class.java)
+                    startActivity(intent)
                     true
                 }
                     R.id.nav_home->{

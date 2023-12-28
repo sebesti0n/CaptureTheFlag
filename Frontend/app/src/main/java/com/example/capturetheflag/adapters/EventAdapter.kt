@@ -9,12 +9,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.capturetheflag.R
 import com.example.capturetheflag.models.Event
+import com.example.capturetheflag.models.EventX
 import com.example.capturetheflag.util.EventItemClickListner
 
 class EventAdapter(private val context:Context,private val listner: EventItemClickListner):
     RecyclerView.Adapter<EventAdapter.EventViewHolder>() {
 
-        private var list :ArrayList<Event> = arrayListOf()
+        private var list :ArrayList<EventX> = arrayListOf()
 
         class EventViewHolder(view:View):RecyclerView.ViewHolder(view){
             val title = view.findViewById<TextView>(R.id.heading)
@@ -33,8 +34,8 @@ class EventAdapter(private val context:Context,private val listner: EventItemCli
     override fun onBindViewHolder(holder: EventAdapter.EventViewHolder, position: Int) {
         val currEvent = list[position]
         holder.title.text = currEvent.title
-        holder.date.text = currEvent.start_time.date.toString()
-        holder.month.text = currEvent.start_time.month.toString()
+        holder.date.text = "27"
+        holder.month.text = "Dec"
         holder.location.text = currEvent.location
         holder.organiser.text = currEvent.organisation
         holder.itemView.setOnClickListener {
@@ -47,7 +48,7 @@ class EventAdapter(private val context:Context,private val listner: EventItemCli
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setdata(list:ArrayList<Event>){
+    fun setdata(list:ArrayList<EventX>){
         this.list=list
         notifyDataSetChanged()
     }

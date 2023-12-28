@@ -30,7 +30,7 @@ exports.liveEvents = ( async(req,res)=>{
 
 exports.addEvents = ( async(req,res)=>{
     try {
-        const {title , location, description, start_time, end_time, owner_id, No_of_questions} = req.body;
+        const {title , location, description, start_time, end_time, owner_id, No_of_questions, posterImage} = req.body;
        const data = await knex('events').insert({
             title:title,
             description:description,
@@ -38,7 +38,8 @@ exports.addEvents = ( async(req,res)=>{
             start_time:new Date(start_time),
             end_time:new Date(end_time),
             owner_id:owner_id,
-            No_of_questions:No_of_questions
+            No_of_questions:No_of_questions,
+            posterImage:posterImage
         }).returning('*');
         res.status(200).json({success: true,message:"ok",event:data});
     } catch (error) {

@@ -16,6 +16,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.capturetheflag.R
 import com.example.capturetheflag.databinding.FragmentCreateEventBinding
+import com.example.capturetheflag.models.Event
+import com.example.capturetheflag.models.EventX
 import com.example.capturetheflag.models.QuestionModel
 import com.example.capturetheflag.ui.CreateEventViewModel
 import com.example.capturetheflag.util.QuestionAdapter
@@ -54,6 +56,7 @@ class CreateEventFragment : Fragment(),QuestionItemClickListner {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     listner = this
+
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -65,7 +68,7 @@ class CreateEventFragment : Fragment(),QuestionItemClickListner {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(CreateEventViewModel::class.java)
+        viewModel = ViewModelProvider(this)[CreateEventViewModel::class.java]
         problemList = ArrayList()
         etTitle = binding.etTitle
         etDescription = binding.etDescription
@@ -115,6 +118,9 @@ class CreateEventFragment : Fragment(),QuestionItemClickListner {
             if (title.isEmpty() || des.isEmpty() || org.isEmpty() || location.isEmpty() || stDate.isEmpty() || endDate.isEmpty() || strtTime.isEmpty() || endTime.isEmpty()||flgCnt.isEmpty()) {
                 Toast.makeText(requireContext(), "Fill all the details!", Toast.LENGTH_SHORT).show()
             } else {
+                val mEvent = EventX(1,"do", "2023-12-30T08:25:00.000Z","Nita","dcc",1,"Banner 1","2023-12-30T08:00:00.999Z","CTF")
+                viewModel.createEvent(mEvent)
+
                 flagCount = flgCnt.toInt()
                 if (problemList.size<flagCount)
                 addQuestionDialog()
