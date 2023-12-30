@@ -1,13 +1,17 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const User = require('../models/user');
+const knex = require('knex')(require('../Configuration/knexfile')['development']);
+
 
 const loginMiddleware =async (req,res,next) =>{
     const {userEmail, userPass} = req.body;
-    // console.log(userEmail+ userPass);
     try {
-        const finduser = await User.findOne({ Email: userEmail });
-        if (finduser) {
+        const finduser = await knex('users').select('*').where('email','=',userEmail).returning('*');
+    console.log(userEmail+ userPass+finduser);
+        
+        if (finduser.length!=0) {
+    console.log(userEmail+ userPass+finduser);
+
             const validate = await bcrypt.compare(userPass, finduser.password);
             // console.log(validate)
             if (!validate) {
@@ -23,7 +27,7 @@ const loginMiddleware =async (req,res,next) =>{
             return res.status(203).json({success:false,message : "Register First", userDetails:null});
         }
     } catch (error) {
-        // console.log(error);
+        console.log(error);
         return res.status(500).send({success:false, message:'Internal Server Error'});
 
     }

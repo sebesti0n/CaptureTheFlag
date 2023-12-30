@@ -1,32 +1,39 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const User = require('../models/user');
+const knex = require('knex')(require('../Configuration/knexfile')['development']);
+
 
 const registrationMiddleware = async(req,res,next)=>{
     try {
-        const newUser = new User(req.body);
+        let {Email, password, cnfpassword, FirstName, LastName, MobileNo, CollegeName} = req.body;
         // console.log(newUser);
-        const alreadyPresent = await User.findOne({ Email: newUser.Email });
+        const alreadyPresent = await knex('users').select('*').where('email','=',Email);
 
-      if (alreadyPresent) {
+      if (alreadyPresent.length!=0) {
             return res.status(200).json({ success: false, message: 'user already registered',user:null });
         } else {
-            bcrypt.hash(newUser.password, 10, (err, hashedpassword) => {
+            bcrypt.hash(password, 10, (err, hashedpassword) => {
                 if (err) return next(err);
-                newUser.set('password', hashedpassword);
-                newUser.set('cnfpassword', hashedpassword);
+                password = hashedpassword
+                cnfpassword = password
                 let data = {
                     time: Date(),
-                    userEmail: newUser.Email
+                    userEmail: Email
                 };
                 const token = jwt.sign(data, process.env.JWT_SECRET_KEY);
                 req.token = token;
-                req.newUser = newUser;
+                req.Email=Email
+                req.password=password
+                req.cnfpassword=cnfpassword
+                req.FirstName=FirstName
+                req.LastName =LastName
+                req.MobileNo =MobileNo
+                req.CollegeName=CollegeName
                 next();
             });
         }
     } catch (error) {
-        // console.log("Error in registration middleware:", error);
+        console.log("Error in registration middleware:", error);
         return res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
 };
