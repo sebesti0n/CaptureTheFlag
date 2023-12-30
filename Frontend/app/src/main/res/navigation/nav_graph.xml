@@ -24,5 +24,23 @@
         <action
             android:id="@+id/action_FirstFragment_to_createEventFragment"
             app:destination="@id/createEventFragment" />
+        <action
+            android:id="@+id/action_FirstFragment_to_adminEventFragment"
+            app:destination="@id/adminEventFragment" >
+
+        </action>
     </fragment>
+    <fragment
+        android:id="@+id/adminEventFragment"
+        android:name="com.example.capturetheflag.fragments.AdminEventFragment"
+        android:label="fragment_admin_event"
+        tools:layout="@layout/fragment_event">
+
+
+        <argument
+            android:name="eid"
+            app:argType="long"
+            android:defaultValue="-1L" />
+    </fragment>
+
 </navigation>

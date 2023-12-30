@@ -7,7 +7,7 @@ data class EventX(
     val organisation: String,
     val location: String,
     val owner_id: Int,
-    val posterImage: String,
+    val posterImage: String?,
     val start_time: String,
     val title: String
 )

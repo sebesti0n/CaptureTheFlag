@@ -10,7 +10,9 @@ import com.example.capturetheflag.models.UserLoginDetails
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface ApiEndpoints {
     @POST("/register")
@@ -28,6 +30,16 @@ interface ApiEndpoints {
     fun createEvent(
         @Body
         event: EventX
+    ): Call<ResponseEventModel>
+    @GET("/admin/event")
+    fun getEvent(
+        @Query("owner")
+        ownerID:Int
+    ): Call<ResponseEventModel>
+    @GET("/admin/oneevent")
+    fun getEventbyId(
+        @Query("eid")
+        eid:Int
     ): Call<ResponseEventModel>
 
 }

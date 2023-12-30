@@ -1,10 +1,9 @@
 package com.example.capturetheflag.models
 
-import java.sql.Timestamp
 
 data class Event(
     val event_id:Int,
-    val title:String,
+    val title: String,
     val location:String,
     val description:String,
     val owner_id:Int,

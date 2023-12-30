@@ -7,6 +7,8 @@ router.get('/upcoming',eventcontroller.upcomingEvents);
 router.get('/live',eventcontroller.liveEvents);
 router.post('/create',eventcontroller.addEvents);
 router.post('/addTask',eventcontroller.addQuestion);
+router.get('/event/:owner',eventcontroller.adminEvents);
+router.get('/oneevent/:eid',eventcontroller.adminEvent);
 
 module.exports = router;
 

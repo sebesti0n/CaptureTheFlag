@@ -27,6 +27,8 @@
         app:boxStrokeWidth="3dp"
         app:boxStrokeColor="@color/green"
         app:startIconDrawable="@drawable/ic_prize"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+
         >
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/et_ques"
@@ -44,6 +46,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         android:layout_marginTop="5dp"
         app:boxCornerRadiusTopStart="7dp"
         app:boxCornerRadiusBottomEnd="7dp"
@@ -73,6 +76,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="0dp"
             android:layout_height="60dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
             android:layout_marginTop="6dp"
             app:boxCornerRadiusTopStart="7dp"
             app:boxCornerRadiusBottomEnd="7dp"

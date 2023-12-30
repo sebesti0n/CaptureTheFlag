@@ -8,18 +8,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.capturetheflag.R
 import com.example.capturetheflag.databinding.FragmentCreateEventBinding
-import com.example.capturetheflag.models.Event
 import com.example.capturetheflag.models.EventX
 import com.example.capturetheflag.models.QuestionModel
 import com.example.capturetheflag.ui.CreateEventViewModel
+import com.example.capturetheflag.util.ImageUtil
 import com.example.capturetheflag.util.QuestionAdapter
 import com.example.capturetheflag.util.QuestionItemClickListner
 import com.google.android.material.button.MaterialButton
@@ -28,6 +28,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import kotlinx.coroutines.launch
 import java.util.Calendar
 import kotlin.random.Random
 
@@ -51,11 +52,9 @@ class CreateEventFragment : Fragment(),QuestionItemClickListner {
     private lateinit var listner: QuestionItemClickListner
     private var posterUri:Uri?=null
     private var flagCount = 0
-//    private var itr = 0
-//    private late init var decodeBase64ImageTask: DecodeBase64ImageTask
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-    listner = this
+        listner = this
 
     }
     override fun onCreateView(
@@ -118,11 +117,22 @@ class CreateEventFragment : Fragment(),QuestionItemClickListner {
             if (title.isEmpty() || des.isEmpty() || org.isEmpty() || location.isEmpty() || stDate.isEmpty() || endDate.isEmpty() || strtTime.isEmpty() || endTime.isEmpty()||flgCnt.isEmpty()) {
                 Toast.makeText(requireContext(), "Fill all the details!", Toast.LENGTH_SHORT).show()
             } else {
-                val mEvent = EventX(1,"do", "2023-12-30T08:25:00.000Z","Nita","dcc",1,"Banner 1","2023-12-30T08:00:00.999Z","CTF")
-                viewModel.createEvent(mEvent)
-
                 flagCount = flgCnt.toInt()
-                if (problemList.size<flagCount)
+                if(problemList.size==0){
+                    var base64Poster:String?=null
+                    if(posterUri!=null){
+                       viewModel.viewModelScope.launch {
+                           base64Poster =
+                               ImageUtil.uriToBase64(requireContext().contentResolver, posterUri!!)
+                       }
+                    }
+
+                    val mEvent = EventX(flagCount,des, "$endDate $endTime", org,location,1,base64Poster,"$stDate $strtTime",title)
+
+                    viewModel.createEvent(mEvent)
+                    addQuestionDialog()
+                }
+                else if (problemList.size<flagCount)
                 addQuestionDialog()
                 else{
                     binding.btnAddQuestion.setText("Submit")
@@ -145,7 +155,7 @@ class CreateEventFragment : Fragment(),QuestionItemClickListner {
                 val qNo = (problemList.size+1).toString()
                 val headingText = "Add Question $qNo"
                     val dialogLayout = layoutInflater.inflate(R.layout.layout_question_dialog, null)
-        dialogLayout.findViewById<TextView>(R.id.heading).text = headingText
+                    dialogLayout.findViewById<TextView>(R.id.heading).text = headingText
                     val etQuestion = dialogLayout.findViewById<TextInputEditText>(R.id.et_ques)
                     val etAnswer = dialogLayout.findViewById<TextInputEditText>(R.id.et_correctAnswer)
                     val etUniqueCode = dialogLayout.findViewById<TextInputEditText>(R.id.et_uniqueCode)
@@ -263,6 +273,5 @@ class CreateEventFragment : Fragment(),QuestionItemClickListner {
         val dialog = builder.create()
         dialog.show()
     }
-
 
 }

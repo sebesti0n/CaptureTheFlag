@@ -26,6 +26,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         android:layout_marginTop="5dp"
         app:boxCornerRadiusTopStart="7dp"
         app:boxCornerRadiusBottomEnd="7dp"
@@ -60,6 +61,7 @@
         app:startIconDrawable="@drawable/ic_organisations"
         app:boxStrokeWidth="3dp"
         app:boxStrokeColor="@color/green"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         >
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_orgnisation"
@@ -84,6 +86,7 @@
         app:startIconDrawable="@drawable/ic_description"
         app:boxStrokeWidth="3dp"
         app:boxStrokeColor="@color/green"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         >
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_description"
@@ -112,6 +115,7 @@
         app:boxStrokeWidth="3dp"
         app:startIconDrawable="@drawable/ic_location"
         app:boxStrokeColor="@color/green"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         >
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_location"
@@ -136,6 +140,7 @@
         app:boxStrokeWidth="3dp"
         app:boxStrokeColor="@color/green"
         app:startIconDrawable="@drawable/ic_prize"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         >
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_prizes"
@@ -174,7 +179,7 @@
             android:layout_weight="1"
             android:layout_marginRight="5dp"
             app:startIconDrawable="@drawable/ic_date"
-
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
             >
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_startDate"
@@ -310,6 +315,7 @@
         app:boxStrokeWidth="3dp"
         app:boxStrokeColor="@color/green"
         app:startIconDrawable="@drawable/ic_prize"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         >
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_flagCount"

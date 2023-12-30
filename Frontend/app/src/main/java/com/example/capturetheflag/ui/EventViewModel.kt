@@ -11,14 +11,16 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class AdminHomeViewModel: ViewModel() {
+class EventViewModel:ViewModel() {
     private var eventResposeLiveData= MutableLiveData<ResponseEventModel>()
     fun get(): LiveData<ResponseEventModel>?{
         return eventResposeLiveData!!
     }
-
-    fun getAdminEvents(oid:Int){
-        RetrofitInstances.service.getEvent(oid).enqueue(object: Callback<ResponseEventModel> {
+    fun getArrayListAdminEvent(): ArrayList<Event>? {
+        return eventResposeLiveData.value?.event
+    }
+    fun getAdminEventbyId(eid:Int){
+        RetrofitInstances.service.getEvent(eid).enqueue(object: Callback<ResponseEventModel> {
             override fun onResponse(
                 call: Call<ResponseEventModel>,
                 response: Response<ResponseEventModel>
