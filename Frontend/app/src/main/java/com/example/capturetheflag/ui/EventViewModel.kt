@@ -20,11 +20,14 @@ class EventViewModel:ViewModel() {
         return eventResposeLiveData.value?.event
     }
     fun getAdminEventbyId(eid:Int){
-        RetrofitInstances.service.getEvent(eid).enqueue(object: Callback<ResponseEventModel> {
+        Log.w("sebastian evm",eid.toString())
+        RetrofitInstances.service.getEventbyId(eid).enqueue(object: Callback<ResponseEventModel> {
             override fun onResponse(
                 call: Call<ResponseEventModel>,
                 response: Response<ResponseEventModel>
             ){
+                Log.w("sebastian evm",response.body().toString())
+
                 eventResposeLiveData.value = response.body()
                 Log.w("Sebastian",eventResposeLiveData.value.toString())
 

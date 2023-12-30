@@ -14,6 +14,8 @@ exports.upcomingEvents = (async (req,res)=>{
 });
 
 
+
+
 exports.liveEvents = ( async(req,res)=>{
     try {
         const currTime = new Date();
@@ -27,94 +29,7 @@ exports.liveEvents = ( async(req,res)=>{
     }
 });
 
-exports.adminEvents = (async (req,res)=>{
-    try {
-        const oid = req.query.owner
-        const events = await knex('events')
-        .select('*')
-        .where('owner_id','=',oid);
-        res.status(200).json({success: true,message:"ok",event:events});
-    } catch (error) {
-        res.status(500).json({success: false, message:"unknown Error!", event:null});
-    }
-});
 
-exports.adminEvent = (async (req,res)=>{
-    try {
-        const eid = req.query.eid
-        const currTime = new Date();
-        const events = await knex('events')
-        .select('*')
-        .where('event_id','=',eid);
-        res.status(200).json({success: true,message:"ok",event:events});
-    } catch (error) {
-        res.status(500).json({success: false, message:"unknown Error!", event:null});
-    }
-});
-
-function getIstTimestamp(dateTimeString){
-const timestamp = Date.parse(dateTimeString);
-const time = timestamp / 1000;
-const date = new Date(time * 1000);
-const utcTime = date.getTime();
-const istTime = utcTime + (5.5 * 60 * 60 * 1000);
-const istDate = new Date(istTime);
-const formattedIST = istDate.toLocaleString('en-US', {
-    timeZone: 'Asia/Kolkata',
-    hour12: false, 
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit'
-});
-
-return formattedIST;
-
-}
-
-exports.addEvents = ( async(req,res)=>{
-    try {
-        const {title , location, description,organisation, start_time, end_time, owner_id, No_of_questions, posterImage} = req.body;
-        const startTimeDate = await getIstTimestamp(start_time);
-        const endTimeDate = await getIstTimestamp(end_time);
-
-        const data = await knex('events').insert({
-            title:title,
-            description:description,
-            location:location,
-            organisation:organisation,
-            start_time:startTimeDate,
-            end_time:endTimeDate,
-            owner_id:owner_id,
-            No_of_questions:No_of_questions,
-            posterImage:posterImage
-        }).returning('*');
-        res.status(200).json({success: true,message:"ok",event:data});
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({success: false, message:"unknown Error!", event:null});
-    }
-});
-
-
-exports.addQuestion = ( async(req,res) => {
-    try {
-        const{question_id,event_id,question,answer,unique_code}=req.body;
-        const data = await knex('questions').insert({
-            question_id:question_id,
-            event_id:event_id,
-            question:question,
-            answer:answer,
-            unique_code:unique_code
-        }).returning('*');
-        res.status(200).json({success: true,message:"ok",question:data});
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({success: false, message:"unknown Error!", event:null});  
-    }
-});
 
 
 exports.registerUserinEvents = ( async(req,res) => {
@@ -138,3 +53,72 @@ exports.registerUserinEvents = ( async(req,res) => {
 });
 
 
+
+
+exports.isRegisterforUserforEvents = ( async(req,res) => {
+    try {
+        const eid =req.query.eid;
+        const uid = req.query.uid;
+        const is_registered = await knex('user_event_participation')
+        .select('is_registered')
+        .where('event_id',eid)
+        .andWhere('user_id',uid)
+        
+        if((await is_registered).length > 0){
+            if(is_registered[0]==true)
+            res.status(200).json({is_registered:1});
+            else {
+            res.status(200).json({is_registered:0});
+            }
+        }
+        else{
+            res.status(200).json({is_registered:-1});
+        }
+    } catch (error) {
+        res.status(403).json({is_registered:-2});
+          
+    } finally{
+        knex.destroy();
+    }
+});
+
+
+exports.registeredEventforUser = (async(req, res) => {
+    const uid = req.query.uid
+    try {
+        const event = await knex('events')
+                .innerJoin('user_event_participation','events.event_id','=','user_event_participation.event_id')
+                .where('user_event_participation.user_id','=',uid)
+                .andWhere('user_event_participation.is_registered','=',false)
+                .select('events.event_id','events.title','events.location','events.description','events.start_time','events.end_time','events.owner_id','events.No_of_questions','events.posterImage','events.organisation')
+                console.log(event);
+                res.status(200).json({success:true,message:"ok",event:event});
+        
+    } catch (error) {
+        console.log(error);
+        res.status(505).json({success:false,message:"something went wrong",event:null});
+    }finally{
+        knex.destroy();
+    }
+});
+
+exports.historyEventofUser = ( async(req, res) => {
+try {
+    const uid = req.query.uid
+    const currTime = new Date()
+    const event = await knex('events')
+                .innerJoin('user_event_participation','events.event_id','=','user_event_participation.event_id')
+                .where('user_event_participation.user_id','=',uid)
+                .andWhere('user_event_participation.is_registered','=',false)
+                .andWhere('events.end_time','<',currTime.toISOString)
+                .select('events.event_id','events.title','events.location','events.description','events.start_time','events.end_time','events.owner_id','events.No_of_questions','events.posterImage','events.organisation')
+                console.log(event);
+                res.status(200).json({success:true,message:"ok",event:event});
+} catch (error) {
+        console.log(error);
+        res.status(505).json({success:false,message:"something went wrong",event:null});
+    
+}finally{
+    knex.destroy();
+}
+});

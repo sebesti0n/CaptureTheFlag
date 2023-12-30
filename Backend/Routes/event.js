@@ -5,10 +5,8 @@ const eventcontroller = require('../Controllers/eventController');
 
 router.get('/upcoming',eventcontroller.upcomingEvents);
 router.get('/live',eventcontroller.liveEvents);
-router.post('/create',eventcontroller.addEvents);
-router.post('/addTask',eventcontroller.addQuestion);
-router.get('/event/:owner',eventcontroller.adminEvents);
-router.get('/oneevent/:eid',eventcontroller.adminEvent);
+router.get('/register',eventcontroller.registeredEventforUser)
+router.get('/history',eventcontroller.historyEventofUser)
 
 module.exports = router;
 

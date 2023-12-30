@@ -42,6 +42,7 @@ class AdminEventFragment : Fragment() {
         viewModel.getAdminEventbyId(eid.toInt())
         viewModel.get()?.observe(requireActivity()) {
             val event = it.event.get(0)
+            Log.w("sebastian","event")
             binding.contentDescription.text =  event.description
             binding.contentDetails.text = "Start At: ${event.start_time} \n End At: ${event.end_time}"
             binding.contentPrizes.text = "Amazing Goodies"

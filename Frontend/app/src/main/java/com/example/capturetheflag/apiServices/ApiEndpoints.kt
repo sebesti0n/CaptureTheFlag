@@ -41,5 +41,15 @@ interface ApiEndpoints {
         @Query("eid")
         eid:Int
     ): Call<ResponseEventModel>
+    @GET("/event/register")
+    fun getRegisteredEventbyId(
+        @Query("eid")
+        eid:Int
+    ): Call<ResponseEventModel>
+    @GET("/event/history")
+    fun getPreviousEventbyId(
+        @Query("eid")
+        eid:Int
+    ): Call<ResponseEventModel>
 
 }
