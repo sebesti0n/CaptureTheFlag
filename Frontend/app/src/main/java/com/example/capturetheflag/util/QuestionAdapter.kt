@@ -8,7 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.capturetheflag.R
 import com.example.capturetheflag.models.QuestionModel
 
-class QuestionAdapter(private val list:ArrayList<QuestionModel>,private val listner: QuestionItemClickListner): RecyclerView.Adapter<QuestionAdapter.QuestionViewHolder>() {
+class QuestionAdapter(private val listner: QuestionItemClickListner): RecyclerView.Adapter<QuestionAdapter.QuestionViewHolder>() {
+    private var list:ArrayList<QuestionModel> = ArrayList()
     class QuestionViewHolder(view:View):RecyclerView.ViewHolder(view) {
        val qItem = view.findViewById<TextView>(R.id.question)
     }
@@ -29,6 +30,13 @@ class QuestionAdapter(private val list:ArrayList<QuestionModel>,private val list
             listner.onQuestionClickListner(currQues)
         }
     }
-
+    fun addData(ques:QuestionModel){
+        list.add(ques);
+        notifyDataSetChanged()
+    }
+    fun setData(list:ArrayList<QuestionModel>){
+        this.list=list
+        notifyDataSetChanged()
+    }
 
 }

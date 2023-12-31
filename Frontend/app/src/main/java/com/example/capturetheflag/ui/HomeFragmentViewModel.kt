@@ -11,19 +11,38 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class HomeFragmentViewModel : ViewModel() {
-    private var eventResposeLiveData= MutableLiveData<ResponseEventModel>()
-    fun get(): LiveData<ResponseEventModel>?{
-        return eventResposeLiveData!!
+    private var eventResponseLiveData= MutableLiveData<ResponseEventModel>()
+    private var liveEventResponseLiveData= MutableLiveData<ResponseEventModel>()
+    fun get(): LiveData<ResponseEventModel> {
+        return eventResponseLiveData
+    }
+    fun getLive(): LiveData<ResponseEventModel> {
+        return liveEventResponseLiveData
     }
 
-    fun getAdminEvents(oid:Int){
-        RetrofitInstances.service.getEvent(oid).enqueue(object: Callback<ResponseEventModel> {
+    fun getUpcomingEvents(){
+        RetrofitInstances.service.getupcomingEvent().enqueue(object: Callback<ResponseEventModel> {
             override fun onResponse(
                 call: Call<ResponseEventModel>,
                 response: Response<ResponseEventModel>
             ){
-                eventResposeLiveData.value = response.body()
-                Log.w("Sebastian",eventResposeLiveData.value.toString())
+                eventResponseLiveData.value = response.body()
+                Log.w("Sebastian",eventResponseLiveData.value.toString())
+
+            }
+            override fun onFailure(call: Call<ResponseEventModel>, t: Throwable) {
+                Log.d("TAG", t.message.toString())
+            }
+        })
+    }
+    fun getLiveEvents(){
+        RetrofitInstances.service.getliveEvent().enqueue(object: Callback<ResponseEventModel> {
+            override fun onResponse(
+                call: Call<ResponseEventModel>,
+                response: Response<ResponseEventModel>
+            ){
+                liveEventResponseLiveData.value = response.body()
+                Log.w("Sebastian",eventResponseLiveData.value.toString())
 
             }
             override fun onFailure(call: Call<ResponseEventModel>, t: Throwable) {

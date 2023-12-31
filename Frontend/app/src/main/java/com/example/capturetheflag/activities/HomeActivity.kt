@@ -20,7 +20,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.capturetheflag.R
 import com.example.capturetheflag.databinding.ActivityHomeBinding
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity(){
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityHomeBinding
@@ -52,16 +52,20 @@ class HomeActivity : AppCompatActivity() {
                     true
                 }
                     R.id.nav_home->{
+//                        binding.appBarHome.toolbar.title= "Home"
+//                        supportActionBar?.title ="Home"
                     navController.navigate(R.id.homefragment)
                         drawerLayout.closeDrawer(GravityCompat.START)  // Close the drawer
                         true
         }
                 R.id.nav_registeredHunt->{
+//                    binding.appBarHome.toolbar.title= "Registered Event"
                     navController.navigate(R.id.registerHuntFragment)
                     drawerLayout.closeDrawer(GravityCompat.START)  // Close the drawer
                     true
                 }
                 R.id.nav_history->{
+//                    binding.appBarHome.toolbar.title= "History"
                     navController.navigate(R.id.historyHuntFragment)
                     drawerLayout.closeDrawer(GravityCompat.START)  // Close the drawer
                     true
@@ -80,17 +84,24 @@ class HomeActivity : AppCompatActivity() {
             when(it.itemId){
             R.id.home->{
                 val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_home) as NavHostFragment
+//                binding.appBarHome.toolbar.title= "Home"
+//                supportActionBar?.title ="Home"
+
                 navController = navHostFragment.navController
                 navController.navigate(R.id.homefragment)
+
                 true
             }
             R.id.history->{
+//                binding.appBarHome.toolbar.title= "History"
                 val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_home) as NavHostFragment
                 navController = navHostFragment.navController
                 navController.navigate(R.id.historyHuntFragment)
                 true
             }
             R.id.reg_hunt->{
+//                binding.appBarHome.toolbar.title= "Registered Event"
+
                 val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_home) as NavHostFragment
                 navController = navHostFragment.navController
                 navController.navigate(R.id.registerHuntFragment)
@@ -119,7 +130,15 @@ class HomeActivity : AppCompatActivity() {
         return true
     }
     override fun onSupportNavigateUp(): Boolean {
+//        supportActionBar?.title ="Home"
         val navController = findNavController(R.id.nav_host_fragment_content_home)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
+//    fun updateTitleofToolbar(title:String){
+//        supportActionBar?.title =title
+//        Log.w("actionBAr", supportActionBar?.title.toString())
+//
+//    }
+
+
 }

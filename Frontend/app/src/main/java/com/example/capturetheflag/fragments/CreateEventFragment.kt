@@ -5,24 +5,26 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.capturetheflag.R
 import com.example.capturetheflag.databinding.FragmentCreateEventBinding
+import com.example.capturetheflag.databinding.LayoutQuestionDialogBinding
 import com.example.capturetheflag.models.EventX
 import com.example.capturetheflag.models.QuestionModel
 import com.example.capturetheflag.ui.CreateEventViewModel
 import com.example.capturetheflag.util.ImageUtil
 import com.example.capturetheflag.util.QuestionAdapter
 import com.example.capturetheflag.util.QuestionItemClickListner
-import com.google.android.material.button.MaterialButton
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
@@ -50,49 +52,30 @@ class CreateEventFragment : Fragment(),QuestionItemClickListner {
     private lateinit var problemList:ArrayList<QuestionModel>
     private lateinit var qAdapter:QuestionAdapter
     private lateinit var listner: QuestionItemClickListner
+    private lateinit var dialogBinding: LayoutQuestionDialogBinding
+    private lateinit var dialog : BottomSheetDialog
     private var posterUri:Uri?=null
     private var flagCount = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         listner = this
-
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding=FragmentCreateEventBinding.inflate(inflater,container,false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this)[CreateEventViewModel::class.java]
-        problemList = ArrayList()
-        etTitle = binding.etTitle
-        etDescription = binding.etDescription
-        etLocation = binding.etLocation
-        etOrganisation = binding.etLocation
-        etPrizes = binding.etPrizes
-        etStartDate = binding.etStartDate
-        etEndDate = binding.etEndDate
-        etStartTime = binding.etStartTime
-        etEndTime = binding.etEndTime
-        etFlagCount = binding.etFlagCount
-
+        initializeMemberVariables()
         etStartDate.setOnClickListener {
-            val datePicker = MaterialDatePicker.Builder.datePicker().build()
-            datePicker.show(childFragmentManager, "Select Start Date")
-            datePicker.addOnPositiveButtonClickListener {
-                etStartDate.setText(datePicker.headerText)
-            }
+            datePickerSetup()
         }
         etEndDate.setOnClickListener {
-            val datePicker = MaterialDatePicker.Builder.datePicker().build()
-            datePicker.show(childFragmentManager, "Select Start Date")
-            datePicker.addOnPositiveButtonClickListener {
-                etEndDate.setText(datePicker.headerText)
-            }
+           endDatePicker()
         }
         etStartTime.setOnClickListener {
          setStartTimePicker()
@@ -105,98 +88,148 @@ class CreateEventFragment : Fragment(),QuestionItemClickListner {
         }
         setUpQuestionRecyclerView()
         binding.btnAddQuestion.setOnClickListener {
-            val title = etTitle.text.toString()
-            val des = etDescription.text.toString()
-            val org = etOrganisation.text.toString()
-            val location = etLocation.text.toString()
-            val stDate = etStartDate.text.toString()
-            val endDate = etEndDate.text.toString()
-            val strtTime = etStartTime.text.toString()
-            val endTime = etEndTime.text.toString()
-            val flgCnt = etFlagCount.text.toString()
-            if (title.isEmpty() || des.isEmpty() || org.isEmpty() || location.isEmpty() || stDate.isEmpty() || endDate.isEmpty() || strtTime.isEmpty() || endTime.isEmpty()||flgCnt.isEmpty()) {
-                Toast.makeText(requireContext(), "Fill all the details!", Toast.LENGTH_SHORT).show()
-            } else {
-                flagCount = flgCnt.toInt()
-                if(problemList.size==0){
-                    var base64Poster:String?=null
-                    if(posterUri!=null){
-                       viewModel.viewModelScope.launch {
-                           base64Poster =
-                               ImageUtil.uriToBase64(requireContext().contentResolver, posterUri!!)
-                       }
+            setupQuestionAddDialog()
+        }
+    }
+
+
+
+
+
+    private fun setupQuestionAddDialog() {
+        val title = etTitle.text.toString()
+        val des = etDescription.text.toString()
+        val org = etOrganisation.text.toString()
+        val location = etLocation.text.toString()
+        val stDate = etStartDate.text.toString()
+        val endDate = etEndDate.text.toString()
+        val strtTime = etStartTime.text.toString()
+        val endTime = etEndTime.text.toString()
+        val flgCnt = etFlagCount.text.toString()
+        if (title.isEmpty() || des.isEmpty() || org.isEmpty() || location.isEmpty() || stDate.isEmpty() || endDate.isEmpty() || strtTime.isEmpty() || endTime.isEmpty()||flgCnt.isEmpty()) {
+            Toast.makeText(requireContext(), "Fill all the details!", Toast.LENGTH_SHORT).show()
+        } else {
+            flagCount = flgCnt.toInt()
+            if(problemList.size==0){
+                var base64Poster:String?=null
+                if(posterUri!=null){
+                    viewModel.viewModelScope.launch {
+                        base64Poster =
+                            ImageUtil.uriToBase64(requireContext().contentResolver, posterUri!!)
                     }
-
-                    val mEvent = EventX(flagCount,des, "$endDate $endTime", org,location,1,base64Poster,"$stDate $strtTime",title)
-
-                    viewModel.createEvent(mEvent)
-                    addQuestionDialog()
                 }
-                else if (problemList.size<flagCount)
+
+                val mEvent = EventX(flagCount,des, "$endDate $endTime", org,location,1,base64Poster,"$stDate $strtTime",title)
+                viewModel.createEvent(mEvent)
                 addQuestionDialog()
-                else{
-                    binding.btnAddQuestion.setText("Submit")
-                    Toast.makeText(requireContext(),"submit it",Toast.LENGTH_SHORT).show()
-                }
-
+            }
+            if(problemList.size==flagCount){
+                viewModel.addTasks(problemList)
+                val action = CreateEventFragmentDirections.actionCreateEventFragmentToFirstFragment()
+                findNavController().navigate(action)
             }
         }
+    }
 
+
+    private fun endDatePicker() {
+        val datePicker = MaterialDatePicker.Builder.datePicker().build()
+        datePicker.show(childFragmentManager, "Select Start Date")
+        datePicker.addOnPositiveButtonClickListener {
+            etEndDate.setText(datePicker.headerText)
+        }
+    }
+
+    private fun datePickerSetup() {
+        val datePicker = MaterialDatePicker.Builder.datePicker().build()
+        datePicker.show(childFragmentManager, "Select Start Date")
+        datePicker.addOnPositiveButtonClickListener {
+            etStartDate.setText(datePicker.headerText)
+        }
+    }
+
+    private fun initializeMemberVariables() {
+        viewModel = ViewModelProvider(this)[CreateEventViewModel::class.java]
+        problemList = ArrayList()
+        etTitle = binding.etTitle
+        etDescription = binding.etDescription
+        etLocation = binding.etLocation
+        etOrganisation = binding.etLocation
+        etPrizes = binding.etPrizes
+        etStartDate = binding.etStartDate
+        etEndDate = binding.etEndDate
+        etStartTime = binding.etStartTime
+        etEndTime = binding.etEndTime
+        etFlagCount = binding.etFlagCount
+        initializeBottomSheetDialog()
+    }
+
+    private fun initializeBottomSheetDialog() {
+        dialog = BottomSheetDialog(requireContext())
+        dialogBinding = LayoutQuestionDialogBinding.inflate(layoutInflater)
+        dialog.setContentView(dialogBinding.root)
+        dialog.window?.attributes?.windowAnimations  = R.style.DialogAnimation
     }
 
     private fun setUpQuestionRecyclerView() {
-        qAdapter = QuestionAdapter(problemList,listner)
+        qAdapter = QuestionAdapter(listner)
         binding.rvQuestionList.adapter = qAdapter
+        qAdapter.setData(problemList)
         binding.rvQuestionList.layoutManager = LinearLayoutManager(requireContext())
     }
 
-    @SuppressLint("MissingInflatedId")
+    @SuppressLint("MissingInflatedId", "SetTextI18n", "NotifyDataSetChanged")
     private fun addQuestionDialog() {
-                val qNo = (problemList.size+1).toString()
-                val headingText = "Add Question $qNo"
-                    val dialogLayout = layoutInflater.inflate(R.layout.layout_question_dialog, null)
-                    dialogLayout.findViewById<TextView>(R.id.heading).text = headingText
-                    val etQuestion = dialogLayout.findViewById<TextInputEditText>(R.id.et_ques)
-                    val etAnswer = dialogLayout.findViewById<TextInputEditText>(R.id.et_correctAnswer)
-                    val etUniqueCode = dialogLayout.findViewById<TextInputEditText>(R.id.et_uniqueCode)
-                    val btn = dialogLayout.findViewById<MaterialButton>(R.id.btn_generateCode)
-                    btn.setOnClickListener{
-                        val code = generateRandomCode(6)
-                        etUniqueCode.setText(code)
-                    }
-                    val builder = MaterialAlertDialogBuilder(requireActivity())
-                        .setView(dialogLayout)
-                        .setNegativeButton("Cancel") { _, _ ->
-                            // Handle cancellation if needed
-                        }
-                        .setPositiveButton("Submit") { _, _ ->
-                            val quesString = etQuestion.text.toString()
-                            val correctAnswer = etAnswer.text.toString()
-                            val unqCode = etUniqueCode.text.toString()
-
-                            if (quesString.isNotEmpty() && correctAnswer.isNotEmpty() && unqCode.isNotEmpty()) {
-                                val question = QuestionModel(quesString, correctAnswer, unqCode)
-                                problemList.add(question)
-                                qAdapter.notifyDataSetChanged()
-                            } else {
-                                Toast.makeText(requireActivity(), "Fill all the details!", Toast.LENGTH_LONG).show()
-                            }
-                        }
-
-                    val dialog = builder.create()
-                    dialog.show()
+        dialog.show()
+        if(problemList.size+1==flagCount){
+            dialogBinding.btnNext.text = "Add"
+        }
+        val qNo = (problemList.size+1).toString()
+        val headingText = "Add Question $qNo"
+        dialogBinding.heading.text = headingText
+        val etQuestion = dialogBinding.etQues
+        val etAnswer = dialogBinding.etCorrectAnswer
+        val etUniqueCode = dialogBinding.etUniqueCode
+        dialogBinding.btnGenerateCode.setOnClickListener{
+            val code = generateRandomCode()
+            etUniqueCode.setText(code)
+        }
+        dialogBinding.btnNext.setOnClickListener {
+            val quesString = etQuestion.text.toString()
+            val correctAnswer = etAnswer.text.toString()
+            val unqCode = etUniqueCode.text.toString()
+            if (quesString.isNotEmpty() && correctAnswer.isNotEmpty() && unqCode.isNotEmpty()) {
+                val question = QuestionModel(1,quesString, correctAnswer, unqCode)
+                problemList.add(question)
+                qAdapter.notifyDataSetChanged()
+//              qAdapter.addData(question)
+                dialog.dismiss()
+                Log.w("dialog","dismiss")
+                if(problemList.size<flagCount){
+                    etQuestion.setText("")
+                    etAnswer.setText("")
+                    etUniqueCode.setText("")
+                    addQuestionDialog()
+                } else {
+                    binding.btnAddQuestion.text = "Submit"
                 }
 
-    private fun generateRandomCode(length: Int): String {
+            } else {
+                Toast.makeText(requireActivity(), "Fill all the details!", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+
+
+    private fun generateRandomCode(): String {
         val alphanumericChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
         val random = Random.Default
         val code = StringBuilder()
-
-        repeat(length) {
+        repeat(6) {
             val randomIndex = random.nextInt(alphanumericChars.length)
             code.append(alphanumericChars[randomIndex])
         }
-
         return code.toString()
     }
 
@@ -205,14 +238,12 @@ class CreateEventFragment : Fragment(),QuestionItemClickListner {
         val currentTime = Calendar.getInstance()
         val hour = currentTime.get(Calendar.HOUR_OF_DAY)
         val minute = currentTime.get(Calendar.MINUTE)
-
         val timePicker = MaterialTimePicker.Builder()
             .setTimeFormat(TimeFormat.CLOCK_24H)
             .setHour(hour)
             .setMinute(minute)
             .setTitleText("Select Time")
             .build()
-
         timePicker.addOnPositiveButtonClickListener {
             val selectedHour = timePicker.hour
             val selectedMinute = timePicker.minute
@@ -225,14 +256,12 @@ class CreateEventFragment : Fragment(),QuestionItemClickListner {
         val currentTime = Calendar.getInstance()
         val hour = currentTime.get(Calendar.HOUR_OF_DAY)
         val minute = currentTime.get(Calendar.MINUTE)
-
         val timePicker = MaterialTimePicker.Builder()
             .setTimeFormat(TimeFormat.CLOCK_24H)
             .setHour(hour)
             .setMinute(minute)
             .setTitleText("Select Time")
             .build()
-
         timePicker.addOnPositiveButtonClickListener {
             val selectedHour = timePicker.hour
             val selectedMinute = timePicker.minute
@@ -246,7 +275,6 @@ class CreateEventFragment : Fragment(),QuestionItemClickListner {
         galleryIntent.type = "image/*"
         startActivityForResult(galleryIntent, 1)
     }
-
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -255,21 +283,16 @@ class CreateEventFragment : Fragment(),QuestionItemClickListner {
             posterUri=data.data
         }
     }
-
     override fun onQuestionClickListner(ques: QuestionModel) {
         showQuestionDialog(ques)
     }
     private fun showQuestionDialog(currQues:QuestionModel){
-
         val builder = MaterialAlertDialogBuilder(requireActivity())
-            .setMessage("Q$- ${currQues.question}\nAns- ${currQues.cAnswer}\nCode- ${currQues.unqCode}")
+            .setMessage("Q$- ${currQues.question}\nAns- ${currQues.answer}\nCode- ${currQues.unique_code}")
             .setNegativeButton("Cancel") { _, _ ->
-                // Handle cancellation if needed
             }
             .setPositiveButton("Okay") { _, _ ->
-
             }
-
         val dialog = builder.create()
         dialog.show()
     }

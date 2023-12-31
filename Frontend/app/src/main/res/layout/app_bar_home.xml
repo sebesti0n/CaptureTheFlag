@@ -13,13 +13,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:theme="@style/Theme.CaptureTheFlag.AppBarOverlay">
+       >
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/green"
+            app:title="CTF"
             app:popupTheme="@style/Theme.CaptureTheFlag.PopupOverlay" />
 
     </com.google.android.material.appbar.AppBarLayout>

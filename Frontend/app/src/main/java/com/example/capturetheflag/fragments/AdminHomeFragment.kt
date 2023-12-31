@@ -42,11 +42,10 @@ class AdminHomeFragment : Fragment(),EventItemClickListner {
         adapter = EventAdapter(listner = this)
         binding.rvAdminEvent.adapter = adapter
         binding.rvAdminEvent.layoutManager = LinearLayoutManager(requireContext())
-        getEventList()
-        adapter.setdata(eList)
-        adapter.notifyDataSetChanged()
+//        getEventList()
+//        adapter.setdata(eList)
+//        adapter.notifyDataSetChanged()
         Log.w("Sebastian nds",eList.toString())
-
         binding.fab.setOnClickListener{
         Navigation.findNavController(requireView()).navigate(R.id.action_FirstFragment_to_createEventFragment)
         }
@@ -71,12 +70,7 @@ class AdminHomeFragment : Fragment(),EventItemClickListner {
     override fun onEventClickListner(event: Event) {
        Log.w("sebastian dp",event.toString())
         val action = AdminHomeFragmentDirections.actionFirstFragmentToAdminEventFragment(event.event_id.toLong())
-//        Log.w("sebastian dp",event.toString())
         findNavController().navigate(action)
-//        parentFragmentManager.beginTransaction()
-//            .replace(R.id.nav_host_fragment_content_admin,fragment)
-//            .addToBackStack(null)
-//            .commit()
-//        Navigation.findNavController(requireView()).navigate(R.id.action_FirstFragment_to_adminEventFragment).
+
     }
 }

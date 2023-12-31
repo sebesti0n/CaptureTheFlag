@@ -1,30 +1,43 @@
 package com.example.capturetheflag.fragments
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
-import com.example.capturetheflag.ui.HomeFragmentViewModel
 import com.example.capturetheflag.R
+import com.example.capturetheflag.adapters.EventAdapter
 import com.example.capturetheflag.adapters.ViewPagerAdapter
 import com.example.capturetheflag.databinding.FragmentHomefragmentBinding
+import com.example.capturetheflag.helper.NetworkHelper
+import com.example.capturetheflag.models.Event
 import com.example.capturetheflag.models.PagerContent
+import com.example.capturetheflag.ui.HomeFragmentViewModel
+import com.example.capturetheflag.util.EventItemClickListner
 
-class HomeFragment : Fragment() {
+
+class HomeFragment : Fragment(),EventItemClickListner {
     private var _binding: FragmentHomefragmentBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: HomeFragmentViewModel
     private lateinit var viewPagerAdapter: ViewPagerAdapter
     private lateinit var viewPager: ViewPager
     private lateinit var mList:ArrayList<PagerContent>
+    private lateinit var mLiveList:ArrayList<Event>
+    private lateinit var mUpcomingEvent: ArrayList<Event>
+    private lateinit var adapter:EventAdapter
+    private lateinit var listner: EventItemClickListner
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        listner = this
         _binding = FragmentHomefragmentBinding.inflate(inflater, container ,false)
         return binding.root
     }
@@ -37,20 +50,44 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        val viewPager: CircularViewPager = binding.viewPager
-//
-//        val pageContents = listOf(
-//            PageContent(R.drawable.login_prev_ui, "Text for Page 1"),
-//            PageContent(R.drawable.logo_register_removebg_preview, "Text for Page 2"),
-//            PageContent(R.drawable.login, "Text for Page 3")
-//        )
-//
-//        val adapter = CircularViewPagerAdapter(childFragmentManager, pageContents)
-//        viewPager.adapter = adapter
-
+        initializeMembervariables()
         viewPager = binding.viewPager2
         loadcards()
+        val isConnected = NetworkHelper.isInternetAvailable(requireContext())
+        if(isConnected) {
+//            setupUpcomingEventRecyclerView()
+//            fetchUpcomingEventList()
+//            fetchLiveEventList()
+        }
+        else{
+            Toast.makeText(requireContext(),"Network Unavailable",Toast.LENGTH_SHORT).show()
+        }
+    }
 
+    private fun fetchLiveEventList() {
+        viewModel.getLiveEvents()
+        viewModel.getLive().observe(requireActivity()){
+            mLiveList = it.event
+        }
+    }
+
+    private fun fetchUpcomingEventList() {
+    viewModel.getUpcomingEvents()
+        viewModel.get().observe(requireActivity()){
+            mUpcomingEvent = it.event
+        }
+        adapter.setdata(mUpcomingEvent)
+    }
+
+    private fun setupUpcomingEventRecyclerView() {
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerView.adapter = adapter
+    }
+
+    private fun initializeMembervariables() {
+        mLiveList = ArrayList()
+        mUpcomingEvent = ArrayList()
+        adapter = EventAdapter(listner)
     }
 
     private fun loadcards() {
@@ -63,4 +100,11 @@ class HomeFragment : Fragment() {
         viewPagerAdapter.setInitialPosition(viewPager)
 
     }
+
+    override fun onEventClickListner(event: Event) {
+        val action = HomeFragmentDirections.actionHomefragmentToEventFragment(event.event_id.toLong())
+        findNavController().navigate(action)
+    }
+
+
 }

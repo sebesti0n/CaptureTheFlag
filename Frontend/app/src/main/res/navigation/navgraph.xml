@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/homefragment"
         android:name="com.example.capturetheflag.fragments.HomeFragment"
-        android:label="fragment_homefragment"
+        android:label="Home"
         tools:layout="@layout/fragment_homefragment" >
         <action
             android:id="@+id/action_homefragment_to_eventFragment"
@@ -17,7 +17,7 @@
     <fragment
         android:id="@+id/login"
         android:name="com.example.capturetheflag.fragments.Login"
-        android:label="fragment_login"
+        android:label="Login"
         tools:layout="@layout/fragment_login" >
         <action
             android:id="@+id/action_login_to_homefragment"
@@ -29,7 +29,7 @@
     <fragment
         android:id="@+id/registerFragment"
         android:name="com.example.capturetheflag.fragments.RegisterFragment"
-        android:label="fragment_register"
+        android:label="Register"
         tools:layout="@layout/fragment_register" >
         <action
             android:id="@+id/action_registerFragment_to_login"
@@ -41,7 +41,7 @@
     <fragment
         android:id="@+id/registerHuntFragment"
         android:name="com.example.capturetheflag.fragments.RegisterHuntFragment"
-        android:label="fragment_register_hunt"
+        android:label="Registered Event"
         tools:layout="@layout/fragment_register_hunt" >
         <action
             android:id="@+id/action_registerHuntFragment_to_eventFragment"
@@ -51,7 +51,7 @@
     <fragment
         android:id="@+id/historyHuntFragment"
         android:name="com.example.capturetheflag.fragments.HistoryHuntFragment"
-        android:label="fragment_history_hunt"
+        android:label="History"
         tools:layout="@layout/fragment_register_hunt" >
         <action
             android:id="@+id/action_historyHuntFragment_to_eventFragment"
@@ -61,9 +61,13 @@
     <fragment
         android:id="@+id/eventFragment"
         android:name="com.example.capturetheflag.fragments.EventFragment"
-        android:label="fragment_event"
+        android:label="Details"
         tools:layout="@layout/fragment_event" >
 
 
+        <argument
+            android:name="eid"
+            app:argType="long"
+            android:defaultValue="-1L" />
     </fragment>
 </navigation>

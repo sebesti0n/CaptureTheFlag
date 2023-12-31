@@ -12,12 +12,12 @@ import retrofit2.Response
 
 class HistoryHuntViewModel:ViewModel() {
     private var eventResposeLiveData= MutableLiveData<ResponseEventModel>()
-    fun get(): LiveData<ResponseEventModel>?{
-        return eventResposeLiveData!!
+    fun get(): LiveData<ResponseEventModel> {
+        return eventResposeLiveData
     }
 
-    fun getAdminEvents(oid:Int){
-        RetrofitInstances.service.getEvent(oid).enqueue(object: Callback<ResponseEventModel> {
+    fun getHistoryEvents(uid:Int){
+        RetrofitInstances.service.getPreviousEventbyId(uid).enqueue(object: Callback<ResponseEventModel> {
             override fun onResponse(
                 call: Call<ResponseEventModel>,
                 response: Response<ResponseEventModel>

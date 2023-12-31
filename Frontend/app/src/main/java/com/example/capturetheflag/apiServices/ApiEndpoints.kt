@@ -3,10 +3,12 @@ package com.example.capturetheflag.apiServices
 import com.example.capturetheflag.models.Event
 import com.example.capturetheflag.models.EventX
 import com.example.capturetheflag.models.LoginReponse
+import com.example.capturetheflag.models.QuestionModel
 import com.example.capturetheflag.models.RegisterResponse
 import com.example.capturetheflag.models.ResponseEventModel
 import com.example.capturetheflag.models.User
 import com.example.capturetheflag.models.UserLoginDetails
+import com.example.capturetheflag.models.taskResponseModel
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.http.Body
@@ -36,20 +38,32 @@ interface ApiEndpoints {
         @Query("owner")
         ownerID:Int
     ): Call<ResponseEventModel>
-    @GET("/admin/oneevent")
+    @GET("/admin/SingleEvent")
     fun getEventbyId(
         @Query("eid")
         eid:Int
     ): Call<ResponseEventModel>
     @GET("/event/register")
     fun getRegisteredEventbyId(
-        @Query("eid")
-        eid:Int
+        @Query("uid")
+        uid:Int
     ): Call<ResponseEventModel>
     @GET("/event/history")
     fun getPreviousEventbyId(
-        @Query("eid")
-        eid:Int
+        @Query("uid")
+        uid:Int
     ): Call<ResponseEventModel>
+    @GET("/event/live")
+    fun getliveEvent(): Call<ResponseEventModel>
+
+    @GET("/event/upcoming")
+    fun getupcomingEvent(): Call<ResponseEventModel>
+
+    @POST("/admin/addTask")
+    fun addTasks(
+        @Body
+        tList:ArrayList<QuestionModel>
+    ): Call<taskResponseModel>
+
 
 }
