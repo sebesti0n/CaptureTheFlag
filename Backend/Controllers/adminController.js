@@ -81,16 +81,22 @@ exports.addEvents = ( async(req,res)=>{
 
 
 
-exports.addQuestion = ( async(req,res) => {
+exports.addRiddles = ( async(req,res) => {
     try {
-        const{question_id,event_id,question,answer,unique_code}=req.body;
-        const data = await knex('questions').insert({
-            question_id:question_id,
-            event_id:event_id,
-            question:question,
-            answer:answer,
-            unique_code:unique_code
-        }).returning('*');
+        const rList=req.body;
+
+        // const data = await knex('questions').insert({
+        //     question_id:question_id,
+        //     event_id:event_id,
+        //     question:question,
+        //     answer:answer,
+        //     unique_code:unique_code
+        // });
+        console.log(rList)
+        await knex('questions').insert(rList)
+        const data = await knex('questions').returning('*');
+        console.log("inserted Successfully");
+
         res.status(200).json({success: true,message:"ok",question:data});
     } catch (error) {
         console.log(error);
