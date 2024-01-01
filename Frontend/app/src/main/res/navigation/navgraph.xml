@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_homefragment_to_eventFragment"
             app:destination="@id/eventFragment" />
+        <action
+            android:id="@+id/action_homefragment_to_contestFragment"
+            app:destination="@id/contestFragment" />
     </fragment>
     <fragment
         android:id="@+id/login"
@@ -69,5 +72,13 @@
             android:name="eid"
             app:argType="long"
             android:defaultValue="-1L" />
+        <action
+            android:id="@+id/action_eventFragment_to_contestFragment"
+            app:destination="@id/contestFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/contestFragment"
+        android:name="com.example.capturetheflag.fragments.ContestFragment"
+        android:label="fragment_contest"
+        tools:layout="@layout/fragment_contest" />
 </navigation>

@@ -23,7 +23,7 @@ import com.example.capturetheflag.models.QuestionModel
 import com.example.capturetheflag.ui.CreateEventViewModel
 import com.example.capturetheflag.util.ImageUtil
 import com.example.capturetheflag.util.QuestionAdapter
-import com.example.capturetheflag.util.QuestionItemClickListner
+import com.example.capturetheflag.util.QuestionItemClickListener
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -35,7 +35,7 @@ import java.util.Calendar
 import kotlin.random.Random
 
 
-class CreateEventFragment : Fragment(),QuestionItemClickListner {
+class CreateEventFragment : Fragment(),QuestionItemClickListener {
     private var _binding:FragmentCreateEventBinding?=null
     private val binding get() = _binding!!
     private lateinit var viewModel: CreateEventViewModel
@@ -51,7 +51,7 @@ class CreateEventFragment : Fragment(),QuestionItemClickListner {
     private lateinit var etFlagCount:TextInputEditText
     private lateinit var problemList:ArrayList<QuestionModel>
     private lateinit var qAdapter:QuestionAdapter
-    private lateinit var listner: QuestionItemClickListner
+    private lateinit var listner: QuestionItemClickListener
     private lateinit var dialogBinding: LayoutQuestionDialogBinding
     private lateinit var dialog : BottomSheetDialog
     private var posterUri:Uri?=null
@@ -120,11 +120,11 @@ class CreateEventFragment : Fragment(),QuestionItemClickListner {
                 }
 
                 val mEvent = EventX(flagCount,des, "$endDate $endTime", org,location,1,base64Poster,"$stDate $strtTime",title)
-                viewModel.createEvent(mEvent)
+//                viewModel.createEvent(mEvent)
                 addQuestionDialog()
             }
             if(problemList.size==flagCount){
-                viewModel.addTasks(problemList)
+//                viewModel.addTasks(problemList)
                 val action = CreateEventFragmentDirections.actionCreateEventFragmentToFirstFragment()
                 findNavController().navigate(action)
             }

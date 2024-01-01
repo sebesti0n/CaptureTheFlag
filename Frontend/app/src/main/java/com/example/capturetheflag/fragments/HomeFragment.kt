@@ -18,10 +18,10 @@ import com.example.capturetheflag.helper.NetworkHelper
 import com.example.capturetheflag.models.Event
 import com.example.capturetheflag.models.PagerContent
 import com.example.capturetheflag.ui.HomeFragmentViewModel
-import com.example.capturetheflag.util.EventItemClickListner
+import com.example.capturetheflag.util.EventItemClickListener
 
 
-class HomeFragment : Fragment(),EventItemClickListner {
+class HomeFragment : Fragment(),EventItemClickListener {
     private var _binding: FragmentHomefragmentBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: HomeFragmentViewModel
@@ -31,7 +31,7 @@ class HomeFragment : Fragment(),EventItemClickListner {
     private lateinit var mLiveList:ArrayList<Event>
     private lateinit var mUpcomingEvent: ArrayList<Event>
     private lateinit var adapter:EventAdapter
-    private lateinit var listner: EventItemClickListner
+    private lateinit var listner: EventItemClickListener
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,6 +61,10 @@ class HomeFragment : Fragment(),EventItemClickListner {
         }
         else{
             Toast.makeText(requireContext(),"Network Unavailable",Toast.LENGTH_SHORT).show()
+        }
+        binding.headingUpcomingEvent.setOnClickListener {
+            val action = HomeFragmentDirections.actionHomefragmentToContestFragment()
+            findNavController().navigate(action)
         }
     }
 

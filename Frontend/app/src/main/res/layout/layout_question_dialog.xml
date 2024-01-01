@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
+    android:backgroundTint="@color/bgBlack"
     android:layout_height="wrap_content"
+    style="@style/BottomSheetStyle"
     android:padding="10dp">
 <com.google.android.material.textview.MaterialTextView
     android:layout_width="wrap_content"
@@ -11,8 +13,9 @@
     android:textStyle="bold"
     android:textSize="25dp"
     android:id="@+id/heading"
+    android:textColor="@color/textColor"
     android:layout_gravity="center"
-    android:text="Add Question 1"/>
+    android:text="Add Riddle 1"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
@@ -28,6 +31,8 @@
         app:boxStrokeColor="@color/green"
         app:startIconDrawable="@drawable/ic_prize"
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+        android:textColorHint="@color/textColor"
+        app:hintTextColor="@color/textColor"
 
         >
     <com.google.android.material.textfield.TextInputEditText
@@ -35,10 +40,11 @@
         android:layout_width="match_parent"
         android:paddingHorizontal="5dp"
         android:layout_height="52dp"
-        android:hint="Question"
+        android:hint="Riddle"
         android:textSize="15sp"
-
-        android:inputType="number"
+        android:textColor="@color/textColor"
+        android:backgroundTint="@color/transparentBgBlack"
+        android:inputType="text"
 
         />
     </com.google.android.material.textfield.TextInputLayout>
@@ -57,6 +63,9 @@
         app:boxStrokeWidth="3dp"
         app:boxStrokeColor="@color/green"
         app:startIconDrawable="@drawable/ic_prize"
+        android:textColorHint="@color/textColor"
+        app:hintTextColor="@color/textColor"
+
         >
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/et_correctAnswer"
@@ -66,6 +75,8 @@
         android:hint="Correct Answers"
         android:textSize="15sp"
         android:inputType="textMultiLine"
+        android:textColor="@color/textColor"
+        android:backgroundTint="@color/transparentBgBlack"
 
         />
     </com.google.android.material.textfield.TextInputLayout>
@@ -88,6 +99,8 @@
             android:layout_weight="2"
             app:boxStrokeColor="@color/green"
             app:startIconDrawable="@drawable/ic_prize"
+            android:textColorHint="@color/textColor"
+            app:hintTextColor="@color/textColor"
             >
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_uniqueCode"
@@ -101,6 +114,8 @@
                 android:focusableInTouchMode="false"
                 android:textSize="15sp"
                 android:inputType="text"
+                android:textColor="@color/textColor"
+                android:backgroundTint="@color/transparentBgBlack"
 
                 />
 
@@ -118,6 +133,8 @@
         android:layout_height="65dp"
         android:id="@+id/btn_next"
         android:text="Next"
+        android:backgroundTint="@color/green"
         android:textSize="25sp"
+        android:textColor="@color/darktextcolor"
         android:textStyle="bold"/>
 </LinearLayout>

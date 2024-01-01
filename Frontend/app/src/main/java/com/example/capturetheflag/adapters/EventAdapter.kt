@@ -1,7 +1,6 @@
 package com.example.capturetheflag.adapters
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,14 +8,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.capturetheflag.R
 import com.example.capturetheflag.models.Event
-import com.example.capturetheflag.models.EventX
-import com.example.capturetheflag.util.EventItemClickListner
+import com.example.capturetheflag.util.EventItemClickListener
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-class EventAdapter(private val listner: EventItemClickListner):
+class EventAdapter(private val listner: EventItemClickListener):
     RecyclerView.Adapter<EventAdapter.EventViewHolder>() {
 
         private var list :ArrayList<Event> = arrayListOf()

@@ -51,7 +51,7 @@
                     app:hintAnimationEnabled="true"
                     android:autofillHints="emailAddress"
                     app:boxStrokeWidth="3dp"
-                    app:boxStrokeColor="@color/white"
+                    app:boxStrokeColor="@color/bgBlack"
                     >
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_firstname"
@@ -77,7 +77,7 @@
                     app:hintAnimationEnabled="true"
                     android:autofillHints="emailAddress"
                     app:boxStrokeWidth="3dp"
-                    app:boxStrokeColor="@color/white"
+                    app:boxStrokeColor="@color/bgBlack"
                     >
 
 
@@ -107,7 +107,7 @@
                 app:hintAnimationEnabled="true"
                 android:autofillHints="emailAddress"
                 app:boxStrokeWidth="3dp"
-                app:boxStrokeColor="@color/white"
+                app:boxStrokeColor="@color/bgBlack"
                 >
 
 
@@ -133,7 +133,7 @@
                 app:boxCornerRadiusBottomStart="19dp"
                 app:boxCornerRadiusTopEnd="19dp"
                 app:boxStrokeWidth="3dp"
-                app:boxStrokeColor="@color/white"
+                app:boxStrokeColor="@color/bgBlack"
                 android:imeOptions="actionNext"
 
                 >
@@ -161,7 +161,7 @@
                 app:boxCornerRadiusBottomStart="19dp"
                 app:boxCornerRadiusTopEnd="19dp"
                 app:boxStrokeWidth="3dp"
-                app:boxStrokeColor="@color/white"
+                app:boxStrokeColor="@color/bgBlack"
                 android:imeOptions="actionNext"
 
                 >
@@ -188,7 +188,7 @@
                 app:boxCornerRadiusBottomStart="19dp"
                 app:boxCornerRadiusTopEnd="19dp"
                 app:boxStrokeWidth="3dp"
-                app:boxStrokeColor="@color/white"
+                app:boxStrokeColor="@color/bgBlack"
                 android:imeOptions="actionNext"
 
                 >
@@ -217,7 +217,7 @@
 
                 app:boxCornerRadiusTopEnd="19dp"
                 app:boxStrokeWidth="3dp"
-                app:boxStrokeColor="@color/white"
+                app:boxStrokeColor="@color/bgBlack"
                 >
 
 

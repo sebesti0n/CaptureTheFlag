@@ -2,6 +2,6 @@ package com.example.capturetheflag.util
 
 import com.example.capturetheflag.models.Event
 
-interface EventItemClickListner {
+interface EventItemClickListener {
     fun onEventClickListner(event: Event)
 }

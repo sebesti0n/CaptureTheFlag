@@ -45,8 +45,8 @@
         app:layout_constraintStart_toStartOf="parent"
         android:scrollIndicators="left"
         android:background="@color/green"
-        app:itemIconTint="@color/light_yellow"
-        app:itemTextColor="@color/light_yellow"
+        app:itemIconTint="@color/bgBlack"
+        app:itemTextColor="@color/bgBlack"
         app:menu="@menu/nav_menu"
         />
 

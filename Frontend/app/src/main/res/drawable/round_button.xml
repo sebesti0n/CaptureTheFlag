@@ -1,5 +1,5 @@
 <!-- res/drawable/oval_button.xml -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@color/white" />
+    <solid android:color="@color/bgBlack" />
     <corners android:radius="50dp" />
 </shape>

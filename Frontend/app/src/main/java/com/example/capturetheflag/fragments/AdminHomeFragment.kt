@@ -15,10 +15,10 @@ import com.example.capturetheflag.adapters.EventAdapter
 import com.example.capturetheflag.databinding.FragmentAdminHomeBinding
 import com.example.capturetheflag.models.Event
 import com.example.capturetheflag.ui.AdminHomeViewModel
-import com.example.capturetheflag.util.EventItemClickListner
+import com.example.capturetheflag.util.EventItemClickListener
 
 
-class AdminHomeFragment : Fragment(),EventItemClickListner {
+class AdminHomeFragment : Fragment(),EventItemClickListener {
 
     private var _binding: FragmentAdminHomeBinding? = null
     private val binding get() = _binding!!

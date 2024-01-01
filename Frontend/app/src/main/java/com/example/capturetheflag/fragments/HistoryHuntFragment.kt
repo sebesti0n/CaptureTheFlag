@@ -8,22 +8,19 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.capturetheflag.R
 import com.example.capturetheflag.adapters.EventAdapter
-import com.example.capturetheflag.databinding.FragmentRegisterBinding
 import com.example.capturetheflag.databinding.FragmentRegisterHuntBinding
 import com.example.capturetheflag.models.Event
-import com.example.capturetheflag.models.ResponseEventModel
 import com.example.capturetheflag.ui.HistoryHuntViewModel
-import com.example.capturetheflag.util.EventItemClickListner
+import com.example.capturetheflag.util.EventItemClickListener
 
-class HistoryHuntFragment:Fragment(),EventItemClickListner {
+class HistoryHuntFragment:Fragment(),EventItemClickListener {
     private lateinit var viewModel: HistoryHuntViewModel
     private var _binding: FragmentRegisterHuntBinding?=null
     private val binding get() = _binding!!
     private lateinit var eList:ArrayList<Event>
     private lateinit var adapter:EventAdapter
-    private lateinit var listner: EventItemClickListner
+    private lateinit var listner: EventItemClickListener
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

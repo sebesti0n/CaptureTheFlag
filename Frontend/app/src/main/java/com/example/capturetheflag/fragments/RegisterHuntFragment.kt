@@ -8,15 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.capturetheflag.R
 import com.example.capturetheflag.adapters.EventAdapter
 import com.example.capturetheflag.databinding.FragmentRegisterHuntBinding
 import com.example.capturetheflag.models.Event
-import com.example.capturetheflag.ui.HistoryHuntViewModel
 import com.example.capturetheflag.ui.RegisterHuntViewModel
-import com.example.capturetheflag.util.EventItemClickListner
+import com.example.capturetheflag.util.EventItemClickListener
 
-class RegisterHuntFragment : Fragment(),EventItemClickListner{
+class RegisterHuntFragment : Fragment(), EventItemClickListener{
 
 
 
@@ -25,7 +23,7 @@ class RegisterHuntFragment : Fragment(),EventItemClickListner{
     private val binding get() = _binding!!
     private lateinit var eList:ArrayList<Event>
     private lateinit var adapter: EventAdapter
-    private lateinit var listner: EventItemClickListner
+    private lateinit var listner: EventItemClickListener
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,5 +56,7 @@ class RegisterHuntFragment : Fragment(),EventItemClickListner{
         val action = RegisterHuntFragmentDirections.actionRegisterHuntFragmentToEventFragment(event.event_id.toLong())
         findNavController().navigate(action)
     }
+
+
 
 }
