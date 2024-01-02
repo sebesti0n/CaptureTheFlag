@@ -4,8 +4,10 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.capturetheflag.apiServices.RetrofitInstances
 import com.example.capturetheflag.models.ResponseEventModel
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,34 +22,40 @@ class HomeFragmentViewModel : ViewModel() {
         return liveEventResponseLiveData
     }
 
-    fun getUpcomingEvents(){
-        RetrofitInstances.service.getupcomingEvent().enqueue(object: Callback<ResponseEventModel> {
-            override fun onResponse(
-                call: Call<ResponseEventModel>,
-                response: Response<ResponseEventModel>
-            ){
-                eventResponseLiveData.value = response.body()
-                Log.w("Sebastian",eventResponseLiveData.value.toString())
+    fun getUpcomingEvents() {
+        viewModelScope.launch {
+            RetrofitInstances.service.getupcomingEvent()
+                .enqueue(object : Callback<ResponseEventModel> {
+                    override fun onResponse(
+                        call: Call<ResponseEventModel>,
+                        response: Response<ResponseEventModel>
+                    ) {
+                        eventResponseLiveData.value = response.body()
+                        Log.w("Sebastian", eventResponseLiveData.value.toString())
 
-            }
-            override fun onFailure(call: Call<ResponseEventModel>, t: Throwable) {
-                Log.d("TAG", t.message.toString())
-            }
-        })
+                    }
+
+                    override fun onFailure(call: Call<ResponseEventModel>, t: Throwable) {
+                        Log.d("TAG", t.message.toString())
+                    }
+                })
+        }
     }
     fun getLiveEvents(){
-        RetrofitInstances.service.getliveEvent().enqueue(object: Callback<ResponseEventModel> {
-            override fun onResponse(
-                call: Call<ResponseEventModel>,
-                response: Response<ResponseEventModel>
-            ){
-                liveEventResponseLiveData.value = response.body()
-                Log.w("Sebastian",eventResponseLiveData.value.toString())
+        viewModelScope.launch{
+            RetrofitInstances.service.getliveEvent().enqueue(object: Callback<ResponseEventModel> {
+                override fun onResponse(
+                    call: Call<ResponseEventModel>,
+                    response: Response<ResponseEventModel>
+                ){
+                    liveEventResponseLiveData.value = response.body()
+                    Log.w("Sebastian",eventResponseLiveData.value.toString())
 
-            }
-            override fun onFailure(call: Call<ResponseEventModel>, t: Throwable) {
-                Log.d("TAG", t.message.toString())
-            }
-        })
+                }
+                override fun onFailure(call: Call<ResponseEventModel>, t: Throwable) {
+                    Log.d("TAG", t.message.toString())
+                }
+            })
+        }
     }
 }

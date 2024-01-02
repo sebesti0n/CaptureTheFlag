@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.example.capturetheflag.R
@@ -22,6 +23,7 @@ import com.example.capturetheflag.models.UserLoginDetails
 import com.example.capturetheflag.sharedprefrences.userPreferences
 import com.example.capturetheflag.ui.LoginViewModel
 import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Response
@@ -91,33 +93,36 @@ class Login : Fragment() {
 
     private fun actionLoginButton() {
         val loginDetails = UserLoginDetails(emailEditText.text.toString(), passwordEditText.text.toString())
-        RetrofitInstances.service.login(loginDetails).enqueue(object : retrofit2.Callback<LoginReponse> {
-            override fun onResponse(call: Call<LoginReponse>, response: Response<LoginReponse>) {
-                Log.w("sebestian",response.toString())
-                if (response.isSuccessful){
-                    val receivedata = response.body()
-                    if (receivedata != null  ) {
-                        if(receivedata.success == true){
-                            toastMessage("Login successfully")
-                            sharedPref.logOut()
-                            sharedPref.saveUserCredentials(receivedata.userDetails.Email,false,"token")
-                            moveToHome()
-                        } else {
-                            toastMessage(receivedata.message);
+        viewLifecycleOwner.lifecycleScope.launch {
+            RetrofitInstances.service.login(loginDetails).enqueue(object : retrofit2.Callback<LoginReponse> {
+                override fun onResponse(call: Call<LoginReponse>, response: Response<LoginReponse>) {
+                    Log.w("sebestian",response.toString())
+                    if (response.isSuccessful){
+                        val receivedata = response.body()
+                        if (receivedata != null  ) {
+                            if(receivedata.success == true){
+                                toastMessage("Login successfully")
+                                sharedPref.logOut()
+                                sharedPref.saveUserCredentials(receivedata.userDetails.Email,false,"token")
+                                moveToHome()
+                            } else {
+                                toastMessage(receivedata.message);
+                            }
                         }
                     }
+                    else{
+                        toastMessage("unknown error")
+                    }
                 }
-                else{
-                    toastMessage("unknown error")
+
+                override fun onFailure(call: Call<LoginReponse>, t: Throwable) {
+                    Log.w("sebestion",t)
+                    toastMessage("Unknown Error!")
                 }
-            }
 
-            override fun onFailure(call: Call<LoginReponse>, t: Throwable) {
-                Log.w("sebestion",t)
-                toastMessage("Unknown Error!")
-            }
+            })
+        }
 
-        })
 
     }
 
