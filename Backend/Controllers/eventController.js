@@ -10,6 +10,8 @@ exports.upcomingEvents = (async (req,res)=>{
         res.status(200).json({success: true,message:"ok",event:events});
     }catch (err) {
         res.status(500).json({success: false,message:"unknown Error!",event:null});
+    }finally{
+        knex.destroy();
     }
 });
 
@@ -26,6 +28,9 @@ exports.liveEvents = ( async(req,res)=>{
         res.status(200).json({success: true,message:"ok",event:events});
     } catch (error) {
         res.status(500).json({success: false, message:"unknown Error!", event:null});
+    }
+    finally{
+        knex.destroy();
     }
 });
 
@@ -49,6 +54,8 @@ exports.registerUserinEvents = ( async(req,res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json({success: false, message:"unknown Error!", event:null});
+    } finally{
+        knex.destroy();
     }
 });
 
