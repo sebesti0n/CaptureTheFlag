@@ -10,8 +10,6 @@ exports.upcomingEvents = (async (req,res)=>{
         res.status(200).json({success: true,message:"ok",event:events});
     }catch (err) {
         res.status(500).json({success: false,message:"unknown Error!",event:null});
-    }finally{
-        knex.destroy();
     }
 });
 
@@ -29,9 +27,7 @@ exports.liveEvents = ( async(req,res)=>{
     } catch (error) {
         res.status(500).json({success: false, message:"unknown Error!", event:null});
     }
-    finally{
-        knex.destroy();
-    }
+    
 });
 
 
@@ -54,9 +50,7 @@ exports.registerUserinEvents = ( async(req,res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json({success: false, message:"unknown Error!", event:null});
-    } finally{
-        knex.destroy();
-    }
+    } 
 });
 
 
@@ -84,9 +78,7 @@ exports.isRegisterforUserforEvents = ( async(req,res) => {
     } catch (error) {
         res.status(403).json({is_registered:-2});
           
-    } finally{
-        knex.destroy();
-    }
+    } 
 });
 
 
@@ -104,8 +96,6 @@ exports.registeredEventforUser = (async(req, res) => {
     } catch (error) {
         console.log(error);
         res.status(505).json({success:false,message:"something went wrong",event:null});
-    }finally{
-        knex.destroy();
     }
 });
 
@@ -125,7 +115,5 @@ try {
         console.log(error);
         res.status(505).json({success:false,message:"something went wrong",event:null});
     
-}finally{
-    knex.destroy();
 }
 });

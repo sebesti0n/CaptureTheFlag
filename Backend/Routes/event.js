@@ -8,6 +8,6 @@ router.get('/upcoming',eventcontroller.upcomingEvents);
 router.get('/live',eventcontroller.liveEvents);
 router.get('/register',eventcontroller.registeredEventforUser)
 router.get('/history',eventcontroller.historyEventofUser)
-router.post('/submit',answercontroller.submitAnswer);
+router.get('/submit',answercontroller.submitAnswer);
 module.exports = router;
 
