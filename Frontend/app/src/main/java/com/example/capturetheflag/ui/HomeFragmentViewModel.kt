@@ -23,7 +23,6 @@ class HomeFragmentViewModel : ViewModel() {
     }
 
     fun getUpcomingEvents() {
-        viewModelScope.launch {
             RetrofitInstances.service.getupcomingEvent()
                 .enqueue(object : Callback<ResponseEventModel> {
                     override fun onResponse(
@@ -31,7 +30,7 @@ class HomeFragmentViewModel : ViewModel() {
                         response: Response<ResponseEventModel>
                     ) {
                         eventResponseLiveData.value = response.body()
-                        Log.w("Sebastian", eventResponseLiveData.value.toString())
+                        Log.w("Sebastian viewModel", eventResponseLiveData.value.toString())
 
                     }
 
@@ -39,10 +38,8 @@ class HomeFragmentViewModel : ViewModel() {
                         Log.d("TAG", t.message.toString())
                     }
                 })
-        }
     }
     fun getLiveEvents(){
-        viewModelScope.launch{
             RetrofitInstances.service.getliveEvent().enqueue(object: Callback<ResponseEventModel> {
                 override fun onResponse(
                     call: Call<ResponseEventModel>,
@@ -57,5 +54,4 @@ class HomeFragmentViewModel : ViewModel() {
                 }
             })
         }
-    }
 }

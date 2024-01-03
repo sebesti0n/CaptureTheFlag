@@ -7,9 +7,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.example.capturetheflag.databinding.FragmentEventBinding
+import com.example.capturetheflag.models.Event
 import com.example.capturetheflag.ui.EventViewModel
 
 class EventFragment : Fragment() {
@@ -17,6 +19,8 @@ class EventFragment : Fragment() {
     private val binding get() = _binding!!
     private val args: EventFragmentArgs by navArgs()
     private lateinit var viewModel: EventViewModel
+    private var eid:Long=-1
+    private lateinit var event: Event
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -25,12 +29,40 @@ class EventFragment : Fragment() {
         _binding = FragmentEventBinding.inflate(inflater, container, false)
         return binding.root
     }
-
-    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.w("sebastian idk","sex")
-        val eid = args.eid
+        eid = args.eid
+        updateUI()
+        fetchRegisterStatusforEventOnOpen()
+        binding.btnRegisteredEvent.setOnClickListener {
+        fetchRegisterStatusforEvent()
+        }
+    }
+
+    private fun fetchRegisterStatusforEventOnOpen() {
+        viewModel.getFirstStatus(1,eid.toInt())
+        viewModel.onOpenStatus().observe(requireActivity()){
+            if(it==1)
+                binding.btnRegisteredEvent.setText("Unregister")
+            else
+                binding.btnRegisteredEvent.setText("Register")
+        }
+    }
+
+    private fun fetchRegisterStatusforEvent() {
+        viewModel.registerUserForEvent(1,eid.toInt())
+        viewModel.getStatus().observe(requireActivity()) {
+            if(it==1)
+                binding.btnRegisteredEvent.setText("Unregister")
+            else
+                binding.btnRegisteredEvent.setText("Register")
+        }
+
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun updateUI() {
         if (eid.toInt() ==-1){
             binding.contentDescription.text =  "Not found"
             binding.contentDetails.text = "Not Found"
@@ -39,15 +71,14 @@ class EventFragment : Fragment() {
         else{
             viewModel.getAdminEventbyId(eid.toInt())
             viewModel.get()?.observe(requireActivity()) {
-                val event = it.event.get(0)
+                event = it.event.get(0)
                 Log.w("sebastian","event")
                 binding.contentDescription.text =  event.description
                 binding.contentDetails.text = "Start At: ${event.start_time} \n End At: ${event.end_time}"
                 binding.contentPrizes.text = "Amazing Goodies"
+
             }
+
         }
-
     }
-
-
 }

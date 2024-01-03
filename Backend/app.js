@@ -7,6 +7,7 @@ const app= express();
 const PORT = 3008;
 
 app.use(express.json());
+app.use(express.urlencoded({extended:true}));
 app.use('/',routes);
 app.use('/event',eventRouter);
 app.use('/admin',adminRouter);

@@ -19,7 +19,6 @@ class HistoryHuntViewModel:ViewModel() {
     }
 
     fun getHistoryEvents(uid:Int) {
-        viewModelScope.launch {
             RetrofitInstances.service.getPreviousEventbyId(uid)
                 .enqueue(object : Callback<ResponseEventModel> {
                     override fun onResponse(
@@ -36,5 +35,5 @@ class HistoryHuntViewModel:ViewModel() {
                     }
                 })
         }
-    }
+
 }

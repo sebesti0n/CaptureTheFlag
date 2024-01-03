@@ -93,7 +93,7 @@ class Login : Fragment() {
 
     private fun actionLoginButton() {
         val loginDetails = UserLoginDetails(emailEditText.text.toString(), passwordEditText.text.toString())
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             RetrofitInstances.service.login(loginDetails).enqueue(object : retrofit2.Callback<LoginReponse> {
                 override fun onResponse(call: Call<LoginReponse>, response: Response<LoginReponse>) {
                     Log.w("sebestian",response.toString())

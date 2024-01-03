@@ -56,26 +56,44 @@ exports.registerUserinEvents = ( async(req,res) => {
 
 
 
-exports.isRegisterforUserforEvents = ( async(req,res) => {
+exports.isUserRegisterforEvents = ( async(req,res) => {
     try {
         const eid =req.query.eid;
         const uid = req.query.uid;
-        const is_registered = await knex('user_event_participation')
+        const is_register = await knex('user_event_participation')
         .select('is_registered')
         .where('event_id',eid)
         .andWhere('user_id',uid)
+        console.log(is_register);
         
-        if((await is_registered).length > 0){
-            if(is_registered[0]==true)
+        if(is_register.length > 0){
+            const flg = is_register[0].is_registered
+            if(flg){
+                await knex('user_event_participation')
+                        .update({is_registered:false})
+                        .where('event_id', eid)
+                .andWhere('user_id', uid);
+                res.status(200).json({is_registered:0});
+            
+        }else {
+            await knex('user_event_participation')
+                        .update({is_registered:true})
+                        .where('event_id', eid)
+                .andWhere('user_id', uid);
             res.status(200).json({is_registered:1});
-            else {
-            res.status(200).json({is_registered:0});
             }
         }
         else{
-            res.status(200).json({is_registered:-1});
+           await knex('user_event_participation')
+            .insert({
+                user_id:uid, 
+                event_id:eid, 
+                is_registered:true
+            })
+            res.status(200).json({is_registered:1});
         }
     } catch (error) {
+        console.log(error)
         res.status(403).json({is_registered:-2});
           
     } 
@@ -116,4 +134,33 @@ try {
         res.status(505).json({success:false,message:"something went wrong",event:null});
     
 }
+});
+
+exports.onOpenEventPage = (async (req,res)=>{
+    try{
+    const eid =req.query.eid;
+    const uid = req.query.uid;
+    const data = await knex('user_event_participation')
+        .select('is_registered')
+        .where('event_id',eid)
+        .andWhere('user_id',uid)
+        if(data.length>0){
+            const flg = data[0].is_registered;
+            if(flg){
+                res.status(200).json({is_registered:1});
+            }
+            else{
+                res.status(200).json({is_registered:0});
+            }
+        }else{
+            res.status(200).json({is_registered:0});
+        }
+        // console.log(data[0].is_registered);
+        // res.json(data);
+    } catch(err){
+        console.log(err);
+        res.status(505).json({success:false,message:"something went wrong",event:null});
+    }
+
+
 });

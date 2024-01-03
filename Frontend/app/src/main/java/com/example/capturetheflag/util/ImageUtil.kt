@@ -13,8 +13,7 @@ import java.io.InputStream
 
 class ImageUtil{
     companion object{
-        suspend fun uriToBase64(contentResolver: ContentResolver,uri: Uri): String {
-            return withContext(Dispatchers.IO) {
+        fun uriToBase64(contentResolver: ContentResolver,uri: Uri): String {
                 var inputStream: InputStream? = null
                 try {
                     inputStream = contentResolver.openInputStream(uri)
@@ -22,11 +21,11 @@ class ImageUtil{
                     val byteArrayOutputStream = ByteArrayOutputStream()
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
                     val byteArray = byteArrayOutputStream.toByteArray()
-                    Base64.encodeToString(byteArray, Base64.DEFAULT)
+                   return Base64.encodeToString(byteArray, Base64.DEFAULT)
                 } finally {
                     inputStream?.close()
                 }
             }
         }
     }
-}
+

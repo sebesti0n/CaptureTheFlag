@@ -52,8 +52,7 @@ class HomeActivity : AppCompatActivity(){
                     true
                 }
                     R.id.nav_home->{
-//                        binding.appBarHome.toolbar.title= "Home"
-//                        supportActionBar?.title ="Home"
+
                     navController.navigate(R.id.homefragment)
                         drawerLayout.closeDrawer(GravityCompat.START)  // Close the drawer
                         true

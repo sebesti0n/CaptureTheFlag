@@ -9,5 +9,7 @@ router.get('/live',eventcontroller.liveEvents);
 router.get('/register',eventcontroller.registeredEventforUser)
 router.get('/history',eventcontroller.historyEventofUser)
 router.get('/submit',answercontroller.submitAnswer);
+router.get('/registration/status',eventcontroller.isUserRegisterforEvents);
+router.get('/openStatus',eventcontroller.onOpenEventPage);
 module.exports = router;
 

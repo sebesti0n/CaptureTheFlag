@@ -1,6 +1,7 @@
 package com.example.capturetheflag.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,30 +43,26 @@ class HomeFragment : Fragment(),EventItemClickListener {
         return binding.root
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this)[HomeFragmentViewModel::class.java]
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(this)[HomeFragmentViewModel::class.java]
+
         initializeMembervariables()
         viewPager = binding.viewPager2
         loadcards()
         val isConnected = NetworkHelper.isInternetAvailable(requireContext())
         if(isConnected) {
-//            setupUpcomingEventRecyclerView()
-//            fetchUpcomingEventList()
-//            fetchLiveEventList()
+            setupUpcomingEventRecyclerView()
+            fetchUpcomingEventList()
+            fetchLiveEventList()
         }
         else{
             Toast.makeText(requireContext(),"Network Unavailable",Toast.LENGTH_SHORT).show()
         }
-        binding.headingUpcomingEvent.setOnClickListener {
-            val action = HomeFragmentDirections.actionHomefragmentToContestFragment()
-            findNavController().navigate(action)
-        }
+//        binding.headingUpcomingEvent.setOnClickListener {
+//            val action = HomeFragmentDirections.actionHomefragmentToContestFragment()
+//            findNavController().navigate(action)
+//        }
     }
 
     private fun fetchLiveEventList() {
@@ -74,13 +71,18 @@ class HomeFragment : Fragment(),EventItemClickListener {
             mLiveList = it.event
         }
     }
-
+//
     private fun fetchUpcomingEventList() {
     viewModel.getUpcomingEvents()
         viewModel.get().observe(requireActivity()){
             mUpcomingEvent = it.event
+            adapter.setdata(it.event)
+            adapter.notifyDataSetChanged()
+            Log.w("sebastian Home",it.event.toString())
+
         }
-        adapter.setdata(mUpcomingEvent)
+    Log.w("sebastian Home",mUpcomingEvent.toString())
+
     }
 
     private fun setupUpcomingEventRecyclerView() {
@@ -109,6 +111,6 @@ class HomeFragment : Fragment(),EventItemClickListener {
         val action = HomeFragmentDirections.actionHomefragmentToEventFragment(event.event_id.toLong())
         findNavController().navigate(action)
     }
-
+//
 
 }

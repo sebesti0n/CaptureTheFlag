@@ -23,7 +23,6 @@ private var registerResposeLiveData= MutableLiveData<RegisterResponse>()
 
 
     fun register(user:User){
-        viewModelScope.launch {
             RetrofitInstances.service.register(user).enqueue(object : Callback<RegisterResponse> {
                 override fun onResponse(
                     call: Call<RegisterResponse>,
@@ -37,8 +36,5 @@ private var registerResposeLiveData= MutableLiveData<RegisterResponse>()
                 }
 
             })
-        }
-
-
     }
 }

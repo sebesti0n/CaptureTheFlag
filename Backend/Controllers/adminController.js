@@ -59,6 +59,7 @@ exports.addEvents = ( async(req,res)=>{
         const {title , location, description,organisation, start_time, end_time, owner_id, No_of_questions, posterImage} = req.body;
         const startTimeDate = await getIstTimestamp(start_time);
         const endTimeDate = await getIstTimestamp(end_time);
+        console.log(posterImage);
 
         const data = await knex('events').insert({
             title:title,

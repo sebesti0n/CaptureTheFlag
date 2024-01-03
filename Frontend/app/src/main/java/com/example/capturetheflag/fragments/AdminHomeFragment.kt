@@ -42,9 +42,9 @@ class AdminHomeFragment : Fragment(),EventItemClickListener {
         adapter = EventAdapter(listner = this)
         binding.rvAdminEvent.adapter = adapter
         binding.rvAdminEvent.layoutManager = LinearLayoutManager(requireContext())
-//        getEventList()
-//        adapter.setdata(eList)
-//        adapter.notifyDataSetChanged()
+        getEventList()
+        adapter.setdata(eList)
+        adapter.notifyDataSetChanged()
         Log.w("Sebastian nds",eList.toString())
         binding.fab.setOnClickListener{
         Navigation.findNavController(requireView()).navigate(R.id.action_FirstFragment_to_createEventFragment)

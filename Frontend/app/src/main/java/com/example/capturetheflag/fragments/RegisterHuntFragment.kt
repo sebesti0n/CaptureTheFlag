@@ -57,6 +57,4 @@ class RegisterHuntFragment : Fragment(), EventItemClickListener{
         findNavController().navigate(action)
     }
 
-
-
 }

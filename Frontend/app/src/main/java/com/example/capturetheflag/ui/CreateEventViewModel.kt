@@ -17,6 +17,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class CreateEventViewModel: ViewModel() {
+
     private var eventResposeLiveData= MutableLiveData<ResponseEventModel>()
     fun get(): LiveData<ResponseEventModel>?{
         return eventResposeLiveData!!
@@ -24,7 +25,6 @@ class CreateEventViewModel: ViewModel() {
 
 
     fun createEvent(event: EventX){
-        viewModelScope.launch {
             RetrofitInstances.service.createEvent(event)
                 .enqueue(object : Callback<ResponseEventModel> {
                     override fun onResponse(
@@ -39,10 +39,9 @@ class CreateEventViewModel: ViewModel() {
                     }
 
                 })
-        }
+
     }
     fun addTasks(tList: ArrayList<QuestionModel>) {
-        viewModelScope.launch {
             RetrofitInstances.service.addTasks(tList).enqueue(object : Callback<taskResponseModel> {
                 override fun onResponse(
                     call: Call<taskResponseModel>,
@@ -57,5 +56,5 @@ class CreateEventViewModel: ViewModel() {
 
             })
         }
-    }
+
 }

@@ -19,7 +19,6 @@ class RegisterHuntViewModel : ViewModel() {
     }
 
     fun getRegisteredEvents(uid:Int) {
-        viewModelScope.launch {
             RetrofitInstances.service.getRegisteredEventbyId(uid)
                 .enqueue(object : Callback<ResponseEventModel> {
                     override fun onResponse(
@@ -36,5 +35,5 @@ class RegisterHuntViewModel : ViewModel() {
                     }
                 })
         }
-    }
+
 }

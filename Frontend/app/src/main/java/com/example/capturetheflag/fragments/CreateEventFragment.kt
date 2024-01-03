@@ -30,6 +30,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import kotlin.random.Random
@@ -54,6 +56,8 @@ class CreateEventFragment : Fragment(),QuestionItemClickListener {
     private lateinit var listner: QuestionItemClickListener
     private lateinit var dialogBinding: LayoutQuestionDialogBinding
     private lateinit var dialog : BottomSheetDialog
+    private lateinit var storage:FirebaseStorage
+    private lateinit var storageRef:StorageReference
     private var posterUri:Uri?=null
     private var flagCount = 0
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,6 +75,7 @@ class CreateEventFragment : Fragment(),QuestionItemClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initializeMemberVariables()
+        setupFirebaseStorage()
         etStartDate.setOnClickListener {
             datePickerSetup()
         }
@@ -92,8 +97,10 @@ class CreateEventFragment : Fragment(),QuestionItemClickListener {
         }
     }
 
-
-
+    private fun setupFirebaseStorage() {
+        storage=FirebaseStorage.getInstance()
+        storageRef = storage.reference
+    }
 
 
     private fun setupQuestionAddDialog() {
@@ -111,24 +118,50 @@ class CreateEventFragment : Fragment(),QuestionItemClickListener {
         } else {
             flagCount = flgCnt.toInt()
             if(problemList.size==0){
-                var base64Poster:String?=null
-                if(posterUri!=null){
-                    viewModel.viewModelScope.launch {
-                        base64Poster =
-                            ImageUtil.uriToBase64(requireContext().contentResolver, posterUri!!)
-                    }
-                }
+                val imageurl = getimageurl()
 
-                val mEvent = EventX(flagCount,des, "$endDate $endTime", org,location,1,base64Poster,"$stDate $strtTime",title)
-//                viewModel.createEvent(mEvent)
+                val mEvent = EventX(flagCount,des, "$endDate $endTime", org,location,1,imageurl,"$stDate $strtTime",title)
+                Log.w("sebastian Poster",mEvent.toString())
+                viewModel.createEvent(mEvent)
                 addQuestionDialog()
             }
             if(problemList.size==flagCount){
-//                viewModel.addTasks(problemList)
+                viewModel.addTasks(problemList)
                 val action = CreateEventFragmentDirections.actionCreateEventFragmentToFirstFragment()
                 findNavController().navigate(action)
             }
         }
+    }
+
+    private fun getimageurl(): String {
+        var imageUrl = ""
+        if (posterUri != null) {
+            val imageRef = storageRef.child("images/${posterUri!!.lastPathSegment}")
+            val uploadTask = imageRef.putFile(posterUri!!)
+
+            uploadTask.addOnFailureListener { exception ->
+                Toast.makeText(requireContext(), "Upload failed: ${exception.message}", Toast.LENGTH_SHORT).show()
+                Log.w("seb_IMG_UPLOAD", exception.message.toString())
+            }.addOnSuccessListener { _ ->
+                imageRef.downloadUrl.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val downloadUri = task.result
+                        imageUrl = downloadUri.toString()
+                        Log.d("seb_IMG_erl", "$imageUrl")
+                        Toast.makeText(requireContext(), "Upload successful! URL: $imageUrl", Toast.LENGTH_SHORT).show()
+
+                        // Use imageUrl here or pass it to another function
+                        // For example:
+                        // useImageUrl(imageUrl)
+                    } else {
+                        Toast.makeText(requireContext(), "Failed to get download URL", Toast.LENGTH_SHORT).show()
+                        Log.w("seb_IMG_DWNLOAD", "getDownloadUrlTask:failure", task.exception)
+                    }
+                }
+            }
+        }
+
+        return imageUrl
     }
 
 

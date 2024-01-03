@@ -20,7 +20,6 @@ class AdminHomeViewModel: ViewModel() {
     }
 
     fun getAdminEvents(oid:Int) {
-        viewModelScope.launch {
             RetrofitInstances.service.getEvent(oid).enqueue(object : Callback<ResponseEventModel> {
                 override fun onResponse(
                     call: Call<ResponseEventModel>,
@@ -36,5 +35,5 @@ class AdminHomeViewModel: ViewModel() {
                 }
             })
         }
-    }
+
 }
