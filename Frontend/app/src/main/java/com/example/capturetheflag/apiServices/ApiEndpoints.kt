@@ -2,14 +2,17 @@ package com.example.capturetheflag.apiServices
 
 import com.example.capturetheflag.models.EventX
 import com.example.capturetheflag.models.LoginReponse
+import com.example.capturetheflag.models.NextRiddleModel
 import com.example.capturetheflag.models.QuestionModel
 import com.example.capturetheflag.models.RegisterResponse
 import com.example.capturetheflag.models.ResponseEventModel
+import com.example.capturetheflag.models.ResponseQuestionModel
 import com.example.capturetheflag.models.StatusModel
 import com.example.capturetheflag.models.User
 import com.example.capturetheflag.models.UserLoginDetails
 import com.example.capturetheflag.models.taskResponseModel
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -77,7 +80,20 @@ interface ApiEndpoints {
         @Query("eid")
         eid:Int
     ) : Call<StatusModel>
-
+    @GET("/event/get-riddles")
+    suspend fun getRiddles(
+        @Query("uid")
+        uid:Int,
+        @Query("eid")
+        eid:Int
+    ):Response<ResponseQuestionModel>
+    @GET("/event/submit")
+    suspend fun getSubmissionDetails(
+        @Query("eid")
+        eid:Int,
+        @Query("uid")
+        uid:Int
+    ):Response<NextRiddleModel>
 
 
 

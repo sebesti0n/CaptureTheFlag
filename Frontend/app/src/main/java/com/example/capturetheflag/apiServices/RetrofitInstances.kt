@@ -14,7 +14,7 @@ class RetrofitInstances {
             val okHttpClient = OkHttpClient.Builder()
                 .addInterceptor(interceptor)
                 .build()
-            Retrofit.Builder().baseUrl("https://c665-2409-40e4-3f-6e7b-6869-8534-7a1-aea9.ngrok-free.app/")
+            Retrofit.Builder().baseUrl("https://e3eb-2409-40e5-104b-28b2-23c9-747e-368-384f.ngrok-free.app/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient)
                 .build()

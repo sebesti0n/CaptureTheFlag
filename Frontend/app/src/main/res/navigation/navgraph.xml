@@ -80,5 +80,10 @@
         android:id="@+id/contestFragment"
         android:name="com.example.capturetheflag.fragments.ContestFragment"
         android:label="fragment_contest"
-        tools:layout="@layout/fragment_contest" />
+        tools:layout="@layout/fragment_contest" >
+        <argument
+            android:name="eid"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </fragment>
 </navigation>

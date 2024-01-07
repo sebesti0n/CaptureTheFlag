@@ -28,7 +28,6 @@ class HomeFragment : Fragment(),EventItemClickListener {
     private lateinit var viewModel: HomeFragmentViewModel
     private lateinit var viewPagerAdapter: ViewPagerAdapter
     private lateinit var viewPager: ViewPager
-    private lateinit var mList:ArrayList<PagerContent>
     private lateinit var mLiveList:ArrayList<Event>
     private lateinit var mUpcomingEvent: ArrayList<Event>
     private lateinit var adapter:EventAdapter
@@ -49,7 +48,7 @@ class HomeFragment : Fragment(),EventItemClickListener {
 
         initializeMembervariables()
         viewPager = binding.viewPager2
-        loadcards()
+//        loadcards()
         val isConnected = NetworkHelper.isInternetAvailable(requireContext())
         if(isConnected) {
             setupUpcomingEventRecyclerView()
@@ -69,6 +68,12 @@ class HomeFragment : Fragment(),EventItemClickListener {
         viewModel.getLiveEvents()
         viewModel.getLive().observe(requireActivity()){
             mLiveList = it.event
+            if(mLiveList.size>0) {
+                loadcards()
+                binding.viewPager2.visibility = View.VISIBLE
+            }
+            else
+                binding.viewPager2.visibility = View.INVISIBLE
         }
     }
 //
@@ -97,11 +102,7 @@ class HomeFragment : Fragment(),EventItemClickListener {
     }
 
     private fun loadcards() {
-        mList= ArrayList()
-        mList.add(PagerContent(R.drawable.login_prev_ui,"text 1"))
-        mList.add(PagerContent(R.drawable.bg_login,"text 2"))
-        mList.add(PagerContent(R.drawable.login,"text 3"))
-        viewPagerAdapter = context?.let { ViewPagerAdapter(it,mList) }!!
+        viewPagerAdapter = context?.let { ViewPagerAdapter(it,mLiveList,listner) }!!
         viewPager.adapter=viewPagerAdapter
         viewPagerAdapter.setInitialPosition(viewPager)
 

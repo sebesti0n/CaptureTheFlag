@@ -8,10 +8,13 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
+import com.bumptech.glide.Glide
 import com.example.capturetheflag.R
+import com.example.capturetheflag.models.Event
 import com.example.capturetheflag.models.PagerContent
+import com.example.capturetheflag.util.EventItemClickListener
 
-class ViewPagerAdapter(private val context:Context, private val list:ArrayList<PagerContent>): PagerAdapter() {
+class ViewPagerAdapter(private val context:Context, private val list:ArrayList<Event>,private val listner: EventItemClickListener): PagerAdapter() {
 
     override fun getCount(): Int {
 return  Int.MAX_VALUE
@@ -36,10 +39,13 @@ return  Int.MAX_VALUE
         val ivPager = view.findViewById<ImageView>(R.id.iv_pager)
 
         if (list.size > 0) {
-            ivPager.setImageResource(list[adjustedPosition].imageResId)
+            Glide.with(context)
+                .load(list[adjustedPosition].posterImage)
+                .into(ivPager)
         }
 
         view.setOnClickListener {
+            listner.onEventClickListner(list[adjustedPosition])
             Toast.makeText(context, "view Pager clicked", Toast.LENGTH_SHORT).show()
         }
 

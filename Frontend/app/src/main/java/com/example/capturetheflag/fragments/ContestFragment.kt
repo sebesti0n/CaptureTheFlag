@@ -1,9 +1,7 @@
 package com.example.capturetheflag.fragments
 
 import android.Manifest
-import android.content.DialogInterface
 import android.content.Intent
-import android.content.pm.PackageManager
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
@@ -12,39 +10,84 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.NavArgs
+import androidx.navigation.fragment.navArgs
 import com.example.capturetheflag.databinding.FragmentContestBinding
 import com.example.capturetheflag.helper.PermissionHelper
+import com.example.capturetheflag.models.QuestionModel
+import com.example.capturetheflag.ui.ContestViewModel
 import com.example.capturetheflag.util.PermissionListener
 import com.google.zxing.integration.android.IntentIntegrator
 
 class ContestFragment : Fragment(),PermissionListener{
     private var _binding:FragmentContestBinding?=null
     private val binding get() = _binding!!
+    private val args:ContestFragmentArgs by navArgs()
     private lateinit var viewModel: ContestViewModel
     private lateinit var permissionHelper: PermissionHelper
-//    private lateinit var listener:PermissionListener
+    private var riddleNumber:Int=-1
+    private var eid =-1
+    private lateinit var rList:ArrayList<QuestionModel>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentContestBinding.inflate(inflater,container,false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        eid = args.eid
         setupViewModel()
+        rList = ArrayList()
         permissionHelper = PermissionHelper(this,this)
         binding.btnScan.setOnClickListener {
             Log.w("sebastian ","button clicked")
             permissionHelper.checkPermissions(Manifest.permission.CAMERA)
         }
+        binding.submit.setOnClickListener {
+            handleOnClickofSubmitButton()
+        }
+        getRiddlesList()
+        onLaunchTimeRiddleNumber()
+    }
+
+    private fun handleOnClickofSubmitButton() {
+        val code = binding.etCode.text.toString()
+        if (code != rList[riddleNumber].unique_code) {
+            Toast.makeText(requireContext(), "You are at Wrong place", Toast.LENGTH_SHORT).show()
+        } else {
+            if (riddleNumber == -1) {
+                binding.riddleDiscription.text = "Not Found"
+            } else if (riddleNumber >= rList.size) {
+                Toast.makeText(requireContext(), "done ", Toast.LENGTH_SHORT).show()
+            } else {
+                onLaunchTimeRiddleNumber()
+                binding.riddleDiscription.setText(rList[riddleNumber].question)
+            }
+        }
+    }
+
+    private fun getRiddlesList() {
+        viewModel.getRiddles(eid,1)
+        viewModel.get().observe(requireActivity()){
+            rList = it!!
+            Log.i("sebastian rList",it.toString())
+        }
+    }
+
+    private fun onLaunchTimeRiddleNumber() {
+        viewModel.getSubmissionDetails(eid,1)
+        viewModel.getNo().observe(requireActivity()){
+            riddleNumber=it!!
+        }
     }
 
 
     private fun setupViewModel() {
-        viewModel = ViewModelProvider(this).get(ContestViewModel::class.java)
+        viewModel = ViewModelProvider(this)[ContestViewModel::class.java]
     }
 
     private fun setupScanner() {
@@ -58,6 +101,7 @@ class ContestFragment : Fragment(),PermissionListener{
         integrator.initiateScan()
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -70,7 +114,7 @@ class ContestFragment : Fragment(),PermissionListener{
                 Toast.makeText(requireContext(), "Cancelled", Toast.LENGTH_SHORT).show();
             } else {
                 Log.w("sebastian scanResult",scanResult.contents.toString())
-                binding.etTitle.setText(scanResult.contents.toString())
+                binding.etCode.setText(scanResult.contents.toString())
             }
         } else {
             Log.w("sebastian scanResult","not return")
@@ -80,8 +124,9 @@ class ContestFragment : Fragment(),PermissionListener{
     }
 
 
+
     override fun shouldShowRationaleInfo() {
-                permissionHelper.launchPermissionDialog(Manifest.permission.CAMERA)
+        permissionHelper.launchPermissionDialog(Manifest.permission.CAMERA)
     }
 
     override fun isPermissionGranted(isGranted: Boolean) {
@@ -89,7 +134,6 @@ class ContestFragment : Fragment(),PermissionListener{
 
         if(isGranted){
             Log.w("sebastian scanResult","granted")
-
 //            Toast.makeText(requireContext(), "Permission Granted", Toast.LENGTH_SHORT).show()
             setupScanner()
         }

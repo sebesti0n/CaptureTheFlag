@@ -11,5 +11,6 @@ router.get('/history',eventcontroller.historyEventofUser)
 router.get('/submit',answercontroller.submitAnswer);
 router.get('/registration/status',eventcontroller.isUserRegisterforEvents);
 router.get('/openStatus',eventcontroller.onOpenEventPage);
+router.get('/get-riddles',answercontroller.getRiddles);
 module.exports = router;
 

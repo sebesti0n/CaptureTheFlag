@@ -1,8 +1,6 @@
 package com.example.capturetheflag.fragments
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -10,9 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.capturetheflag.R
@@ -21,7 +19,6 @@ import com.example.capturetheflag.databinding.LayoutQuestionDialogBinding
 import com.example.capturetheflag.models.EventX
 import com.example.capturetheflag.models.QuestionModel
 import com.example.capturetheflag.ui.CreateEventViewModel
-import com.example.capturetheflag.util.ImageUtil
 import com.example.capturetheflag.util.QuestionAdapter
 import com.example.capturetheflag.util.QuestionItemClickListener
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -29,10 +26,10 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.MaterialTimePicker.INPUT_MODE_CLOCK
 import com.google.android.material.timepicker.TimeFormat
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import kotlinx.coroutines.launch
 import java.util.Calendar
 import kotlin.random.Random
 
@@ -60,6 +57,12 @@ class CreateEventFragment : Fragment(),QuestionItemClickListener {
     private lateinit var storageRef:StorageReference
     private var posterUri:Uri?=null
     private var flagCount = 0
+    private var getContent = registerForActivityResult(ActivityResultContracts.GetContent()){
+        if(it!=null){
+            binding.EventPoster.setImageURI(it)
+            posterUri=it
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         listner = this
@@ -119,7 +122,7 @@ class CreateEventFragment : Fragment(),QuestionItemClickListener {
             flagCount = flgCnt.toInt()
             if(problemList.size==0){
                 val imageurl = getimageurl()
-
+                Log.w("sebastian Poster",imageurl)
                 val mEvent = EventX(flagCount,des, "$endDate $endTime", org,location,1,imageurl,"$stDate $strtTime",title)
                 Log.w("sebastian Poster",mEvent.toString())
                 viewModel.createEvent(mEvent)
@@ -136,7 +139,7 @@ class CreateEventFragment : Fragment(),QuestionItemClickListener {
     private fun getimageurl(): String {
         var imageUrl = ""
         if (posterUri != null) {
-            val imageRef = storageRef.child("images/${posterUri!!.lastPathSegment}")
+            val imageRef = storageRef.child("/images/${posterUri!!.lastPathSegment}")
             val uploadTask = imageRef.putFile(posterUri!!)
 
             uploadTask.addOnFailureListener { exception ->
@@ -147,12 +150,8 @@ class CreateEventFragment : Fragment(),QuestionItemClickListener {
                     if (task.isSuccessful) {
                         val downloadUri = task.result
                         imageUrl = downloadUri.toString()
-                        Log.d("seb_IMG_erl", "$imageUrl")
+                        Log.d("seb_IMG_erl", imageUrl)
                         Toast.makeText(requireContext(), "Upload successful! URL: $imageUrl", Toast.LENGTH_SHORT).show()
-
-                        // Use imageUrl here or pass it to another function
-                        // For example:
-                        // useImageUrl(imageUrl)
                     } else {
                         Toast.makeText(requireContext(), "Failed to get download URL", Toast.LENGTH_SHORT).show()
                         Log.w("seb_IMG_DWNLOAD", "getDownloadUrlTask:failure", task.exception)
@@ -272,7 +271,8 @@ class CreateEventFragment : Fragment(),QuestionItemClickListener {
         val hour = currentTime.get(Calendar.HOUR_OF_DAY)
         val minute = currentTime.get(Calendar.MINUTE)
         val timePicker = MaterialTimePicker.Builder()
-            .setTimeFormat(TimeFormat.CLOCK_24H)
+            .setTimeFormat(TimeFormat.CLOCK_12H)
+            .setInputMode(INPUT_MODE_CLOCK)
             .setHour(hour)
             .setMinute(minute)
             .setTitleText("Select Time")
@@ -290,7 +290,8 @@ class CreateEventFragment : Fragment(),QuestionItemClickListener {
         val hour = currentTime.get(Calendar.HOUR_OF_DAY)
         val minute = currentTime.get(Calendar.MINUTE)
         val timePicker = MaterialTimePicker.Builder()
-            .setTimeFormat(TimeFormat.CLOCK_24H)
+            .setTimeFormat(TimeFormat.CLOCK_12H)
+            .setInputMode(INPUT_MODE_CLOCK)
             .setHour(hour)
             .setMinute(minute)
             .setTitleText("Select Time")
@@ -303,18 +304,8 @@ class CreateEventFragment : Fragment(),QuestionItemClickListener {
         }
         timePicker.show(childFragmentManager, timePicker.toString())
     }
-    private fun uploadPoster(){
-        val galleryIntent = Intent(Intent.ACTION_PICK)
-        galleryIntent.type = "image/*"
-        startActivityForResult(galleryIntent, 1)
-    }
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode==1&&resultCode==Activity.RESULT_OK&&data!=null){
-            binding.EventPoster.setImageURI(data.data)
-            posterUri=data.data
-        }
+    private fun uploadPoster() {
+        getContent.launch("image/*")
     }
     override fun onQuestionClickListner(ques: QuestionModel) {
         showQuestionDialog(ques)

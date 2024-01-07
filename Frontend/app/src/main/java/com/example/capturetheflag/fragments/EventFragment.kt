@@ -9,7 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.Glide
 import com.example.capturetheflag.databinding.FragmentEventBinding
 import com.example.capturetheflag.models.Event
 import com.example.capturetheflag.ui.EventViewModel
@@ -36,8 +38,11 @@ class EventFragment : Fragment() {
         updateUI()
         fetchRegisterStatusforEventOnOpen()
         binding.btnRegisteredEvent.setOnClickListener {
-        fetchRegisterStatusforEvent()
+//        fetchRegisterStatusforEvent()
+            val action = EventFragmentDirections.actionEventFragmentToContestFragment(eid.toInt())
+            findNavController().navigate(action)
         }
+
     }
 
     private fun fetchRegisterStatusforEventOnOpen() {
@@ -76,6 +81,10 @@ class EventFragment : Fragment() {
                 binding.contentDescription.text =  event.description
                 binding.contentDetails.text = "Start At: ${event.start_time} \n End At: ${event.end_time}"
                 binding.contentPrizes.text = "Amazing Goodies"
+                val imgview = binding.banner
+                Glide.with(requireContext())
+                    .load(event.posterImage)
+                    .into(imgview)
 
             }
 
