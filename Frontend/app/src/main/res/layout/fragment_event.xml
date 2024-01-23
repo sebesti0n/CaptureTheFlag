@@ -20,6 +20,16 @@
     android:textStyle="bold"
     android:backgroundTint="@color/green"
     />
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/countDownTimer"
+        app:layout_constraintBottom_toTopOf="@+id/btn_registeredEvent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="5dp"
+        android:text="YYYY:MM:DD:HH:MM:SS"
+        android:textColor="@color/textColor"
+        android:textSize="18sp"/>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"

@@ -81,19 +81,20 @@ interface ApiEndpoints {
         eid:Int
     ) : Call<StatusModel>
     @GET("/event/get-riddles")
-    suspend fun getRiddles(
-        @Query("uid")
-        uid:Int,
-        @Query("eid")
-        eid:Int
-    ):Response<ResponseQuestionModel>
-    @GET("/event/submit")
-    suspend fun getSubmissionDetails(
+    fun getRiddles(
         @Query("eid")
         eid:Int,
         @Query("uid")
         uid:Int
-    ):Response<NextRiddleModel>
+
+    ):Call<ResponseQuestionModel>
+    @GET("/event/submit")
+    fun getSubmissionDetails(
+        @Query("eid")
+        eid:Int,
+        @Query("uid")
+        uid:Int
+    ):Call<NextRiddleModel>
 
 
 

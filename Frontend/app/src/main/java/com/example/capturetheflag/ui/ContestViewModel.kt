@@ -1,17 +1,27 @@
 package com.example.capturetheflag.ui
 
+import android.app.Application
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.capturetheflag.apiServices.RetrofitInstances
+import com.example.capturetheflag.models.NextRiddleModel
 import com.example.capturetheflag.models.QuestionModel
+import com.example.capturetheflag.models.ResponseQuestionModel
+import com.example.capturetheflag.sharedprefrences.userPreferences
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-class ContestViewModel : ViewModel() {
+class ContestViewModel(
+    private val app:Application
+) : AndroidViewModel(app) {
     private var riddlesLivedata= MutableLiveData<ArrayList<QuestionModel>>()
     private var nextRiddleNo = MutableLiveData<Int?>()
     fun get():LiveData<ArrayList<QuestionModel>>{
@@ -20,45 +30,57 @@ class ContestViewModel : ViewModel() {
     fun getNo():LiveData<Int?>{
         return nextRiddleNo
     }
-
-    fun getRiddles(eid: Int, uid: Int) {
-        viewModelScope.launch {
+    private val session = userPreferences.getInstance(app.applicationContext)
+    fun getUID() = session.getUID()
+    private val id = session.getUID()
+    fun getRiddles(eid: Int) {
             try {
-                val response = RetrofitInstances.service.getRiddles(eid, uid)
-                if (response.isSuccessful && response.body() != null) {
-                    Log.d("sebastian riddleList",response.body().toString())
-                    withContext(Dispatchers.Main){
-                        val rList = response.body()!!.questions
+                val response = RetrofitInstances.service.getRiddles(eid, id)
+                response.enqueue(object : Callback<ResponseQuestionModel>{
+                    override fun onResponse(
+                        call: Call<ResponseQuestionModel>,
+                        response: Response<ResponseQuestionModel>
+                    ) {
+                        val rList = response.body()!!.riddles
+                        Log.i("seb contest VM","response ${response} \n qList ${rList}")
                         riddlesLivedata.postValue(rList)
                     }
 
-                } else {
-                    Log.d("sebastian riddleList", "Unsuccessful response or empty body")
-                }
+                    override fun onFailure(call: Call<ResponseQuestionModel>, t: Throwable) {
+                        Log.d("sebastian riddleList", "Unsuccessful response or empty body")
+                    }
+
+                })
             } catch (e: Exception) {
                 e.printStackTrace()
                 Log.d("sebastian riddleList", "Exception occurred: ${e.message}")
             }
-        }
+
     }
-    fun getSubmissionDetails(eid: Int, uid: Int){
-        viewModelScope.launch {
+    fun getSubmissionDetails(eid: Int,){
             try {
-                val res = RetrofitInstances.service.getSubmissionDetails(eid, uid)
-                if (res.isSuccessful && res.body()!=null){
-                    Log.d("sebastian submissionDetails",res.body().toString())
-                    val rNo = res.body()
-                    if (rNo != null) {
-                        nextRiddleNo.postValue(rNo.next)
+                val res = RetrofitInstances.service.getSubmissionDetails(eid, id)
+                res.enqueue(object: Callback<NextRiddleModel>{
+                    override fun onResponse(
+                        call: Call<NextRiddleModel>,
+                        response: Response<NextRiddleModel>
+                    ) { Log.d("sebastian submissionDetails",response.body().toString())
+                        val rNo = response.body()
+                        if (rNo != null) {
+                            nextRiddleNo.postValue(rNo.next)
+                        }
                     }
-                }else{
-                    Log.d("sebastian riddleNo", "getting error while this")
-                }
+
+                    override fun onFailure(call: Call<NextRiddleModel>, t: Throwable) {
+                        Log.d("sebastian riddleNo", "getting error while this")
+                    }
+
+                })
             }catch(e:Exception){
                 e.printStackTrace()
                 Log.d("sebastian riddleno", "Exception occurred: ${e.message}")
             }
         }
-    }
+
 
 }

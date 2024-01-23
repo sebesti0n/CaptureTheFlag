@@ -71,7 +71,8 @@ class ContestFragment : Fragment(),PermissionListener{
     }
 
     private fun getRiddlesList() {
-        viewModel.getRiddles(eid,1)
+        viewModel.getRiddles(eid)
+        Log.i("seb contest","eid${eid}")
         viewModel.get().observe(requireActivity()){
             rList = it!!
             Log.i("sebastian rList",it.toString())
@@ -79,7 +80,7 @@ class ContestFragment : Fragment(),PermissionListener{
     }
 
     private fun onLaunchTimeRiddleNumber() {
-        viewModel.getSubmissionDetails(eid,1)
+        viewModel.getSubmissionDetails(eid)
         viewModel.getNo().observe(requireActivity()){
             riddleNumber=it!!
         }

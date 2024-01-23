@@ -39,8 +39,10 @@ return  Int.MAX_VALUE
         val ivPager = view.findViewById<ImageView>(R.id.iv_pager)
 
         if (list.size > 0) {
+            var imageurl="https://firebasestorage.googleapis.com/v0/b/capture-the-flag-9f489.appspot.com/o/images%2F1000094308?alt=media&token=71f9154e-2765-4391-8019-9fb209abd0a5"
+            if(list[adjustedPosition].posterImage!="")imageurl=list[adjustedPosition].posterImage
             Glide.with(context)
-                .load(list[adjustedPosition].posterImage)
+                .load(imageurl)
                 .into(ivPager)
         }
 

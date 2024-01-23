@@ -45,7 +45,7 @@ class RegisterHuntFragment : Fragment(), EventItemClickListener{
         adapter = EventAdapter(listner)
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
-        viewModel.getRegisteredEvents(1)
+        viewModel.getRegisteredEvents()
         viewModel.get().observe(requireActivity()){
             eList = it.event
         }

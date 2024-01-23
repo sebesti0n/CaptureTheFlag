@@ -12,22 +12,27 @@ const loginMiddleware =async (req,res,next) =>{
         if (finduser.length!=0) {
     console.log(userEmail+ userPass+finduser);
 
-            const validate = await bcrypt.compare(userPass, finduser.password);
-            // console.log(validate)
-            if (!validate) {
-                return res.status(200).json({ success : false,message:"Invalid Credentials", userDetails: null });
-            }
-            else {
-            req.finduser =finduser;
-            next();
+            bcrypt.compare(userPass, finduser.password)
+            .then((result) => {
+                if (result) {
+                    req.finduser =finduser;
+                    next();
+                } else { 
+                    return res.status(200).json({ success : false,message:"Invalid Credentials", userDetails: null });
                 }
+              })
+              .catch((error) => {
+                console.error('Error comparing passwords:', error);
+                return res.status(500).json({ success : false,message:"Server Error", userDetails: null });
+                
+              });
          }
         else {
             //not registered user
             return res.status(203).json({success:false,message : "Register First", userDetails:null});
         }
     } catch (error) {
-        console.log(error);
+        console.log(error)
         return res.status(500).send({success:false, message:'Internal Server Error'});
 
     }

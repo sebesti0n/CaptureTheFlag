@@ -1,6 +1,8 @@
 package com.example.capturetheflag.ui
 
+import android.app.Application
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,12 +11,13 @@ import com.example.capturetheflag.apiServices.RetrofitInstances
 import com.example.capturetheflag.models.Event
 import com.example.capturetheflag.models.ResponseEventModel
 import com.example.capturetheflag.models.StatusModel
+import com.example.capturetheflag.sharedprefrences.userPreferences
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class EventViewModel:ViewModel() {
+class EventViewModel(private val app:Application):AndroidViewModel(app) {
     private var eventResposeLiveData= MutableLiveData<ResponseEventModel>()
     private var registrationStatusofuser = MutableLiveData<Int>()
     private var onOpeningRegistrationStatusofuser = MutableLiveData<Int>()
@@ -28,6 +31,8 @@ class EventViewModel:ViewModel() {
     fun onOpenStatus() : LiveData<Int>{
         return onOpeningRegistrationStatusofuser
     }
+    private val session = userPreferences.getInstance(app.applicationContext)
+    private val id = session.getUID()
 
     fun getAdminEventbyId(eid:Int){
         Log.w("sebastian evm",eid.toString())
@@ -50,8 +55,8 @@ class EventViewModel:ViewModel() {
                 })
 
     }
-    fun registerUserForEvent(uid:Int,eid:Int){
-            RetrofitInstances.service.getStatusRegistration(uid,eid)
+    fun registerUserForEvent(eid:Int){
+            RetrofitInstances.service.getStatusRegistration(id,eid)
                 .enqueue(object: Callback<StatusModel>{
                     override fun onResponse(
                         call: Call<StatusModel>,
@@ -67,8 +72,8 @@ class EventViewModel:ViewModel() {
 
                 })
     }
-    fun getFirstStatus(uid:Int,eid:Int) {
-        RetrofitInstances.service.onOpenStatusRegistration(uid,eid)
+    fun getFirstStatus(eid:Int) {
+        RetrofitInstances.service.onOpenStatusRegistration(id,eid)
             .enqueue(object: Callback<StatusModel>{
                 override fun onResponse(
                     call: Call<StatusModel>,

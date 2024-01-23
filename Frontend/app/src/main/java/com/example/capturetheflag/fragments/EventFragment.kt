@@ -2,6 +2,7 @@ package com.example.capturetheflag.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -15,6 +16,9 @@ import com.bumptech.glide.Glide
 import com.example.capturetheflag.databinding.FragmentEventBinding
 import com.example.capturetheflag.models.Event
 import com.example.capturetheflag.ui.EventViewModel
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.TimeZone
 
 class EventFragment : Fragment() {
     private var _binding:FragmentEventBinding?=null
@@ -23,6 +27,7 @@ class EventFragment : Fragment() {
     private lateinit var viewModel: EventViewModel
     private var eid:Long=-1
     private lateinit var event: Event
+    private var isLive = false
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -38,32 +43,59 @@ class EventFragment : Fragment() {
         updateUI()
         fetchRegisterStatusforEventOnOpen()
         binding.btnRegisteredEvent.setOnClickListener {
-//        fetchRegisterStatusforEvent()
+        fetchRegisterStatusforEvent()
             val action = EventFragmentDirections.actionEventFragmentToContestFragment(eid.toInt())
             findNavController().navigate(action)
         }
 
     }
 
+    @SuppressLint("SetTextI18n")
     private fun fetchRegisterStatusforEventOnOpen() {
-        viewModel.getFirstStatus(1,eid.toInt())
+        viewModel.getFirstStatus(eid.toInt())
         viewModel.onOpenStatus().observe(requireActivity()){
+            if (it==3){
+                isLive = true
+            }
             if(it==1)
-                binding.btnRegisteredEvent.setText("Unregister")
+                binding.btnRegisteredEvent.text = "Unregister"
             else
-                binding.btnRegisteredEvent.setText("Register")
+                binding.btnRegisteredEvent.text = "Register"
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun fetchRegisterStatusforEvent() {
-        viewModel.registerUserForEvent(1,eid.toInt())
+        viewModel.registerUserForEvent(eid.toInt())
         viewModel.getStatus().observe(requireActivity()) {
-            if(it==1)
-                binding.btnRegisteredEvent.setText("Unregister")
+            if(it==1){
+                binding.btnRegisteredEvent.text = "Start"
+            }
+            else if(it==2)
+                binding.btnRegisteredEvent.text = "Unregister"
             else
-                binding.btnRegisteredEvent.setText("Register")
+                binding.btnRegisteredEvent.text = "Register"
         }
 
+    }
+    private fun setCountDownTimer(startTime:String){
+        val currTime = System.currentTimeMillis()
+        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+        sdf.timeZone = TimeZone.getTimeZone("UTC")
+        val startDate = sdf.parse(startTime)?.time ?: 0
+        val timeToStart = startDate-currTime
+        val countDownTimer = object:CountDownTimer(timeToStart,1000){
+            override fun onTick(millisUntilFinished: Long) {
+                val timeString = getFormattedTime(millisUntilFinished)
+                binding.countDownTimer.text = timeString
+            }
+
+            override fun onFinish() {
+                binding.countDownTimer.text =  "Event is Live Now"
+            }
+
+        }
+        countDownTimer.start()
     }
 
     @SuppressLint("SetTextI18n")
@@ -76,8 +108,9 @@ class EventFragment : Fragment() {
         else{
             viewModel.getAdminEventbyId(eid.toInt())
             viewModel.get()?.observe(requireActivity()) {
-                event = it.event.get(0)
+                event = it.event[0]
                 Log.w("sebastian","event")
+                setCountDownTimer(event.start_time)
                 binding.contentDescription.text =  event.description
                 binding.contentDetails.text = "Start At: ${event.start_time} \n End At: ${event.end_time}"
                 binding.contentPrizes.text = "Amazing Goodies"
@@ -89,5 +122,16 @@ class EventFragment : Fragment() {
             }
 
         }
+    }
+    private fun getFormattedTime(millisUntilFinished: Long): String {
+        val days = millisUntilFinished / (1000 * 60 * 60 * 24)
+        val hours = (millisUntilFinished % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        val minutes = (millisUntilFinished % (1000 * 60 * 60)) / (1000 * 60)
+        val seconds = (millisUntilFinished % (1000 * 60)) / 1000
+
+        return String.format(
+            "%04d:%02d:%02d:%02d:%02d",
+            days, hours, minutes, seconds
+        )
     }
 }

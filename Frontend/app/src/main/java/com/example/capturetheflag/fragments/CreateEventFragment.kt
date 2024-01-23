@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.capturetheflag.R
@@ -30,7 +31,13 @@ import com.google.android.material.timepicker.MaterialTimePicker.INPUT_MODE_CLOC
 import com.google.android.material.timepicker.TimeFormat
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Calendar
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 import kotlin.random.Random
 
 
@@ -57,6 +64,7 @@ class CreateEventFragment : Fragment(),QuestionItemClickListener {
     private lateinit var storageRef:StorageReference
     private var posterUri:Uri?=null
     private var flagCount = 0
+    private var eid = -1
     private var getContent = registerForActivityResult(ActivityResultContracts.GetContent()){
         if(it!=null){
             binding.EventPoster.setImageURI(it)
@@ -120,47 +128,71 @@ class CreateEventFragment : Fragment(),QuestionItemClickListener {
             Toast.makeText(requireContext(), "Fill all the details!", Toast.LENGTH_SHORT).show()
         } else {
             flagCount = flgCnt.toInt()
-            if(problemList.size==0){
-                val imageurl = getimageurl()
-                Log.w("sebastian Poster",imageurl)
-                val mEvent = EventX(flagCount,des, "$endDate $endTime", org,location,1,imageurl,"$stDate $strtTime",title)
-                Log.w("sebastian Poster",mEvent.toString())
-                viewModel.createEvent(mEvent)
-                addQuestionDialog()
-            }
-            if(problemList.size==flagCount){
-                viewModel.addTasks(problemList)
-                val action = CreateEventFragmentDirections.actionCreateEventFragmentToFirstFragment()
-                findNavController().navigate(action)
-            }
-        }
-    }
-
-    private fun getimageurl(): String {
-        var imageUrl = ""
-        if (posterUri != null) {
-            val imageRef = storageRef.child("/images/${posterUri!!.lastPathSegment}")
-            val uploadTask = imageRef.putFile(posterUri!!)
-
-            uploadTask.addOnFailureListener { exception ->
-                Toast.makeText(requireContext(), "Upload failed: ${exception.message}", Toast.LENGTH_SHORT).show()
-                Log.w("seb_IMG_UPLOAD", exception.message.toString())
-            }.addOnSuccessListener { _ ->
-                imageRef.downloadUrl.addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        val downloadUri = task.result
-                        imageUrl = downloadUri.toString()
-                        Log.d("seb_IMG_erl", imageUrl)
-                        Toast.makeText(requireContext(), "Upload successful! URL: $imageUrl", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(requireContext(), "Failed to get download URL", Toast.LENGTH_SHORT).show()
-                        Log.w("seb_IMG_DWNLOAD", "getDownloadUrlTask:failure", task.exception)
+            if (problemList.size == 0) {
+                var imageurl = ""
+                lifecycleScope.launch(Dispatchers.Main) {
+                    val imgurl = lifecycleScope.async {
+                        getimageurl()
                     }
+                    imageurl = imgurl.await()
+                    Log.w("sebastian Poster", imageurl)
+                    val mEvent = EventX(
+                        flagCount,
+                        des,
+                        "$endDate $endTime",
+                        org,
+                        location,
+                        1,
+                        imageurl,
+                        "$stDate $strtTime",
+                        title
+                    )
+                    Log.w("sebastian Poster", mEvent.toString())
+                    viewModel.createEvent(mEvent)
+                    viewModel.get()?.observe(requireActivity()) {
+                        eid = it.event[0].event_id
+                    }
+                    addQuestionDialog()
                 }
             }
-        }
+                if (problemList.size == flagCount) {
+                    viewModel.addTasks(problemList)
+                    val action =
+                        CreateEventFragmentDirections.actionCreateEventFragmentToFirstFragment()
+                    findNavController().navigate(action)
+                }
+            }
 
-        return imageUrl
+    }
+
+    private suspend fun getimageurl(): String {
+        return suspendCoroutine { continuation ->
+                if (posterUri != null) {
+                    val imageRef = storageRef.child("/images/${posterUri!!.lastPathSegment}")
+                    val uploadTask = imageRef.putFile(posterUri!!)
+                    uploadTask.addOnFailureListener { exception ->
+                        // Handle failure
+                        continuation.resumeWith(Result.failure(exception))
+                    }.addOnSuccessListener { _ ->
+                        imageRef.downloadUrl.addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                val downloadUri = task.result
+                                val imageUrl = downloadUri.toString()
+                                continuation.resume(imageUrl)
+                                showToast("Upload successful! URL: $imageUrl")
+                                Log.d("seb_IMG_erl", imageUrl)
+                            } else {
+                            showToast("Failed to get download URL")
+                            Log.w("seb_IMG_DWNLOAD", "getDownloadUrlTask:failure", task.exception)
+                                continuation.resumeWith(Result.failure(Exception("Failed to get download URL")))
+                            }
+                        }
+                    }
+                } else {
+                    // Handle no posterUri
+                    continuation.resumeWith(Result.failure(Exception("No posterUri provided")))
+                }
+            }
     }
 
 
@@ -231,10 +263,9 @@ class CreateEventFragment : Fragment(),QuestionItemClickListener {
             val correctAnswer = etAnswer.text.toString()
             val unqCode = etUniqueCode.text.toString()
             if (quesString.isNotEmpty() && correctAnswer.isNotEmpty() && unqCode.isNotEmpty()) {
-                val question = QuestionModel(1,quesString, correctAnswer, unqCode)
+                val question = QuestionModel(eid ,quesString, correctAnswer, unqCode)
                 problemList.add(question)
                 qAdapter.notifyDataSetChanged()
-//              qAdapter.addData(question)
                 dialog.dismiss()
                 Log.w("dialog","dismiss")
                 if(problemList.size<flagCount){
@@ -308,9 +339,9 @@ class CreateEventFragment : Fragment(),QuestionItemClickListener {
         getContent.launch("image/*")
     }
     override fun onQuestionClickListner(ques: QuestionModel) {
-        showQuestionDialog(ques)
+        showRiddleDialog(ques)
     }
-    private fun showQuestionDialog(currQues:QuestionModel){
+    private fun showRiddleDialog(currQues:QuestionModel){
         val builder = MaterialAlertDialogBuilder(requireActivity())
             .setMessage("Q$- ${currQues.question}\nAns- ${currQues.answer}\nCode- ${currQues.unique_code}")
             .setNegativeButton("Cancel") { _, _ ->
@@ -319,6 +350,9 @@ class CreateEventFragment : Fragment(),QuestionItemClickListener {
             }
         val dialog = builder.create()
         dialog.show()
+    }
+    private fun showToast(msg:String){
+        Toast.makeText(requireContext(),msg,Toast.LENGTH_SHORT).show()
     }
 
 }

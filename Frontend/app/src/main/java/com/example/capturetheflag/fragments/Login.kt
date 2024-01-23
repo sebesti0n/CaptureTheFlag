@@ -59,7 +59,7 @@ class Login : Fragment() {
         loginButton = binding.btnLogin
         googleButton = binding.btnGoogle
 
-        if (!sharedPref.getUserFirstTime()){
+        if (sharedPref.isLogin()){
             moveToHome()
         }
 
@@ -103,7 +103,7 @@ class Login : Fragment() {
                             if(receivedata.success == true){
                                 toastMessage("Login successfully")
                                 sharedPref.logOut()
-                                sharedPref.saveUserCredentials(receivedata.userDetails.Email,false,"token")
+                                sharedPref.createSession(receivedata.userDetails.user_id,receivedata.userDetails.Email,true,"token")
                                 moveToHome()
                             } else {
                                 toastMessage(receivedata.message);

@@ -7,14 +7,14 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class RetrofitInstances {
     companion object {
-
+        private val BASEURL="https://88ec-49-38-250-40.ngrok-free.app/"
         private val retrofit: Retrofit by lazy {
             val interceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 
             val okHttpClient = OkHttpClient.Builder()
                 .addInterceptor(interceptor)
                 .build()
-            Retrofit.Builder().baseUrl("https://e3eb-2409-40e5-104b-28b2-23c9-747e-368-384f.ngrok-free.app/")
+            Retrofit.Builder().baseUrl(BASEURL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient)
                 .build()

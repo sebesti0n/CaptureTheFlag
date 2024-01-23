@@ -20,6 +20,7 @@ import com.example.capturetheflag.models.Event
 import com.example.capturetheflag.models.PagerContent
 import com.example.capturetheflag.ui.HomeFragmentViewModel
 import com.example.capturetheflag.util.EventItemClickListener
+import com.google.android.material.snackbar.Snackbar
 
 
 class HomeFragment : Fragment(),EventItemClickListener {
@@ -67,6 +68,11 @@ class HomeFragment : Fragment(),EventItemClickListener {
     private fun fetchLiveEventList() {
         viewModel.getLiveEvents()
         viewModel.getLive().observe(requireActivity()){
+            if(it==null||it.event.size == 0){
+                showSnackbar("No Live Events is Active")
+                binding.viewPager2.visibility = View.INVISIBLE
+            }
+            else{
             mLiveList = it.event
             if(mLiveList.size>0) {
                 loadcards()
@@ -76,15 +82,18 @@ class HomeFragment : Fragment(),EventItemClickListener {
                 binding.viewPager2.visibility = View.INVISIBLE
         }
     }
+    }
 //
     private fun fetchUpcomingEventList() {
     viewModel.getUpcomingEvents()
         viewModel.get().observe(requireActivity()){
-            mUpcomingEvent = it.event
-            adapter.setdata(it.event)
-            adapter.notifyDataSetChanged()
-            Log.w("sebastian Home",it.event.toString())
-
+            if(it==null||it.event.size==0) showSnackbar("No Events Upcoming Events")
+            else{
+                mUpcomingEvent = it.event
+                adapter.setdata(it.event)
+                adapter.notifyDataSetChanged()
+                Log.w("sebastian Home",it.event.toString())
+            }
         }
     Log.w("sebastian Home",mUpcomingEvent.toString())
 
@@ -112,6 +121,7 @@ class HomeFragment : Fragment(),EventItemClickListener {
         val action = HomeFragmentDirections.actionHomefragmentToEventFragment(event.event_id.toLong())
         findNavController().navigate(action)
     }
-//
-
+    fun showSnackbar(message:String){
+        Toast.makeText(requireActivity(),message,Toast.LENGTH_LONG).show()
+    }
 }

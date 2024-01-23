@@ -42,7 +42,7 @@ class HistoryHuntFragment:Fragment(),EventItemClickListener {
         adapter = EventAdapter(listner)
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
-        viewModel.getHistoryEvents(1)
+        viewModel.getHistoryEvents()
         viewModel.get().observe(requireActivity()){
             eList = it.event
         }

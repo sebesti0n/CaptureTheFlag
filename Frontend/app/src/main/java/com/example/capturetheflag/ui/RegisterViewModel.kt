@@ -1,26 +1,27 @@
 package com.example.capturetheflag.ui
 
-import android.nfc.Tag
+import android.app.Application
+import android.se.omapi.Session
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.capturetheflag.Repository.RegisterRepository
 import com.example.capturetheflag.apiServices.RetrofitInstances
 import com.example.capturetheflag.models.RegisterResponse
 import com.example.capturetheflag.models.User
-import kotlinx.coroutines.launch
+import com.example.capturetheflag.sharedprefrences.userPreferences
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class RegisterViewModel : ViewModel() {
+class RegisterViewModel(
+    private val app:Application
+) : AndroidViewModel(app) {
 private var registerResposeLiveData= MutableLiveData<RegisterResponse>()
     fun get():LiveData<RegisterResponse>?{
         return registerResposeLiveData!!
     }
-
+    private val session = userPreferences.getInstance(app.applicationContext)
 
     fun register(user:User){
             RetrofitInstances.service.register(user).enqueue(object : Callback<RegisterResponse> {

@@ -32,7 +32,7 @@
         android:layout_below="@+id/viewPager2"
         android:layout_marginTop="8dp"
         android:layout_margin="1dp"
-        android:textColor="@color/black"/>
+        android:textColor="@color/textColor"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"

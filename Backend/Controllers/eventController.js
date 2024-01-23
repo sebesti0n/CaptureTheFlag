@@ -65,9 +65,21 @@ exports.isUserRegisterforEvents = ( async(req,res) => {
         .where('event_id',eid)
         .andWhere('user_id',uid)
         console.log(is_register);
-        
+        const eventDetails = await knex('events')
+            .select('*')
+            .where('event_id',eid)
+        const isLive = false
+        if(eventDetails.length>0){
+        const startTime = eventDetails.start_time
+        const endTime = eventDetails.end_time
+        const currTime = new Date()
+        if(startTime<=currTime.toISOString&&endTime>=currTime.toISOString){
+            isLive=true;
+        }
+    }
         if(is_register.length > 0){
             const flg = is_register[0].is_registered
+        
             if(flg){
                 await knex('user_event_participation')
                         .update({is_registered:false})
@@ -140,14 +152,29 @@ exports.onOpenEventPage = (async (req,res)=>{
     try{
     const eid =req.query.eid;
     const uid = req.query.uid;
+    const eventDetails = await knex('events')
+            .select('*')
+            .where('event_id',eid)
+    const isLive = false
+    if(eventDetails.length>0){
+        const startTime = eventDetails.start_time
+        const endTime = eventDetails.end_time
+        const currTime = new Date()
+        if(startTime<=currTime.toISOString&&endTime>=currTime.toISOString){
+            isLive=true;
+        }
+    }
     const data = await knex('user_event_participation')
         .select('is_registered')
         .where('event_id',eid)
         .andWhere('user_id',uid)
         if(data.length>0){
             const flg = data[0].is_registered;
-            if(flg){
+            if(flg&&isLive){
                 res.status(200).json({is_registered:1});
+            }
+            else if(flg&&!isLive){
+                res.status(200).json({is_registered:2});
             }
             else{
                 res.status(200).json({is_registered:0});

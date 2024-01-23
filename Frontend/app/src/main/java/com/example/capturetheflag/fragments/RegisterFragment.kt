@@ -1,6 +1,7 @@
 package com.example.capturetheflag.fragments
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -11,6 +12,7 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import com.example.capturetheflag.R
+import com.example.capturetheflag.activities.HomeActivity
 import com.example.capturetheflag.databinding.FragmentRegisterBinding
 import com.example.capturetheflag.models.User
 import com.example.capturetheflag.sharedprefrences.userPreferences
@@ -77,7 +79,7 @@ class RegisterFragment : Fragment() {
                 viewModel.register(newUser)
                 viewModel.get()?.observe(requireActivity(), Observer {
                     if(it.success){
-                       sharedPref.saveUserCredentials(it.user.Email,false,it.message)
+                       sharedPref.createSession(it.user.user_id,it.user.Email,true,it.message)
                         moveToHome()
 
                     }else{
@@ -89,8 +91,8 @@ class RegisterFragment : Fragment() {
     }
 
     private fun moveToHome() {
-        Navigation.findNavController(requireView()).navigate(R.id.action_registerFragment_to_homefragment)
-    }
+        val intent = Intent(requireContext(), HomeActivity::class.java)
+        startActivity(intent)    }
 
     private fun showToastMessage(msg: String) {
     Toast.makeText(requireActivity(),msg,Toast.LENGTH_SHORT).show()
