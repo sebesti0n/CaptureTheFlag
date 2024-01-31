@@ -142,7 +142,7 @@ class CreateEventFragment : Fragment(),QuestionItemClickListener {
                         "$endDate $endTime",
                         org,
                         location,
-                        1,
+                        viewModel.getUID(),
                         imageurl,
                         "$stDate $strtTime",
                         title

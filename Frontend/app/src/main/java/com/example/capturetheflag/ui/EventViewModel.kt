@@ -19,16 +19,16 @@ import retrofit2.Response
 
 class EventViewModel(private val app:Application):AndroidViewModel(app) {
     private var eventResposeLiveData= MutableLiveData<ResponseEventModel>()
-    private var registrationStatusofuser = MutableLiveData<Int>()
-    private var onOpeningRegistrationStatusofuser = MutableLiveData<Int>()
+    private var registrationStatusofuser = MutableLiveData<String>()
+    private var onOpeningRegistrationStatusofuser = MutableLiveData<String>()
 
     fun get(): LiveData<ResponseEventModel>?{
         return eventResposeLiveData!!
     }
-    fun getStatus() : LiveData<Int>{
+    fun getStatus() : LiveData<String>{
         return registrationStatusofuser
     }
-    fun onOpenStatus() : LiveData<Int>{
+    fun onOpenStatus() : LiveData<String>{
         return onOpeningRegistrationStatusofuser
     }
     private val session = userPreferences.getInstance(app.applicationContext)
@@ -62,7 +62,7 @@ class EventViewModel(private val app:Application):AndroidViewModel(app) {
                         call: Call<StatusModel>,
                         response: Response<StatusModel>
                     ) {
-                        registrationStatusofuser.value= response.body()?.is_registered
+                        registrationStatusofuser.value= response.body()?.buttonText
                     }
 
                     override fun onFailure(call: Call<StatusModel>, t: Throwable) {
@@ -79,7 +79,7 @@ class EventViewModel(private val app:Application):AndroidViewModel(app) {
                     call: Call<StatusModel>,
                     response: Response<StatusModel>
                 ) {
-                   onOpeningRegistrationStatusofuser.value= response.body()?.is_registered
+                   onOpeningRegistrationStatusofuser.value= response.body()?.buttonText
                 }
 
                 override fun onFailure(call: Call<StatusModel>, t: Throwable) {

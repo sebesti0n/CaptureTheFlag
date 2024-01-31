@@ -5,26 +5,12 @@
     android:id="@+id/navgraph"
     app:startDestination="@id/login">
 
-    <fragment
-        android:id="@+id/homefragment"
-        android:name="com.example.capturetheflag.fragments.HomeFragment"
-        android:label="Home"
-        tools:layout="@layout/fragment_homefragment" >
-        <action
-            android:id="@+id/action_homefragment_to_eventFragment"
-            app:destination="@id/eventFragment" />
-        <action
-            android:id="@+id/action_homefragment_to_contestFragment"
-            app:destination="@id/contestFragment" />
-    </fragment>
+
     <fragment
         android:id="@+id/login"
         android:name="com.example.capturetheflag.fragments.Login"
         android:label="Login"
         tools:layout="@layout/fragment_login" >
-        <action
-            android:id="@+id/action_login_to_homefragment"
-            app:destination="@id/homefragment" />
         <action
             android:id="@+id/action_login_to_registerFragment"
             app:destination="@id/registerFragment" />
@@ -37,53 +23,6 @@
         <action
             android:id="@+id/action_registerFragment_to_login"
             app:destination="@id/login" />
-        <action
-            android:id="@+id/action_registerFragment_to_homefragment"
-            app:destination="@id/homefragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/registerHuntFragment"
-        android:name="com.example.capturetheflag.fragments.RegisterHuntFragment"
-        android:label="Registered Event"
-        tools:layout="@layout/fragment_register_hunt" >
-        <action
-            android:id="@+id/action_registerHuntFragment_to_eventFragment"
-            app:destination="@id/eventFragment" />
-
-    </fragment>
-    <fragment
-        android:id="@+id/historyHuntFragment"
-        android:name="com.example.capturetheflag.fragments.HistoryHuntFragment"
-        android:label="History"
-        tools:layout="@layout/fragment_register_hunt" >
-        <action
-            android:id="@+id/action_historyHuntFragment_to_eventFragment"
-            app:destination="@id/eventFragment" />
     </fragment>
 
-    <fragment
-        android:id="@+id/eventFragment"
-        android:name="com.example.capturetheflag.fragments.EventFragment"
-        android:label="Details"
-        tools:layout="@layout/fragment_event" >
-
-
-        <argument
-            android:name="eid"
-            app:argType="long"
-            android:defaultValue="-1L" />
-        <action
-            android:id="@+id/action_eventFragment_to_contestFragment"
-            app:destination="@id/contestFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/contestFragment"
-        android:name="com.example.capturetheflag.fragments.ContestFragment"
-        android:label="fragment_contest"
-        tools:layout="@layout/fragment_contest" >
-        <argument
-            android:name="eid"
-            app:argType="integer"
-            android:defaultValue="-1" />
-    </fragment>
 </navigation>

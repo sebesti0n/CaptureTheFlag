@@ -13,7 +13,9 @@
 
         <action
             android:id="@+id/action_createEventFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
+            app:destination="@id/FirstFragment"
+            app:popUpTo="@id/createEventFragment"
+            app:popUpToInclusive="false"/>
     </fragment>
     <fragment
         android:id="@+id/FirstFragment"

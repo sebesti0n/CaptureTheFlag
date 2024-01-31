@@ -15,7 +15,7 @@ router.get('/', (req, res) => {
 router.post('/register',registrationMiddleware,userController.userRegistration);
 router.post('/login',loginMiddleware, (req, res) => {
     const { finduser } = req;
-    return res.status(200).json({success: true,message:"ok",userDetails:finduser});
+    return res.status(200).json({success: true,message:"ok",userDetails:finduser[0]});
 });
 router.get('/validate',validationMiddleware , (req, res) => {
     return res.send("Successfully Verified");

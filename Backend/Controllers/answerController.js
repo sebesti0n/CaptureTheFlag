@@ -43,3 +43,21 @@ exports.getRiddles = (async (req,res) => {
     }
 })
 
+exports.getRiddleNumberFirsTime = ( async ( req , res ) => {
+    const uid = req.query.uid;
+    const eid = req.query.eid;
+    try{
+        const data = await db('user_event_participation')
+        .where('user_id',uid)
+        .andWhere('event_id',eid)
+        .returning('Number_correct_answer');
+        if(data.length>0)
+        res.status(200).json({next:data[0].Number_correct_answer});
+        else
+        res.status(200).json({next:-1});
+    }
+    catch(error){
+        console.log(error);
+        res.status(503).json({next:-1});
+    }
+});

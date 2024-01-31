@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
@@ -21,6 +22,10 @@ import com.example.capturetheflag.models.PagerContent
 import com.example.capturetheflag.ui.HomeFragmentViewModel
 import com.example.capturetheflag.util.EventItemClickListener
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 class HomeFragment : Fragment(),EventItemClickListener {
@@ -59,45 +64,58 @@ class HomeFragment : Fragment(),EventItemClickListener {
         else{
             Toast.makeText(requireContext(),"Network Unavailable",Toast.LENGTH_SHORT).show()
         }
-//        binding.headingUpcomingEvent.setOnClickListener {
-//            val action = HomeFragmentDirections.actionHomefragmentToContestFragment()
-//            findNavController().navigate(action)
-//        }
     }
 
     private fun fetchLiveEventList() {
+        hideViewPager()
+        showViewPagerProgressBar()
         viewModel.getLiveEvents()
         viewModel.getLive().observe(requireActivity()){
             if(it==null||it.event.size == 0){
                 showSnackbar("No Live Events is Active")
-                binding.viewPager2.visibility = View.INVISIBLE
+                hideViewPager()
+                hideViewPagerProgressBar()
             }
             else{
-            mLiveList = it.event
-            if(mLiveList.size>0) {
-                loadcards()
-                binding.viewPager2.visibility = View.VISIBLE
+                mLiveList = it.event
+                if(mLiveList.size > 0) {
+                    loadcards()
+                    showViewPager()
+                }
+                else
+                    hideViewPager()
+                hideViewPagerProgressBar()
+
             }
-            else
-                binding.viewPager2.visibility = View.INVISIBLE
-        }
-    }
-    }
-//
-    private fun fetchUpcomingEventList() {
-    viewModel.getUpcomingEvents()
-        viewModel.get().observe(requireActivity()){
-            if(it==null||it.event.size==0) showSnackbar("No Events Upcoming Events")
-            else{
-                mUpcomingEvent = it.event
-                adapter.setdata(it.event)
-                adapter.notifyDataSetChanged()
-                Log.w("sebastian Home",it.event.toString())
-            }
-        }
-    Log.w("sebastian Home",mUpcomingEvent.toString())
 
     }
+
+    }
+//
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun fetchUpcomingEventList() {
+        hideRv()
+        showRvProgressBar()
+            viewModel.getUpcomingEvents()
+            viewModel.get().observe(requireActivity()){
+                if(it==null||it.event.size==0) {
+                    showSnackbar("No Events Upcoming Events")
+                    hideRvProgressBar()
+                }
+                else{
+                    mUpcomingEvent = it.event
+                    adapter.setdata(it.event)
+                    adapter.notifyDataSetChanged()
+                    hideRvProgressBar()
+                    showRv()
+
+                    Log.w("sebastian Home",it.event.toString())
+                }
+            }
+            Log.w("sebastian Home",mUpcomingEvent.toString())
+        }
+
+
 
     private fun setupUpcomingEventRecyclerView() {
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -114,6 +132,7 @@ class HomeFragment : Fragment(),EventItemClickListener {
         viewPagerAdapter = context?.let { ViewPagerAdapter(it,mLiveList,listner) }!!
         viewPager.adapter=viewPagerAdapter
         viewPagerAdapter.setInitialPosition(viewPager)
+        hideViewPagerProgressBar()
 
     }
 
@@ -121,7 +140,31 @@ class HomeFragment : Fragment(),EventItemClickListener {
         val action = HomeFragmentDirections.actionHomefragmentToEventFragment(event.event_id.toLong())
         findNavController().navigate(action)
     }
-    fun showSnackbar(message:String){
+    private fun showSnackbar(message:String){
         Toast.makeText(requireActivity(),message,Toast.LENGTH_LONG).show()
+    }
+    private fun showViewPagerProgressBar(){
+        binding.vpProgressBar.visibility = View.VISIBLE
+    }
+    private fun hideViewPagerProgressBar(){
+        binding.vpProgressBar.visibility = View.INVISIBLE
+    }
+    private fun showViewPager(){
+        binding.viewPager2.visibility = View.VISIBLE
+    }
+    private fun hideViewPager(){
+        binding.viewPager2.visibility = View.INVISIBLE
+    }
+    private fun showRvProgressBar(){
+        binding.rvProgressBar.visibility = View.VISIBLE
+    }
+    private fun hideRvProgressBar(){
+        binding.rvProgressBar.visibility = View.INVISIBLE
+    }
+    private fun showRv(){
+        binding.recyclerView.visibility = View.VISIBLE
+    }
+    private fun hideRv(){
+        binding.recyclerView.visibility = View.INVISIBLE
     }
 }

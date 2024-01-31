@@ -79,7 +79,7 @@ class RegisterFragment : Fragment() {
                 viewModel.register(newUser)
                 viewModel.get()?.observe(requireActivity(), Observer {
                     if(it.success){
-                       sharedPref.createSession(it.user.user_id,it.user.Email,true,it.message)
+                       sharedPref.createSession(it.user.user_id,it.user.email,true,it.message)
                         moveToHome()
 
                     }else{

@@ -10,7 +10,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.Observer
 import androidx.navigation.NavArgs
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.capturetheflag.databinding.FragmentContestBinding
 import com.example.capturetheflag.helper.PermissionHelper
@@ -40,8 +42,10 @@ class ContestFragment : Fragment(),PermissionListener{
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         eid = args.eid
+        binding.riddleDiscription.text = "Not Found";
         setupViewModel()
         rList = ArrayList()
+        getRiddlesList()
         permissionHelper = PermissionHelper(this,this)
         binding.btnScan.setOnClickListener {
             Log.w("sebastian ","button clicked")
@@ -50,8 +54,7 @@ class ContestFragment : Fragment(),PermissionListener{
         binding.submit.setOnClickListener {
             handleOnClickofSubmitButton()
         }
-        getRiddlesList()
-        onLaunchTimeRiddleNumber()
+
     }
 
     private fun handleOnClickofSubmitButton() {
@@ -59,33 +62,34 @@ class ContestFragment : Fragment(),PermissionListener{
         if (code != rList[riddleNumber].unique_code) {
             Toast.makeText(requireContext(), "You are at Wrong place", Toast.LENGTH_SHORT).show()
         } else {
-            if (riddleNumber == -1) {
-                binding.riddleDiscription.text = "Not Found"
-            } else if (riddleNumber >= rList.size) {
-                Toast.makeText(requireContext(), "done ", Toast.LENGTH_SHORT).show()
-            } else {
-                onLaunchTimeRiddleNumber()
-                binding.riddleDiscription.setText(rList[riddleNumber].question)
-            }
+        Log.i("sebastian rList1",rList.toString()+riddleNumber)
+        updateDescriptionBox()
         }
     }
 
     private fun getRiddlesList() {
         viewModel.getRiddles(eid)
         Log.i("seb contest","eid${eid}")
-        viewModel.get().observe(requireActivity()){
+        viewModel.get().observe(viewLifecycleOwner, Observer {
             rList = it!!
-            Log.i("sebastian rList",it.toString())
-        }
+            onCreateGetRiddleNumber()
+            updateDescriptionBox()
+            Log.i("sebastian rList2",rList.toString())
+        })
     }
 
     private fun onLaunchTimeRiddleNumber() {
         viewModel.getSubmissionDetails(eid)
         viewModel.getNo().observe(requireActivity()){
             riddleNumber=it!!
+
         }
     }
-
+    private fun onCreateGetRiddleNumber() {
+        viewModel.getRiddleNumberNumberFirst(eid){
+         riddleNumber = it!!
+        }
+    }
 
     private fun setupViewModel() {
         viewModel = ViewModelProvider(this)[ContestViewModel::class.java]
@@ -135,8 +139,22 @@ class ContestFragment : Fragment(),PermissionListener{
 
         if(isGranted){
             Log.w("sebastian scanResult","granted")
-//            Toast.makeText(requireContext(), "Permission Granted", Toast.LENGTH_SHORT).show()
             setupScanner()
         }
     }
+    private fun updateDescriptionBox(){
+        if (riddleNumber == -1) {
+            binding.riddleDiscription.text = "Not Found"
+        } else if (riddleNumber >= rList.size) {
+            val action = ContestFragmentDirections.actionContestFragmentToEventFragment(eid.toLong())
+            findNavController().navigate(action)
+            Toast.makeText(requireContext(), "done ", Toast.LENGTH_SHORT).show()
+        } else {
+                onLaunchTimeRiddleNumber()
+            Log.w("riddle${riddleNumber}",rList[riddleNumber].question)
+            binding.riddleDiscription.text=rList[riddleNumber].question
+            riddleNumber++
+        }
+    }
+
 }

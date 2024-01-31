@@ -3,22 +3,29 @@ package com.example.capturetheflag.fragments
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.text.Layout
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
+import com.example.capturetheflag.R
 import com.example.capturetheflag.databinding.FragmentEventBinding
 import com.example.capturetheflag.models.Event
 import com.example.capturetheflag.ui.EventViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
+import java.util.concurrent.TimeUnit
 
 class EventFragment : Fragment() {
     private var _binding:FragmentEventBinding?=null
@@ -42,10 +49,16 @@ class EventFragment : Fragment() {
         eid = args.eid
         updateUI()
         fetchRegisterStatusforEventOnOpen()
+//        val btnText = binding.btnRegisteredEvent.text.toString()
         binding.btnRegisteredEvent.setOnClickListener {
+            val btnText = binding.btnRegisteredEvent.text.toString()
+            if(btnText == "Start"){
+                val action = EventFragmentDirections.actionEventFragmentToContestFragment(eid.toInt())
+                findNavController().navigate(action)
+            }
         fetchRegisterStatusforEvent()
-            val action = EventFragmentDirections.actionEventFragmentToContestFragment(eid.toInt())
-            findNavController().navigate(action)
+//            val action = EventFragmentDirections.actionEventFragmentToContestFragment(eid.toInt())
+//            findNavController().navigate(action)
         }
 
     }
@@ -54,13 +67,8 @@ class EventFragment : Fragment() {
     private fun fetchRegisterStatusforEventOnOpen() {
         viewModel.getFirstStatus(eid.toInt())
         viewModel.onOpenStatus().observe(requireActivity()){
-            if (it==3){
-                isLive = true
-            }
-            if(it==1)
-                binding.btnRegisteredEvent.text = "Unregister"
-            else
-                binding.btnRegisteredEvent.text = "Register"
+                binding.btnRegisteredEvent.text = it
+
         }
     }
 
@@ -68,38 +76,69 @@ class EventFragment : Fragment() {
     private fun fetchRegisterStatusforEvent() {
         viewModel.registerUserForEvent(eid.toInt())
         viewModel.getStatus().observe(requireActivity()) {
-            if(it==1){
-                binding.btnRegisteredEvent.text = "Start"
-            }
-            else if(it==2)
-                binding.btnRegisteredEvent.text = "Unregister"
-            else
-                binding.btnRegisteredEvent.text = "Register"
+            binding.btnRegisteredEvent.text = it
         }
 
     }
-    private fun setCountDownTimer(startTime:String){
-        val currTime = System.currentTimeMillis()
-        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
-        sdf.timeZone = TimeZone.getTimeZone("UTC")
-        val startDate = sdf.parse(startTime)?.time ?: 0
-        val timeToStart = startDate-currTime
-        val countDownTimer = object:CountDownTimer(timeToStart,1000){
-            override fun onTick(millisUntilFinished: Long) {
-                val timeString = getFormattedTime(millisUntilFinished)
-                binding.countDownTimer.text = timeString
-            }
+    private fun setCountDownTimer(dateString:String,endTime:String){
+//            val dateString = "2024-01-26T18:00:00.000Z"
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
 
-            override fun onFinish() {
-                binding.countDownTimer.text =  "Event is Live Now"
-            }
+            try {
+                var targetDate = dateFormat.parse(dateString)
+                val currentDate = Date()
 
+                var timeDifference = targetDate.time - currentDate.time
+
+                if (timeDifference > 0) {
+                    val countDownTimer = object : CountDownTimer(timeDifference, 1000L) {
+                        override fun onTick(millisUntilFinished: Long) {
+                            val days = TimeUnit.MILLISECONDS.toDays(millisUntilFinished)
+                            val hours = TimeUnit.MILLISECONDS.toHours(millisUntilFinished) % 24
+                            val minutes = TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) % 60
+                            val seconds = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) % 60
+
+                            binding.countDownTimer.text=String.format("%d days, %02d:%02d:%02d", days, hours, minutes, seconds)
+                        }
+
+                        override fun onFinish() {
+                            Toast.makeText(requireContext(),"start contest",Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
+                    countDownTimer.start()
+                } else {
+                    targetDate = dateFormat.parse(endTime)
+                    timeDifference = targetDate.time - currentDate.time
+                    val countDownTimer = object : CountDownTimer(timeDifference, 1000L) {
+                        override fun onTick(millisUntilFinished: Long) {
+                            val days = TimeUnit.MILLISECONDS.toDays(millisUntilFinished)
+                            val hours = TimeUnit.MILLISECONDS.toHours(millisUntilFinished) % 24
+                            val minutes = TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) % 60
+                            val seconds = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) % 60
+
+                            binding.countDownTimer.text=String.format("%d days, %02d:%02d:%02d", days, hours, minutes, seconds)
+                        }
+
+                        override fun onFinish() {
+                            Toast.makeText(requireContext(),"contest is ended",Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
+                    countDownTimer.start()
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
-        countDownTimer.start()
-    }
+
+
 
     @SuppressLint("SetTextI18n")
     private fun updateUI() {
+        val includedLayoutView= activity?.findViewById<View>(R.id.app_bar_home)
+        val bottomNavigationView = includedLayoutView?.findViewById<BottomNavigationView>(R.id.nav_bar)
+        bottomNavigationView?.visibility = View.INVISIBLE
         if (eid.toInt() ==-1){
             binding.contentDescription.text =  "Not found"
             binding.contentDetails.text = "Not Found"
@@ -110,7 +149,8 @@ class EventFragment : Fragment() {
             viewModel.get()?.observe(requireActivity()) {
                 event = it.event[0]
                 Log.w("sebastian","event")
-                setCountDownTimer(event.start_time)
+                setCountDownTimer(event.start_time,event.end_time)
+//                binding.countDownTimer.text = event.start_time
                 binding.contentDescription.text =  event.description
                 binding.contentDetails.text = "Start At: ${event.start_time} \n End At: ${event.end_time}"
                 binding.contentPrizes.text = "Amazing Goodies"
@@ -123,15 +163,6 @@ class EventFragment : Fragment() {
 
         }
     }
-    private fun getFormattedTime(millisUntilFinished: Long): String {
-        val days = millisUntilFinished / (1000 * 60 * 60 * 24)
-        val hours = (millisUntilFinished % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-        val minutes = (millisUntilFinished % (1000 * 60 * 60)) / (1000 * 60)
-        val seconds = (millisUntilFinished % (1000 * 60)) / 1000
 
-        return String.format(
-            "%04d:%02d:%02d:%02d:%02d",
-            days, hours, minutes, seconds
-        )
-    }
+
 }

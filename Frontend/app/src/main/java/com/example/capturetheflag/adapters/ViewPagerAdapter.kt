@@ -13,6 +13,10 @@ import com.example.capturetheflag.R
 import com.example.capturetheflag.models.Event
 import com.example.capturetheflag.models.PagerContent
 import com.example.capturetheflag.util.EventItemClickListener
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class ViewPagerAdapter(private val context:Context, private val list:ArrayList<Event>,private val listner: EventItemClickListener): PagerAdapter() {
 
@@ -39,12 +43,14 @@ return  Int.MAX_VALUE
         val ivPager = view.findViewById<ImageView>(R.id.iv_pager)
 
         if (list.size > 0) {
-            var imageurl="https://firebasestorage.googleapis.com/v0/b/capture-the-flag-9f489.appspot.com/o/images%2F1000094308?alt=media&token=71f9154e-2765-4391-8019-9fb209abd0a5"
-            if(list[adjustedPosition].posterImage!="")imageurl=list[adjustedPosition].posterImage
-            Glide.with(context)
-                .load(imageurl)
-                .into(ivPager)
-        }
+                var imageurl =
+                    "https://firebasestorage.googleapis.com/v0/b/capture-the-flag-9f489.appspot.com/o/images%2F1000094308?alt=media&token=71f9154e-2765-4391-8019-9fb209abd0a5"
+                if (list[adjustedPosition].posterImage != "") imageurl = list[adjustedPosition].posterImage
+                Glide.with(context)
+                    .load(imageurl)
+                    .placeholder(R.drawable.pleasewait)
+                    .into(ivPager)
+            }
 
         view.setOnClickListener {
             listner.onEventClickListner(list[adjustedPosition])

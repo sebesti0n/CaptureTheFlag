@@ -1,5 +1,6 @@
 package com.example.capturetheflag.fragments
 
+import android.content.Intent
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
@@ -16,6 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.example.capturetheflag.R
+import com.example.capturetheflag.activities.HomeActivity
 import com.example.capturetheflag.apiServices.RetrofitInstances
 import com.example.capturetheflag.databinding.FragmentLoginBinding
 import com.example.capturetheflag.models.LoginReponse
@@ -103,7 +105,9 @@ class Login : Fragment() {
                             if(receivedata.success == true){
                                 toastMessage("Login successfully")
                                 sharedPref.logOut()
-                                sharedPref.createSession(receivedata.userDetails.user_id,receivedata.userDetails.Email,true,"token")
+                                Log.d("CTF Login1",receivedata.userDetails.toString())
+                                Log.d("CTF Login2",receivedata.userDetails.email.toString())
+                                sharedPref.createSession(receivedata.userDetails.user_id,receivedata.userDetails.email,true,"token")
                                 moveToHome()
                             } else {
                                 toastMessage(receivedata.message);
@@ -130,7 +134,8 @@ class Login : Fragment() {
         TODO("Not yet implemented")
     }
     private fun moveToHome(){
-        Navigation.findNavController(requireView()).navigate(R.id.action_login_to_homefragment)
+        val intent = Intent(requireContext(),HomeActivity::class.java)
+        startActivity(intent)
     }
     @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {

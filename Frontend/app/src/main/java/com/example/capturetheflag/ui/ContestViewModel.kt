@@ -82,5 +82,28 @@ class ContestViewModel(
             }
         }
 
+    fun getRiddleNumberNumberFirst(eid:Int, callback:(Int?)->Unit){
+        try {
+            val res = RetrofitInstances.service.getSubmissionDetails(eid, id)
+            res.enqueue(object: Callback<NextRiddleModel>{
+                override fun onResponse(
+                    call: Call<NextRiddleModel>,
+                    response: Response<NextRiddleModel>
+                ) { Log.d("sebastian submissionDetails",response.body().toString())
+                    val rNo = response.body()
+                    rNo?.let {
+                        callback(it.next);
+                    }
+                }
 
+                override fun onFailure(call: Call<NextRiddleModel>, t: Throwable) {
+                    Log.d("sebastian riddleNo First1", "getting error while this")
+                }
+
+            })
+        }catch(e:Exception){
+            e.printStackTrace()
+            Log.d("sebastian riddleno First2", "Exception occurred: ${e.message}")
+        }
+    }
 }

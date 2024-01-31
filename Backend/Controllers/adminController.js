@@ -57,10 +57,16 @@ return formattedIST;
 exports.addEvents = ( async(req,res)=>{
     try {
         const {title , location, description,organisation, start_time, end_time, owner_id, No_of_questions, posterImage} = req.body;
+        console.log(start_time)
         const startTimeDate = await getIstTimestamp(start_time);
         const endTimeDate = await getIstTimestamp(end_time);
+        console.log(startTimeDate,endTimeDate)
         console.log(posterImage);
-
+        var inputStartDatetime = new Date(start_time);
+        var millisecondsStart = inputStartDatetime.getTime();
+        var inputEndDatetime = new Date(end_time);
+        var millisecondsEnd = inputEndDatetime.getTime();
+        console.log(millisecondsStart,millisecondsStart);
         const data = await knex('events').insert({
             title:title,
             description:description,
@@ -70,7 +76,9 @@ exports.addEvents = ( async(req,res)=>{
             end_time:endTimeDate,
             owner_id:owner_id,
             No_of_questions:No_of_questions,
-            posterImage:posterImage
+            posterImage:posterImage,
+            start_ms:millisecondsStart,
+            end_ms:millisecondsEnd
         }).returning('*');
         res.status(200).json({success: true,message:"ok",event:data});
     } catch (error) {

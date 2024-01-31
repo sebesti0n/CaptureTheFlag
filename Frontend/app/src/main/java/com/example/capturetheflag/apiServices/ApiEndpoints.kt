@@ -95,6 +95,13 @@ interface ApiEndpoints {
         @Query("uid")
         uid:Int
     ):Call<NextRiddleModel>
+    @GET("/event/get-firstTimeRiddleNumber")
+    fun getRiddleNumberFirstTime(
+        @Query("eid")
+        eid:Int,
+        @Query("uid")
+        uid:Int
+    ):Call<NextRiddleModel>
 
 
 

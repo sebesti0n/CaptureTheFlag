@@ -5,14 +5,16 @@ const knex = require('knex')(require('../Configuration/knexfile')['development']
 
 const loginMiddleware =async (req,res,next) =>{
     const {userEmail, userPass} = req.body;
+    // console.log("req.Body:",req.body);
     try {
-        const finduser = await knex('users').select('*').where('email','=',userEmail).returning('*');
-    console.log(userEmail+ userPass+finduser);
+        const finduser = await knex('users').where('email','=',userEmail).returning('*');
+    console.log("finduser:",finduser);
         
         if (finduser.length!=0) {
-    console.log(userEmail+ userPass+finduser);
+    console.log(userPass,finduser[0].password);
 
-            bcrypt.compare(userPass, finduser.password)
+
+            bcrypt.compare(userPass, finduser[0].password)
             .then((result) => {
                 if (result) {
                     req.finduser =finduser;
