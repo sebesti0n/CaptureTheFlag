@@ -2,10 +2,7 @@ package com.example.capturetheflag.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
-import android.widget.ImageView
-import android.widget.TextView
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -16,7 +13,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
 import com.example.capturetheflag.R
 import com.example.capturetheflag.databinding.ActivityHomeBinding
 
@@ -29,7 +25,7 @@ class HomeActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setSupportActionBar(binding.appBarHome.toolbar)
+        supportActionBar?.hide()
 
         //Navigation Drawer Layout setup handle
 
@@ -75,69 +71,14 @@ class HomeActivity : AppCompatActivity(){
                 }
         }
         }
-
-
-    //Bottom Navigation item seclection handle
-
-        binding.appBarHome.navBar.setOnItemSelectedListener{
-            when(it.itemId){
-            R.id.home->{
-                val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_home) as NavHostFragment
-//                binding.appBarHome.toolbar.title= "Home"
-//                supportActionBar?.title ="Home"
-
-                navController = navHostFragment.navController
-                navController.navigate(R.id.homefragment)
-
-                true
-            }
-            R.id.history->{
-//                binding.appBarHome.toolbar.title= "History"
-                val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_home) as NavHostFragment
-                navController = navHostFragment.navController
-                navController.navigate(R.id.historyHuntFragment)
-                true
-            }
-            R.id.reg_hunt->{
-//                binding.appBarHome.toolbar.title= "Registered Event"
-
-                val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_home) as NavHostFragment
-                navController = navHostFragment.navController
-                navController.navigate(R.id.registerHuntFragment)
-                true
-            }
-            else -> {
-                Log.w("sebastian","else")
-                true
-            }
-        }
-        }
-
-    //Header Click handle
-
-        val headerView = navView.getHeaderView(0)
-        val headerImage :ImageView = headerView.findViewById(R.id.headerProfilePic)
-        val uName :TextView = headerView.findViewById(R.id.headerUsername)
-        val uOrganisation :TextView = headerView.findViewById(R.id.headerOrganisation)
-
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.home, menu)
         return true
     }
     override fun onSupportNavigateUp(): Boolean {
-//        supportActionBar?.title ="Home"
         val navController = findNavController(R.id.nav_host_fragment_content_home)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
-//    fun updateTitleofToolbar(title:String){
-//        supportActionBar?.title =title
-//        Log.w("actionBAr", supportActionBar?.title.toString())
-//
-//    }
-
-
 }

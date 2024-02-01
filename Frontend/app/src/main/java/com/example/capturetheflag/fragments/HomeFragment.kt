@@ -22,6 +22,7 @@ import com.example.capturetheflag.models.PagerContent
 import com.example.capturetheflag.ui.HomeFragmentViewModel
 import com.example.capturetheflag.util.EventItemClickListener
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -129,11 +130,12 @@ class HomeFragment : Fragment(),EventItemClickListener {
     }
 
     private fun loadcards() {
-        viewPagerAdapter = context?.let { ViewPagerAdapter(it,mLiveList,listner) }!!
-        viewPager.adapter=viewPagerAdapter
-        viewPagerAdapter.setInitialPosition(viewPager)
-        hideViewPagerProgressBar()
-
+        CoroutineScope(Dispatchers.Main).launch{
+            viewPagerAdapter = context?.let { ViewPagerAdapter(it, mLiveList, listner) }!!
+            viewPager.adapter = viewPagerAdapter
+            viewPagerAdapter.setInitialPosition(viewPager)
+            hideViewPagerProgressBar()
+        }
     }
 
     override fun onEventClickListner(event: Event) {

@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 class ViewPagerAdapter(private val context:Context, private val list:ArrayList<Event>,private val listner: EventItemClickListener): PagerAdapter() {
 
     override fun getCount(): Int {
-return  Int.MAX_VALUE
+return  list.size
     }
 
     override fun isViewFromObject(view: View, `object`: Any): Boolean {
@@ -33,27 +33,20 @@ return  Int.MAX_VALUE
             return super.instantiateItem(container, position)
         }
 
-        val adjustedPosition = if (list.size > 0) {
-            position % list.size
-        } else {
-            0
-        }
-
         val view = LayoutInflater.from(context).inflate(R.layout.item_pager, container, false)
         val ivPager = view.findViewById<ImageView>(R.id.iv_pager)
 
         if (list.size > 0) {
                 var imageurl =
                     "https://firebasestorage.googleapis.com/v0/b/capture-the-flag-9f489.appspot.com/o/images%2F1000094308?alt=media&token=71f9154e-2765-4391-8019-9fb209abd0a5"
-                if (list[adjustedPosition].posterImage != "") imageurl = list[adjustedPosition].posterImage
+                if (list[position].posterImage != "") imageurl = list[position].posterImage
                 Glide.with(context)
                     .load(imageurl)
-                    .placeholder(R.drawable.pleasewait)
                     .into(ivPager)
             }
 
         view.setOnClickListener {
-            listner.onEventClickListner(list[adjustedPosition])
+            listner.onEventClickListner(list[position])
             Toast.makeText(context, "view Pager clicked", Toast.LENGTH_SHORT).show()
         }
 

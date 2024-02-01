@@ -136,9 +136,6 @@ class EventFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun updateUI() {
-        val includedLayoutView= activity?.findViewById<View>(R.id.app_bar_home)
-        val bottomNavigationView = includedLayoutView?.findViewById<BottomNavigationView>(R.id.nav_bar)
-        bottomNavigationView?.visibility = View.INVISIBLE
         if (eid.toInt() ==-1){
             binding.contentDescription.text =  "Not found"
             binding.contentDetails.text = "Not Found"

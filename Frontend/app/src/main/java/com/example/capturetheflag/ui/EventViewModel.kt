@@ -17,7 +17,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class EventViewModel(private val app:Application):AndroidViewModel(app) {
+class EventViewModel(app:Application):AndroidViewModel(app) {
     private var eventResposeLiveData= MutableLiveData<ResponseEventModel>()
     private var registrationStatusofuser = MutableLiveData<String>()
     private var onOpeningRegistrationStatusofuser = MutableLiveData<String>()

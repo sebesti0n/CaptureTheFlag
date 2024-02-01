@@ -1,6 +1,7 @@
 const express = require('express')
 const routes=require('./Routes/auth')
-const eventRouter = require('./Routes/event');
+const eventRouter = require('./Routes/event')
+require('./Configuration/dbConnect')
 const adminRouter = require('./Routes/admin')
 const knex = require('knex')(require('./Configuration/knexfile')['development']);
 const app= express();
