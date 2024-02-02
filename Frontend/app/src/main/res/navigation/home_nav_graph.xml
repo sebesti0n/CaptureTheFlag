@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/home_nav_graph"
-    app:startDestination="@id/homefragment">
+    app:startDestination="@id/homefragment"
+    >
     <fragment
         android:id="@+id/homefragment"
         android:name="com.example.capturetheflag.fragments.HomeFragment"
