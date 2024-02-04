@@ -51,6 +51,9 @@
         <action
             android:id="@+id/action_eventFragment_to_contestFragment"
             app:destination="@id/contestFragment" />
+        <action
+            android:id="@+id/action_eventFragment_to_rankingFragment"
+            app:destination="@id/rankingFragment" />
     </fragment>
     <fragment
         android:id="@+id/contestFragment"
@@ -64,5 +67,17 @@
         <action
             android:id="@+id/action_contestFragment_to_eventFragment"
             app:destination="@id/eventFragment" />
+        <action
+            android:id="@+id/action_contestFragment_to_rankingFragment"
+            app:destination="@id/rankingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/rankingFragment"
+        android:name="com.example.capturetheflag.fragments.RankingFragment"
+        android:label="RankingFragment" >
+        <argument
+            android:name="eid"
+            app:argType="integer"
+            android:defaultValue="-1" />
     </fragment>
 </navigation>

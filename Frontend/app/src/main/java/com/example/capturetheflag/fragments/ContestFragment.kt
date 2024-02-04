@@ -79,11 +79,10 @@ class ContestFragment : Fragment(),PermissionListener{
     }
 
     private fun onLaunchTimeRiddleNumber() {
-        viewModel.getSubmissionDetails(eid)
-        viewModel.getNo().observe(requireActivity()){
-            riddleNumber=it!!
-
+        viewModel.getSubmissionDetails(eid) {
+            riddleNumber = it!!
         }
+
     }
     private fun onCreateGetRiddleNumber() {
         viewModel.getRiddleNumberNumberFirst(eid){

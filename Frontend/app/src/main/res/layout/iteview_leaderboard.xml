@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="4dp"
+    android:paddingVertical="8dp">
+<com.google.android.material.card.MaterialCardView
+
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="8dp"
+        android:outlineSpotShadowColor="@color/ic_blue"
+        android:background="#FDFCFA">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingVertical="10dp"
+        android:paddingHorizontal="5dp"
+        android:orientation="horizontal">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="#"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+<!--        <com.google.android.material.imageview.ShapeableImageView-->
+<!--            android:layout_width="45dp"-->
+<!--            android:layout_height="45dp"-->
+<!--            android:src="@drawable/ic_user"-->
+<!--            android:layout_weight="2"/>-->
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Team Name"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:layout_weight="3"
+            android:textSize="16sp"
+            android:id="@+id/team_name"/>
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="#"
+            android:layout_gravity="center_vertical"
+            android:textStyle="bold"
+            android:layout_weight="1"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:id="@+id/timeTaken"/>
+    </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+</LinearLayout>

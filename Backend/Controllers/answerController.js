@@ -38,7 +38,7 @@ exports.getRiddles = (async (req,res) => {
         res.status(200).json({success:true,message:"ok",riddles:data});
     } catch (error) {
         console.log(error);
-        res.status(403).json({success:false,message:"server unavailable",riddles:null});
+        res.status(403).jsonC({success:false,message:"server unavailable",riddles:null});
    
     }
 })

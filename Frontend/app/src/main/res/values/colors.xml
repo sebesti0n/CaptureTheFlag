@@ -15,4 +15,5 @@
     <color name="textColor">#FFFFF3</color>
     <color name="darktextcolor">#1b1b1b</color>
     <color name="transparentBgBlack">#BE989898</color>
+    <color name="ic_blue">#00699C</color>
 </resources>

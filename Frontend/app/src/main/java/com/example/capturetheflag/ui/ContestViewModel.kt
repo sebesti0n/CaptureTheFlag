@@ -23,13 +23,13 @@ class ContestViewModel(
     private val app:Application
 ) : AndroidViewModel(app) {
     private var riddlesLivedata= MutableLiveData<ArrayList<QuestionModel>>()
-    private var nextRiddleNo = MutableLiveData<Int?>()
+//    private var nextRiddleNo = MutableLiveData<Int?>()
     fun get():LiveData<ArrayList<QuestionModel>>{
         return riddlesLivedata
     }
-    fun getNo():LiveData<Int?>{
-        return nextRiddleNo
-    }
+//    fun getNo():LiveData<Int?>{
+//        return nextRiddleNo
+//    }
     private val session = userPreferences.getInstance(app.applicationContext)
     fun getUID() = session.getUID()
     private val id = session.getUID()
@@ -57,7 +57,7 @@ class ContestViewModel(
             }
 
     }
-    fun getSubmissionDetails(eid: Int,){
+    fun getSubmissionDetails(eid: Int,callback:(Int?)->Unit){
             try {
                 val res = RetrofitInstances.service.getSubmissionDetails(eid, id)
                 res.enqueue(object: Callback<NextRiddleModel>{
@@ -66,9 +66,12 @@ class ContestViewModel(
                         response: Response<NextRiddleModel>
                     ) { Log.d("sebastian submissionDetails",response.body().toString())
                         val rNo = response.body()
-                        if (rNo != null) {
-                            nextRiddleNo.postValue(rNo.next)
+                        rNo?.let {
+                            callback(it.next)
                         }
+//                        if (rNo != null) {
+//                            nextRiddleNo.postValue(rNo.next)
+//                        }
                     }
 
                     override fun onFailure(call: Call<NextRiddleModel>, t: Throwable) {
