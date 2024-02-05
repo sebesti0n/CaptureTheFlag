@@ -21,6 +21,7 @@ import com.example.capturetheflag.models.Event
 import com.example.capturetheflag.models.PagerContent
 import com.example.capturetheflag.ui.HomeFragmentViewModel
 import com.example.capturetheflag.util.EventItemClickListener
+import com.example.capturetheflag.util.LiveEventClickListner
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -29,7 +30,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 
-class HomeFragment : Fragment(),EventItemClickListener {
+class HomeFragment : Fragment(),EventItemClickListener,LiveEventClickListner {
     private var _binding: FragmentHomefragmentBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: HomeFragmentViewModel
@@ -39,12 +40,14 @@ class HomeFragment : Fragment(),EventItemClickListener {
     private lateinit var mUpcomingEvent: ArrayList<Event>
     private lateinit var adapter:EventAdapter
     private lateinit var listner: EventItemClickListener
+    private lateinit var listenerLive:LiveEventClickListner
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         listner = this
+        listenerLive = this
         _binding = FragmentHomefragmentBinding.inflate(inflater, container ,false)
         return binding.root
     }
@@ -55,7 +58,6 @@ class HomeFragment : Fragment(),EventItemClickListener {
 
         initializeMembervariables()
         viewPager = binding.viewPager2
-//        loadcards()
         val isConnected = NetworkHelper.isInternetAvailable(requireContext())
         if(isConnected) {
             setupUpcomingEventRecyclerView()
@@ -131,7 +133,7 @@ class HomeFragment : Fragment(),EventItemClickListener {
 
     private fun loadcards() {
         CoroutineScope(Dispatchers.Main).launch{
-            viewPagerAdapter = context?.let { ViewPagerAdapter(it, mLiveList, listner) }!!
+            viewPagerAdapter = context?.let { ViewPagerAdapter(it, mLiveList, listenerLive) }!!
             viewPager.adapter = viewPagerAdapter
             viewPagerAdapter.setInitialPosition(viewPager)
             hideViewPagerProgressBar()
@@ -168,5 +170,10 @@ class HomeFragment : Fragment(),EventItemClickListener {
     }
     private fun hideRv(){
         binding.recyclerView.visibility = View.INVISIBLE
+    }
+
+    override fun onLiveEventClickListner(event: Event) {
+        val action = HomeFragmentDirections.actionHomefragmentToEventFragment(event.event_id.toLong(),true)
+        findNavController().navigate(action)
     }
 }

@@ -13,12 +13,13 @@ import com.example.capturetheflag.R
 import com.example.capturetheflag.models.Event
 import com.example.capturetheflag.models.PagerContent
 import com.example.capturetheflag.util.EventItemClickListener
+import com.example.capturetheflag.util.LiveEventClickListner
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class ViewPagerAdapter(private val context:Context, private val list:ArrayList<Event>,private val listner: EventItemClickListener): PagerAdapter() {
+class ViewPagerAdapter(private val context:Context, private val list:ArrayList<Event>,private val listner: LiveEventClickListner): PagerAdapter() {
 
     override fun getCount(): Int {
 return  list.size
@@ -46,7 +47,7 @@ return  list.size
             }
 
         view.setOnClickListener {
-            listner.onEventClickListner(list[position])
+            listner.onLiveEventClickListner(list[position])
             Toast.makeText(context, "view Pager clicked", Toast.LENGTH_SHORT).show()
         }
 

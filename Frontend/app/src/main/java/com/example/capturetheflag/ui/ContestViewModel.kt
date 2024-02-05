@@ -20,16 +20,12 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class ContestViewModel(
-    private val app:Application
+    app:Application
 ) : AndroidViewModel(app) {
     private var riddlesLivedata= MutableLiveData<ArrayList<QuestionModel>>()
-//    private var nextRiddleNo = MutableLiveData<Int?>()
     fun get():LiveData<ArrayList<QuestionModel>>{
         return riddlesLivedata
     }
-//    fun getNo():LiveData<Int?>{
-//        return nextRiddleNo
-//    }
     private val session = userPreferences.getInstance(app.applicationContext)
     fun getUID() = session.getUID()
     private val id = session.getUID()
@@ -69,9 +65,6 @@ class ContestViewModel(
                         rNo?.let {
                             callback(it.next)
                         }
-//                        if (rNo != null) {
-//                            nextRiddleNo.postValue(rNo.next)
-//                        }
                     }
 
                     override fun onFailure(call: Call<NextRiddleModel>, t: Throwable) {

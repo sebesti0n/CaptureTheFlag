@@ -14,6 +14,6 @@ exports.up = function(knex) {
  */
 exports.down = function(knex) {
     return knex.schema.alterTable('events', function (table) {
-        table.dropColumn('posterImage'); 
+        table.dropColumn('posterImage');
     });
 };

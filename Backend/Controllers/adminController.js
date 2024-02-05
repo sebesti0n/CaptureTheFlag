@@ -5,7 +5,6 @@ const knex = require('knex')(require('../Configuration/knexfile')['development']
 exports.adminEvent = (async (req,res)=>{
     try {
         const eid = req.query.eid
-        const currTime = new Date();
         const events = await knex('events')
         .select('*')
         .where('event_id','=',eid);
@@ -93,14 +92,6 @@ exports.addEvents = ( async(req,res)=>{
 exports.addRiddles = ( async(req,res) => {
     try {
         const rList=req.body;
-
-        // const data = await knex('questions').insert({
-        //     question_id:question_id,
-        //     event_id:event_id,
-        //     question:question,
-        //     answer:answer,
-        //     unique_code:unique_code
-        // });
         console.log(rList)
         await knex('questions').insert(rList)
         const data = await knex('questions').returning('*');

@@ -97,3 +97,24 @@ exports.registerUserinEvents = (async (req, res) => {
         res.status(500).json({ success: false, message: "unknown Error!", event: null });
     }
 });
+
+
+exports.eventDetails = (async (req,res)=>{
+    try {
+        const eid = req.query.eid;
+        const uid = req.query.uid;
+        const events = await knex('events')
+        .select('*')
+        .where('event_id','=',eid);
+        const data = await knex('user_event_participation')
+            .select('is_registered')
+            .where('event_id', eid)
+            .andWhere('user_id', uid)
+        let is_register=false;
+        if(data.length>0)is_register=true;
+        res.status(200).json({success: true,message:"ok",isRegister:is_register,event:events});
+    } catch (error) {
+        res.status(500).json({success: false, message:"unknown Error!",isRegister:is_register, event:null});
+    }
+});
+

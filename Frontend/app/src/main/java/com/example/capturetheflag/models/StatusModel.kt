@@ -1,5 +1,6 @@
 package com.example.capturetheflag.models
 
 data class StatusModel(
-    val buttonText:String
+    val success:String,
+    val message:String
 )

@@ -54,6 +54,10 @@
         <action
             android:id="@+id/action_eventFragment_to_rankingFragment"
             app:destination="@id/rankingFragment" />
+        <argument
+            android:name="isLive"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </fragment>
     <fragment
         android:id="@+id/contestFragment"

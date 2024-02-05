@@ -7,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class RetrofitInstances {
     companion object {
-        private val BASEURL="https://60a2-106-67-97-200.ngrok-free.app/"
+        private val BASEURL="https://922f-49-38-253-157.ngrok-free.app/"
         private val retrofit: Retrofit by lazy {
             val interceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 

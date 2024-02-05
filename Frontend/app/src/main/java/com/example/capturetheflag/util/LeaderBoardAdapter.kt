@@ -5,10 +5,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.capturetheflag.R
+import com.example.capturetheflag.models.LeaderBoardModel
 import com.google.android.material.textview.MaterialTextView
 
 class LeaderBoardAdapter:RecyclerView.Adapter<LeaderBoardAdapter.LeaderBoardViewHolder>() {
-
+private var list:ArrayList<LeaderBoardModel> = ArrayList()
     class LeaderBoardViewHolder(view:View):RecyclerView.ViewHolder(view){
         val tv_position  = view.findViewById<MaterialTextView>(R.id.position)
         val tv_teamName = view.findViewById<MaterialTextView>(R.id.team_name)
@@ -22,11 +23,20 @@ class LeaderBoardAdapter:RecyclerView.Adapter<LeaderBoardAdapter.LeaderBoardView
     }
 
     override fun onBindViewHolder(holder: LeaderBoardViewHolder, position: Int) {
-        TODO("Not yet implemented")
+        val tt= list[position].end_time-list[position].start_time
+        holder.tv_position.text = (position+1).toString()
+        holder.tv_teamName.text = list[position].name
+        if(tt<0)
+        holder.tv_timeTaken.text = "-"
+        else
+            holder.tv_timeTaken.text = tt.toString()
     }
 
     override fun getItemCount(): Int {
-        TODO("Not yet implemented")
+        return list.size
     }
-
+fun addList(list:ArrayList<LeaderBoardModel>){
+    this.list=list;
+    notifyDataSetChanged()
+}
 }

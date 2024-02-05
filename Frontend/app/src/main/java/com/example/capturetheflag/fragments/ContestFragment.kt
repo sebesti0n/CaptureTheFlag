@@ -27,7 +27,7 @@ class ContestFragment : Fragment(),PermissionListener{
     private val args:ContestFragmentArgs by navArgs()
     private lateinit var viewModel: ContestViewModel
     private lateinit var permissionHelper: PermissionHelper
-    private var riddleNumber:Int=-1
+    private var riddleNumber:Int=0
     private var eid =-1
     private lateinit var rList:ArrayList<QuestionModel>
 

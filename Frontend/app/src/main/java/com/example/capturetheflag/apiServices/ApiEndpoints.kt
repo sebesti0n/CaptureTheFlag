@@ -1,12 +1,15 @@
 package com.example.capturetheflag.apiServices
 
+import com.example.capturetheflag.models.EventDetailsModel
 import com.example.capturetheflag.models.EventX
+import com.example.capturetheflag.models.LeaderBoardModel
 import com.example.capturetheflag.models.LoginReponse
 import com.example.capturetheflag.models.NextRiddleModel
 import com.example.capturetheflag.models.QuestionModel
 import com.example.capturetheflag.models.RegisterResponse
 import com.example.capturetheflag.models.ResponseEventModel
 import com.example.capturetheflag.models.ResponseQuestionModel
+import com.example.capturetheflag.models.StandingModel
 import com.example.capturetheflag.models.StatusModel
 import com.example.capturetheflag.models.User
 import com.example.capturetheflag.models.UserLoginDetails
@@ -40,11 +43,18 @@ interface ApiEndpoints {
         @Query("owner")
         ownerID:Int
     ): Call<ResponseEventModel>
-    @GET("/admin/SingleEvent")
+    @GET("/admin/event-details")
     fun getEventbyId(
         @Query("eid")
         eid:Int
     ): Call<ResponseEventModel>
+    @GET("/event/event-details")
+    fun getEventDetails(
+        @Query("uid")
+        uid:Int,
+        @Query("eid")
+        eid:Int
+    ): Call<EventDetailsModel>
     @GET("/event/register")
     fun getRegisteredEventbyId(
         @Query("uid")
@@ -73,13 +83,6 @@ interface ApiEndpoints {
         @Query("eid")
         eid:Int
     ) : Call<StatusModel>
-    @GET("/event/openStatus")
-    fun onOpenStatusRegistration(
-        @Query("uid")
-        uid:Int,
-        @Query("eid")
-        eid:Int
-    ) : Call<StatusModel>
     @GET("/event/get-riddles")
     fun getRiddles(
         @Query("eid")
@@ -102,7 +105,10 @@ interface ApiEndpoints {
         @Query("uid")
         uid:Int
     ):Call<NextRiddleModel>
-
+    fun getStandings(
+        @Query("eid")
+        eid:Int
+    ):Call<StandingModel>
 
 
 }
