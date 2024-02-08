@@ -18,19 +18,31 @@ class userPreferences constructor(context: Context) {
             }
         }
     }
+
     private val sharedPreferences: SharedPreferences =
         context.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE)
+
     private val editor: SharedPreferences.Editor = sharedPreferences.edit()
-    fun createSession(id:Int, email: String, isLogin:Boolean, token: String) {
+
+    fun createSession(
+        id:Int,
+        email: String,
+        isLogin:Boolean,
+        token: String
+    ){
         editor.putInt(ID, id)
         editor.putString(EMAIL, email)
         editor.putBoolean(IS_LOGIN,isLogin)
         editor.putString(TOKEN, token)
         editor.apply()
     }
+
     fun getUID() : Int = sharedPreferences.getInt(ID, -1)
-    fun getUserEmail(): String? = sharedPreferences.getString(EMAIL, "")
+
+    fun getUserEmail(): String = sharedPreferences.getString(EMAIL, "")!!
+
     fun isLogin(): Boolean = sharedPreferences.getBoolean(IS_LOGIN, false)
+
     fun logOut(){
         editor.clear()
         editor.apply()

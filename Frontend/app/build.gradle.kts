@@ -17,10 +17,9 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
     }
+
     buildFeatures{
         viewBinding = true
     }
@@ -41,15 +40,9 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
 }
 
 dependencies {
-
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation ("androidx.fragment:fragment-ktx:1.6.2")
@@ -74,6 +67,4 @@ dependencies {
     implementation ("com.squareup.okhttp3:logging-interceptor:4.5.0")
     implementation ("com.journeyapps:zxing-android-embedded:4.1.0")
     implementation ("com.github.bumptech.glide:glide:4.16.0")
-
-
 }

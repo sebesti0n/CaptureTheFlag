@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="150dp"
@@ -10,8 +11,8 @@
         android:background="@drawable/ctf_leaderboard"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        >
+        app:layout_constraintRight_toRightOf="parent">
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

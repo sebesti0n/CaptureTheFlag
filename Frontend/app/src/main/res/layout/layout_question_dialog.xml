@@ -7,6 +7,7 @@
     android:layout_height="wrap_content"
     style="@style/BottomSheetStyle"
     android:padding="10dp">
+
 <com.google.android.material.textview.MaterialTextView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -118,8 +119,8 @@
                 android:backgroundTint="@color/transparentBgBlack"
 
                 />
-
         </com.google.android.material.textfield.TextInputLayout>
+
         <com.google.android.material.button.MaterialButton
             android:layout_width="wrap_content"
             android:layout_height="65dp"
@@ -127,7 +128,9 @@
             android:layout_marginLeft="15dp"
             android:backgroundTint="@color/green"
             app:icon="@drawable/ic_title"/>
+
     </LinearLayout>
+
     <com.google.android.material.button.MaterialButton
         android:layout_width="match_parent"
         android:layout_height="65dp"
@@ -137,4 +140,5 @@
         android:textSize="25sp"
         android:textColor="@color/darktextcolor"
         android:textStyle="bold"/>
+
 </LinearLayout>

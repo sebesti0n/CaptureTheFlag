@@ -20,9 +20,11 @@ class AdminHomeViewModel(
     private val app:Application
 ): AndroidViewModel(app) {
     private var eventResposeLiveData= MutableLiveData<ResponseEventModel>()
+
     fun get(): LiveData<ResponseEventModel>?{
         return eventResposeLiveData!!
     }
+
     private val session = userPreferences.getInstance(app.applicationContext)
     private val id = session.getUID()
     fun getAdminEvents() {

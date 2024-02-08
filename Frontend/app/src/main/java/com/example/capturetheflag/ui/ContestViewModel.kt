@@ -22,6 +22,7 @@ import retrofit2.Response
 class ContestViewModel(
     app:Application
 ) : AndroidViewModel(app) {
+
     private var riddlesLivedata= MutableLiveData<ArrayList<QuestionModel>>()
     fun get():LiveData<ArrayList<QuestionModel>>{
         return riddlesLivedata
