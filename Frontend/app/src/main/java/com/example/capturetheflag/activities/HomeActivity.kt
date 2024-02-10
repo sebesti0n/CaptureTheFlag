@@ -75,24 +75,25 @@ class HomeActivity : AppCompatActivity(){
                 velocityX: Float,
                 velocityY: Float
             ): Boolean {
-                if((e1?.x ?: 0f) < (e2.x)){
-                    openDrawerLayout()
-                    return true
+                    if((e1?.x ?: 0f) < (e2.x)){
+                        openDrawerLayout()
+                        return true
+                    }
+                    else if((e1?.x?:0f) > e2.x){
+                        closeDrawerLayout()
+                        return true
+                    }
+                    return super.onFling(e1, e2, velocityX, velocityY)
                 }
-                else if((e1?.x?:0f) > e2.x){
-                    closeDrawerLayout()
-                    return true
-                }
-                return super.onFling(e1, e2, velocityX, velocityY)
-            }
-        })
+        }
+       )
     }
     private fun openDrawerLayout(){
         binding.drawerLayout.openDrawer(GravityCompat.START)
     }
+
     private fun closeDrawerLayout(){
         binding.drawerLayout.closeDrawer(GravityCompat.START)
-
     }
-    }
+}
 

@@ -84,7 +84,7 @@ exports.isUserRegisterforEvents = (async (req, res) => {
         for( let i =0; i < lvl ; i++ ){
             seq.push(Math.floor(Math.random() * node_at_each_level));
         }
-        console.log('seq',seq);
+
             await knex('user_event_participation')
                 .insert({
                     user_id: uid,

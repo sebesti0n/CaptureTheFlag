@@ -5,7 +5,7 @@ module.exports = {
   development: {
     client: 'pg',
     connection: {
-    connectionString: "postgres://sebesti0n:gw7QfAMiXEOuba91HTExYDhgTOcbNbZR@dpg-cn3nuu21hbls73adigng-a.oregon-postgres.render.com/dcc_ctf_db",
+    connectionString: process.env.DB_URL,
     ssl: { rejectUnauthorized: false }, 
     },
     migrations: {
