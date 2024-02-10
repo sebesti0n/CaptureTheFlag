@@ -50,6 +50,7 @@ class ContestFragment : Fragment(),PermissionListener{
         binding.btnScan.setOnClickListener {
             Log.w("sebastian ","button clicked")
             permissionHelper.checkPermissions(Manifest.permission.CAMERA)
+            setupScanner()
         }
         binding.submit.setOnClickListener {
             handleOnClickofSubmitButton()

@@ -46,7 +46,7 @@ class EventFragment : Fragment() {
         isLive = args.isLive
         updateUI()
         binding.btnRegisteredEvent.setOnClickListener {
-            if(!isRegister)fetchRegisterStatusforEvent()
+            if(!isRegister)registerUserForEvent()
             if(isLive){
                 val action = EventFragmentDirections.actionEventFragmentToContestFragment(eid.toInt())
                 findNavController().navigate(action)
@@ -55,7 +55,7 @@ class EventFragment : Fragment() {
 
     }
     @SuppressLint("SetTextI18n")
-    private fun fetchRegisterStatusforEvent() {
+    private fun registerUserForEvent() {
         viewModel.registerUserForEvent(eid.toInt())
     }
 

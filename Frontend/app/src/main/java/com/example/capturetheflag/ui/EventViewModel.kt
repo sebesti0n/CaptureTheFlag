@@ -61,7 +61,7 @@ class EventViewModel(app:Application):AndroidViewModel(app) {
 
     }
     fun registerUserForEvent(eid:Int){
-            RetrofitInstances.service.getStatusRegistration(id,eid)
+            RetrofitInstances.service.registerUserForRegistration(id,eid)
                 .enqueue(object: Callback<StatusModel>{
                     override fun onResponse(
                         call: Call<StatusModel>,

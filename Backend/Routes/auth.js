@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const dotenv =require('dotenv');
-const DB = require('../Configuration/dbConnect');
 const loginMiddleware = require('../middlewares/loginMiddleware');
 const registrationMiddleware = require('../middlewares/registrationMiddleware');
 const validationMiddleware = require('../middlewares/validationMiddleware');

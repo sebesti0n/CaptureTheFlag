@@ -11,7 +11,7 @@ router.get('/live', eventcontroller.liveEvents);
 router.get('/register', eventcontroller.registeredEventforUser);
 router.get('/history', eventcontroller.historyEventofUser);
 router.get('/submit', answercontroller.submitAnswer);
-router.get('/registration/status', eventregistrationcontroller.isUserRegisterforEvents);
+router.get('/event-registration', eventregistrationcontroller.isUserRegisterforEvents);
 router.get('/openStatus', eventregistrationcontroller.onOpenEventPage);
 router.get('/eventRegistration',eventcontroller.registerUserinEvents);
 router.get('/get-riddles', answercontroller.getRiddles);

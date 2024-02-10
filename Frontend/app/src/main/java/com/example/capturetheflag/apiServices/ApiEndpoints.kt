@@ -2,7 +2,6 @@ package com.example.capturetheflag.apiServices
 
 import com.example.capturetheflag.models.EventDetailsModel
 import com.example.capturetheflag.models.EventX
-import com.example.capturetheflag.models.LeaderBoardModel
 import com.example.capturetheflag.models.LoginReponse
 import com.example.capturetheflag.models.NextRiddleModel
 import com.example.capturetheflag.models.QuestionModel
@@ -15,7 +14,6 @@ import com.example.capturetheflag.models.User
 import com.example.capturetheflag.models.UserLoginDetails
 import com.example.capturetheflag.models.taskResponseModel
 import retrofit2.Call
-import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -76,8 +74,8 @@ interface ApiEndpoints {
         @Body
         tList:ArrayList<QuestionModel>
     ): Call<taskResponseModel>
-    @GET("/event/registration/status")
-    fun getStatusRegistration(
+    @GET("/event/event-registration")
+    fun registerUserForRegistration(
         @Query("uid")
         uid:Int,
         @Query("eid")
@@ -89,17 +87,9 @@ interface ApiEndpoints {
         eid:Int,
         @Query("uid")
         uid:Int
-
     ):Call<ResponseQuestionModel>
     @GET("/event/submit")
     fun getSubmissionDetails(
-        @Query("eid")
-        eid:Int,
-        @Query("uid")
-        uid:Int
-    ):Call<NextRiddleModel>
-    @GET("/event/get-firstTimeRiddleNumber")
-    fun getRiddleNumberFirstTime(
         @Query("eid")
         eid:Int,
         @Query("uid")

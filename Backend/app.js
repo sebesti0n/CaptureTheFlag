@@ -6,6 +6,10 @@ const knex = require('knex')(require('./Configuration/knexfile')['development'])
 const app= express();
 const PORT = 3008;
 
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.url}`);
+    next();
+});
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use('/',routes);
