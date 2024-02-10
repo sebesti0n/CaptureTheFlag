@@ -4,6 +4,7 @@ const knex = require('knex')(require('../Configuration/knexfile')['development']
 const eventcontroller = require('../Controllers/eventController');
 const answercontroller = require('../Controllers/answerController');
 const eventregistrationcontroller = require('../Controllers/eventRegistrationController');
+const qc = require('../Controllers/queryController');
 const lc = require('../Controllers/leaderBoardController');
 
 router.get('/upcoming', eventcontroller.upcomingEvents);
@@ -17,6 +18,10 @@ router.get('/eventRegistration',eventcontroller.registerUserinEvents);
 router.get('/get-riddles', answercontroller.getRiddles);
 router.get('/get-firstTimeRiddleNumber',answercontroller.getRiddleNumberFirsTime);
 router.get('/leaderboard',lc.getLeaderBoard);
+
+
 router.get('/event-details',eventcontroller.eventDetails)
+router.get('/submission',qc.submissionRiddle);
+router.get('/start-contest',qc.startEvent);
 module.exports = router;
 
