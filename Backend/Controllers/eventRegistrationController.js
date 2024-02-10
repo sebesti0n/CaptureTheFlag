@@ -76,8 +76,6 @@ exports.isUserRegisterforEvents = (async (req, res) => {
         const data =await knex('events')
                     .where('event_id','=',eid)
                     .returning('No_of_questions');
-        let n = data[0].No_of_questions;
-        
             await knex('user_event_participation')
                 .insert({
                     user_id: uid,
