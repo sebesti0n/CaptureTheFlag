@@ -5,11 +5,15 @@ const loginMiddleware = require('../middlewares/loginMiddleware');
 const registrationMiddleware = require('../middlewares/registrationMiddleware');
 const validationMiddleware = require('../middlewares/validationMiddleware');
 const userController = require('../Controllers/userController');
+const knex = require('knex')(require('../Configuration/knexfile')['development']);
+
 
 
 dotenv.config();
-router.get('/', (req, res) => {
-    return res.send("Om Namah Shivaay");
+router.get('/', async (req, res) => {
+const data = await knex('user_event_participation')
+            .returning('*');
+            res.status(200).json({datas:data})
 });
 router.post('/register',registrationMiddleware,userController.userRegistration);
 router.post('/login',loginMiddleware, (req, res) => {

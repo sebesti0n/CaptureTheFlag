@@ -73,19 +73,30 @@ exports.isUserRegisterforEvents = (async (req, res) => {
     try {
         const eid = req.query.eid;
         const uid = req.query.uid;
+        console.log('eid and uid - ',eid,uid);
         const data =await knex('events')
                     .where('event_id','=',eid)
-                    .returning('No_of_questions');
+                    .returning('levels','node_at_each_level');
+        console.log('data', data);
+        let seq = [];
+        let lvl = data[0].levels;
+        let node_at_each_level = data[0].node_at_each_level;
+        for( let i =0; i < lvl ; i++ ){
+            seq.push(Math.floor(Math.random() * node_at_each_level));
+        }
+
             await knex('user_event_participation')
                 .insert({
                     user_id: uid,
                     event_id: eid,
-                    is_registered: true
+                    is_registered: true,
+                    sequence:seq
                 })
+                console.log(seq);
         return res.status(200).json({success:true,message:"ok"})
 
     } catch (error) {
         console.log(error)
-        res.status(503).json({success:true,message:"ok"});
+        res.status(503).json({success:false,message:"Internal Server Error"});
     }
 });

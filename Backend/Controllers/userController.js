@@ -1,7 +1,5 @@
 const knex = require('knex')(require('../Configuration/knexfile')['development']);
 
-
-
 exports.userRegistration = async(req,res)=>{
     const {Email, password, cnfpassword, FirstName, LastName, MobileNo, CollegeName, token} = req;
     

@@ -6,8 +6,7 @@ exports.upcomingEvents = (async (req, res) => {
         const currTime = currentDate.getTime()
         console.log(currTime);
         const events = await knex('events')
-            .select('*')
-            .where('start_ms', '>', currTime);
+            .where('start_ms', '>', currTime).returning('*');
         console.log(events);
         res.status(200).json({ success: true, message: "ok", event: events });
     } catch (err) {
