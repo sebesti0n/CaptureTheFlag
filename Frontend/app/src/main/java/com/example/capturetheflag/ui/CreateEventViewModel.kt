@@ -2,19 +2,15 @@ package com.example.capturetheflag.ui
 
 import android.app.Application
 import android.util.Log
-import android.view.View
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.capturetheflag.apiServices.RetrofitInstances
 import com.example.capturetheflag.models.EventX
 import com.example.capturetheflag.models.QuestionModel
 import com.example.capturetheflag.models.ResponseEventModel
 import com.example.capturetheflag.models.taskResponseModel
-import com.example.capturetheflag.sharedprefrences.userPreferences
-import kotlinx.coroutines.launch
+import com.example.capturetheflag.session.Session
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -27,7 +23,7 @@ class CreateEventViewModel(
     fun get(): LiveData<ResponseEventModel>?{
         return eventResposeLiveData!!
     }
-    private val session = userPreferences.getInstance(app.applicationContext)
+    private val session = Session.getInstance(app.applicationContext)
     fun getUID():Int = session.getUID()
 
     fun createEvent(event: EventX){

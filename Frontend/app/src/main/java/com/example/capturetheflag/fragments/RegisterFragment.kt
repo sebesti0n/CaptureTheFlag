@@ -10,19 +10,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
-import androidx.navigation.Navigation
-import com.example.capturetheflag.R
 import com.example.capturetheflag.activities.HomeActivity
 import com.example.capturetheflag.databinding.FragmentRegisterBinding
 import com.example.capturetheflag.models.User
-import com.example.capturetheflag.sharedprefrences.userPreferences
+import com.example.capturetheflag.session.Session
 import com.example.capturetheflag.ui.RegisterViewModel
 
 class RegisterFragment : Fragment() {
 
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding!!
-    private lateinit var sharedPref:userPreferences
+    private lateinit var sharedPref: Session
     private lateinit var viewModel: RegisterViewModel
     private lateinit var firstName:String
     private lateinit var lastName:String
@@ -52,7 +50,7 @@ class RegisterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sharedPref = userPreferences(requireActivity())
+        sharedPref = Session(requireActivity())
         viewModel = ViewModelProvider(this)[RegisterViewModel::class.java]
 
 

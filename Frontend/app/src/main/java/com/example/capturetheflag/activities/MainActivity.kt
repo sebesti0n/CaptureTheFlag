@@ -2,18 +2,16 @@ package com.example.capturetheflag.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.capturetheflag.R
 import com.example.capturetheflag.databinding.ActivityMainBinding
-import com.example.capturetheflag.sharedprefrences.userPreferences
+import com.example.capturetheflag.session.Session
 
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var sharedPref: userPreferences
+    private lateinit var sharedPref: Session
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,7 +19,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.hide()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        sharedPref =userPreferences(this)
+        sharedPref =Session(this)
         if (sharedPref.isLogin()){
             val intent = Intent(this,HomeActivity::class.java)
             startActivity(intent)

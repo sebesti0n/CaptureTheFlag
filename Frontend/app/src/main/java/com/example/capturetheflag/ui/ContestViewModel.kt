@@ -5,16 +5,11 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.capturetheflag.apiServices.RetrofitInstances
 import com.example.capturetheflag.models.NextRiddleModel
 import com.example.capturetheflag.models.QuestionModel
 import com.example.capturetheflag.models.ResponseQuestionModel
-import com.example.capturetheflag.sharedprefrences.userPreferences
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.example.capturetheflag.session.Session
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -27,7 +22,7 @@ class ContestViewModel(
     fun get():LiveData<ArrayList<QuestionModel>>{
         return riddlesLivedata
     }
-    private val session = userPreferences.getInstance(app.applicationContext)
+    private val session = Session.getInstance(app.applicationContext)
     fun getUID() = session.getUID()
     private val id = session.getUID()
     fun getRiddles(eid: Int) {

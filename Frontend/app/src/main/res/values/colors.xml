@@ -17,4 +17,12 @@
     <color name="darktextcolor">#1b1b1b</color>
     <color name="transparentBgBlack">#BE989898</color>
     <color name="ic_blue">#00699C</color>
+
+<!--    actual color pallete-->
+    <color name="blue_darkest">#00072D</color>
+    <color name="blue_darker">#001C55</color>
+    <color name="blue">#0A2472</color>
+    <color name="blue_light">#0E6BA8</color>
+    <color name="blue_lighest">#A6E1FA</color>
+    <color name="text_color">#808080</color>
 </resources>
