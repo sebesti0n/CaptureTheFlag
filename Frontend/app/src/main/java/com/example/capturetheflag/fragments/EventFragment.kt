@@ -118,8 +118,8 @@ class EventFragment : Fragment() {
     private fun updateUI() {
         if (eid.toInt() == -1) {
             binding.contentDescription.text = "Not found"
-            binding.contentDetails.text = "Not Found"
-            binding.contentPrizes.text = "Not Found"
+//            binding.contentDetails.text = "Not Found"
+//            binding.contentPrizes.text = "Not Found"
         } else {
             viewModel.eventDetails(eid.toInt()) { it, error ->
                 if (error == true) {
@@ -135,8 +135,8 @@ class EventFragment : Fragment() {
                             Log.w("sebastian", "event")
                             setCountDownTimer(event.start_time, event.end_time)
                             binding.contentDescription.text = event.description
-                            binding.contentDetails.text = "Start At: ${event.start_time} \n End At: ${event.end_time}"
-                            binding.contentPrizes.text = "Amazing Goodies"
+//                            binding.contentDetails.text = "Start At: ${event.start_time} \n End At: ${event.end_time}"
+//                            binding.contentPrizes.text = "Amazing Goodies"
                             val imgview = binding.banner
                             Glide.with(requireContext())
                                 .load(event.posterImage)

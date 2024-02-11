@@ -73,6 +73,7 @@ class RegisterFragment : Fragment() {
                 showToastMessage("Enter Correct Email")
             }else
              {
+                 showProgressBar()
                 val newUser = User(collegeName,email,firstName,lastName,mobileNo,cnfPassword,password)
                 viewModel.register(newUser)
                 viewModel.get()?.observe(requireActivity(), Observer {
@@ -81,6 +82,7 @@ class RegisterFragment : Fragment() {
                         moveToHome()
 
                     }else{
+                        hideProgressBar()
                         showToastMessage(it.message)
                     }
                 })
@@ -89,11 +91,18 @@ class RegisterFragment : Fragment() {
     }
 
     private fun moveToHome() {
+        hideProgressBar()
         val intent = Intent(requireContext(), HomeActivity::class.java)
         startActivity(intent)    }
 
     private fun showToastMessage(msg: String) {
     Toast.makeText(requireActivity(),msg,Toast.LENGTH_SHORT).show()
+    }
+    private fun showProgressBar(){
+        binding.progress.visibility=View.VISIBLE
+    }
+    private fun hideProgressBar(){
+        binding.progress.visibility=View.INVISIBLE
     }
 
 }

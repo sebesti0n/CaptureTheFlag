@@ -54,10 +54,10 @@ class AdminHomeFragment : Fragment(),EventItemClickListener {
 
     private fun getEventList() {
         viewModel.getAdminEvents()
-        viewModel.get()?.observe(requireActivity()) {
-            Log.w("Sebastian it",it.event.toString())
-            eList = it.event
-            adapter.setdata(it.event)
+        viewModel.eventResponseLiveData.observe(requireActivity()) {
+            Log.w("Sebastian it", it.data?.event.toString())
+            eList = it.data?.event!!
+            adapter.setdata(eList)
         }
 
     }

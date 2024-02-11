@@ -35,8 +35,8 @@ class AdminEventFragment : Fragment() {
         val eid = args.eid
         if (eid.toInt() ==-1){
             binding.contentDescription.text =  "Not found"
-            binding.contentDetails.text = "Not Found"
-            binding.contentPrizes.text = "Not Found"
+//            binding.contentDetails.text = "Not Found"
+//            binding.contentPrizes.text = "Not Found"
         }
         else{
         viewModel.getAdminEventbyId(eid.toInt())
@@ -44,8 +44,8 @@ class AdminEventFragment : Fragment() {
             val event = it.event.get(0)
             Log.w("sebastian","event")
             binding.contentDescription.text =  event.description
-            binding.contentDetails.text = "Start At: ${event.start_time} \n End At: ${event.end_time}"
-            binding.contentPrizes.text = "Amazing Goodies"
+//            binding.contentDetails.text = "Start At: ${event.start_time} \n End At: ${event.end_time}"
+//            binding.contentPrizes.text = "Amazing Goodies"
         }
         }
 
