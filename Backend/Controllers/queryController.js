@@ -19,6 +19,7 @@ exports.submissionRiddle = ( async (req, res) => {
     return res.status(200).json({success:true,message:'Next Riddle', next:data[0]});
 
  } catch (error) {
+    console.log(error);
     return res.status(500).json({ success: false, message: "unknown Error!", next: null });
  }
 }); 
