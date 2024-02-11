@@ -4,10 +4,10 @@ exports.submissionRiddle = ( async (req, res) => {
  try {
     const end_time = req.query.et;
     const eid = req.query.eid;
-    const uid = req.query.uid;
+    const tid = req.query.tid;
     const data = await knex('user_event_participation')
                 .where('event_id','=',eid)
-                .andWhere('user_id','=',uid)
+                .andWhere('team_id','=',tid)
                 .update({
                     end_time:end_time
                 }).increment('Number_correct_answer',1)
@@ -27,17 +27,22 @@ exports.submissionRiddle = ( async (req, res) => {
 
 exports.startEvent = ( async (req, res) =>{
     try {
-        const uid = req.query.uid;
+        const tid = req.query.tid;
         const eid = req.query.eid;
         const start_time = req.query.st;
-
-        const data = await knex('user_event_participation')
-                .where('event_id','=',eid)
-                .andWhere('user_id','=',uid)
+        await knex('user_event_participation')
+                .whereNull('start_time')
+                .orWhere('start_time','=',0)
+                .andWhere('event_id','=',eid)
+                .andWhere('team_id','=',tid)
                 .update({
                     start_time:start_time,
                     end_time:start_time
                 })
+                
+        const data = await knex('user_event_participation')
+                .where('event_id','=',eid)
+                .andWhere('team_id','=',tid)
                 .returning('*');
                 console.log('data',data);
     let next = 0;
