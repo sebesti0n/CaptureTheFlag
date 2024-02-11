@@ -7,7 +7,7 @@ const eventregistrationcontroller = require('../Controllers/eventRegistrationCon
 const qc = require('../Controllers/queryController');
 const lc = require('../Controllers/leaderBoardController');
 
-router.get('/upcoming', eventcontroller.upcomingEvents);
+router.get('/all', eventcontroller.upcomingEvents);
 router.get('/live', eventcontroller.liveEvents);
 router.get('/register', eventcontroller.registeredEventforUser);
 router.get('/history', eventcontroller.historyEventofUser);

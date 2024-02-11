@@ -6,7 +6,7 @@ exports.upcomingEvents = (async (req, res) => {
         const currTime = currentDate.getTime()
         console.log(currTime);
         const events = await knex('events')
-            .where('start_ms', '>', currTime).returning('*');
+            .where('start_ms', '>=', currTime).returning('*');
         console.log(events);
         res.status(200).json({ success: true, message: "ok", event: events });
     } catch (err) {
@@ -79,9 +79,9 @@ exports.historyEventofUser = (async (req, res) => {
 
 exports.registerUserinEvents = (async (req, res) => {
     try {
-        const { user_id, event_id, registration_time, is_registered, start_time, end_time, Number_correct_answers, Rank } = req.body;
+        const { team_id, event_id, registration_time, is_registered, start_time, end_time, Number_correct_answers, Rank } = req.body;
         const data = await knex('user_event_participation').insert({
-            user_id: user_id,
+            team_id: team_id,
             event_id: event_id,
             registration_time: registration_time,
             is_registered: is_registered,
@@ -101,14 +101,14 @@ exports.registerUserinEvents = (async (req, res) => {
 exports.eventDetails = (async (req,res)=>{
     try {
         const eid = req.query.eid;
-        const uid = req.query.uid;
+        const tid = req.query.tid;
         const events = await knex('events')
         .select('*')
         .where('event_id','=',eid);
         const data = await knex('user_event_participation')
             .select('is_registered')
             .where('event_id', eid)
-            .andWhere('user_id', uid)
+            .andWhere('team_id', tid)
         let is_register=false;
         if(data.length>0)is_register=true;
         res.status(200).json({success: true,message:"ok",isRegister:is_register,event:events});
