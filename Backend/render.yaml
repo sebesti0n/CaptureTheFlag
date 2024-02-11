@@ -1,3 +1,0 @@
-version: 1
-buildCommand: cd backend && npm install
-startCommand: cd backend && npm start
