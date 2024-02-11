@@ -2,19 +2,17 @@ package com.example.capturetheflag.ui
 
 import android.app.Application
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import com.example.capturetheflag.apiServices.RetrofitInstances
-import com.example.capturetheflag.models.LeaderBoardModel
 import com.example.capturetheflag.models.StandingModel
-import com.example.capturetheflag.sharedprefrences.userPreferences
+import com.example.capturetheflag.session.Session
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class RankingViewModel( app: Application
 ) : AndroidViewModel(app)  {
-    private val session = userPreferences.getInstance(app.applicationContext)
+    private val session = Session.getInstance(app.applicationContext)
     fun getUID() = session.getUID()
     private val id = session.getUID()
 

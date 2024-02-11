@@ -6,26 +6,31 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.capturetheflag.R
 import com.example.capturetheflag.models.Event
 import com.example.capturetheflag.util.EventItemClickListener
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.imageview.ShapeableImageView
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-class EventAdapter(private val listner: EventItemClickListener):
-    RecyclerView.Adapter<EventAdapter.EventViewHolder>() {
+class EventAdapter(
+    private val listner: EventItemClickListener
+): RecyclerView.Adapter<EventAdapter.EventViewHolder>() {
 
-        private var list :ArrayList<Event> = arrayListOf()
+    private var list :ArrayList<Event> = arrayListOf()
 
-        class EventViewHolder(view:View):RecyclerView.ViewHolder(view){
-            val title = view.findViewById<TextView>(R.id.heading)
-            val organiser= view.findViewById<TextView>(R.id.org_company)
-            val location = view.findViewById<TextView>(R.id.location)
-            val date = view.findViewById<TextView>(R.id.event_date)
-            val month =  view.findViewById<TextView>(R.id.event_month)
-        }
+    class EventViewHolder(view:View):RecyclerView.ViewHolder(view){
+        val image: ShapeableImageView = view.findViewById(R.id.event_image)
+        val headingText: TextView = view.findViewById(R.id.titleTv)
+        val locationText: TextView = view.findViewById(R.id.location_tv)
+        val organisationText: TextView = view.findViewById(R.id.organisation_tv)
+        val learnMoreBtn: MaterialButton = view.findViewById(R.id.btn_learn_more)
+    }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -36,12 +41,15 @@ class EventAdapter(private val listner: EventItemClickListener):
     override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
         val currEvent = list[position]
         val dayandDate = getDayandMonth(currEvent.start_time)
-        holder.title.text = currEvent.title
-        holder.date.text =dayandDate.first
-        holder.month.text =dayandDate.second
-        holder.location.text = currEvent.location
-        holder.organiser.text = currEvent.organisation
-        holder.itemView.setOnClickListener {
+
+        Glide.with(holder.itemView.context)
+            .load(currEvent.posterImage)
+            .into(holder.image)
+
+        holder.headingText.text = currEvent.title
+        holder.organisationText.text = currEvent.organisation
+        holder.locationText.text = currEvent.location
+        holder.learnMoreBtn.setOnClickListener {
             listner.onEventClickListner(currEvent)
         }
     }
@@ -68,6 +76,11 @@ class EventAdapter(private val listner: EventItemClickListener):
             )
             val monthAbbreviation = monthAbbreviations[monthNumber]
         return Pair(day.toString(),monthAbbreviation)
+    }
+
+    fun setData(newList: List<Event>) {
+        list = ArrayList(newList)
+        notifyDataSetChanged()
     }
 
 }

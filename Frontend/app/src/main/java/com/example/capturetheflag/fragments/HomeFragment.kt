@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -34,8 +35,6 @@ class HomeFragment : Fragment(),EventItemClickListener,LiveEventClickListner {
     private var _binding: FragmentHomefragmentBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: HomeFragmentViewModel
-    private lateinit var viewPagerAdapter: ViewPagerAdapter
-    private lateinit var viewPager: ViewPager
     private lateinit var mLiveList:ArrayList<Event>
     private lateinit var mUpcomingEvent: ArrayList<Event>
     private lateinit var adapter:EventAdapter
@@ -55,121 +54,46 @@ class HomeFragment : Fragment(),EventItemClickListener,LiveEventClickListner {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this)[HomeFragmentViewModel::class.java]
-
         initializeMembervariables()
-        viewPager = binding.viewPager2
-        val isConnected = NetworkHelper.isInternetAvailable(requireContext())
-        if(isConnected) {
-            setupUpcomingEventRecyclerView()
-            fetchUpcomingEventList()
-            fetchLiveEventList()
+        setUpRecyclerView()
+        if(NetworkHelper.isInternetAvailable(requireContext())){
+            viewModel.getLiveEvents()
         }
-        else{
-            Toast.makeText(requireContext(),"Network Unavailable",Toast.LENGTH_SHORT).show()
+        else showSnackbar("Please connect to internet")
+
+        viewModel.liveEventResponseLiveData.observe(viewLifecycleOwner, Observer {
+            adapter.setdata(it.event)
+        })
+    }
+
+    private fun setUpRecyclerView(){
+        adapter = EventAdapter(listner)
+        binding.apply {
+            eventsRcv.adapter = adapter
+            eventsRcv.layoutManager = LinearLayoutManager(requireContext())
         }
     }
 
     private fun fetchLiveEventList() {
-        hideViewPager()
-        showViewPagerProgressBar()
-        viewModel.getLiveEvents()
-        viewModel.getLive().observe(requireActivity()){
-            if(it==null||it.event.size == 0){
-                showSnackbar("No Live Events is Active")
-                hideViewPager()
-                hideViewPagerProgressBar()
-            }
-            else{
-                mLiveList = it.event
-                if(mLiveList.size > 0) {
-                    loadcards()
-                    showViewPager()
-                }
-                else
-                    hideViewPager()
-                hideViewPagerProgressBar()
-
-            }
-
-    }
-
-    }
-//
-    @OptIn(DelicateCoroutinesApi::class)
-    private fun fetchUpcomingEventList() {
-        hideRv()
-        showRvProgressBar()
-            viewModel.getUpcomingEvents()
-            viewModel.get().observe(requireActivity()){
-                if(it==null||it.event.size==0) {
-                    showSnackbar("No Events Upcoming Events")
-                    hideRvProgressBar()
-                }
-                else{
-                    mUpcomingEvent = it.event
-                    adapter.setdata(it.event)
-                    adapter.notifyDataSetChanged()
-                    hideRvProgressBar()
-                    showRv()
-
-                    Log.w("sebastian Home",it.event.toString())
-                }
-            }
-            Log.w("sebastian Home",mUpcomingEvent.toString())
-        }
-
-
-
-    private fun setupUpcomingEventRecyclerView() {
-        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerView.adapter = adapter
+        viewModel.getUpcomingEvents()
     }
 
     private fun initializeMembervariables() {
         mLiveList = ArrayList()
         mUpcomingEvent = ArrayList()
-        adapter = EventAdapter(listner)
-    }
-
-    private fun loadcards() {
-        CoroutineScope(Dispatchers.Main).launch{
-            viewPagerAdapter = context?.let { ViewPagerAdapter(it, mLiveList, listenerLive) }!!
-            viewPager.adapter = viewPagerAdapter
-            viewPagerAdapter.setInitialPosition(viewPager)
-            hideViewPagerProgressBar()
-        }
     }
 
     override fun onEventClickListner(event: Event) {
-        val action = HomeFragmentDirections.actionHomefragmentToEventFragment(event.event_id.toLong())
+        moveToEventFragment(event.event_id)
+    }
+
+    private fun moveToEventFragment(id: Int){
+        val action = HomeFragmentDirections.actionHomefragmentToEventFragment(id.toLong())
         findNavController().navigate(action)
     }
-    private fun showSnackbar(message:String){
-        Toast.makeText(requireActivity(),message,Toast.LENGTH_LONG).show()
-    }
-    private fun showViewPagerProgressBar(){
-        binding.vpProgressBar.visibility = View.VISIBLE
-    }
-    private fun hideViewPagerProgressBar(){
-        binding.vpProgressBar.visibility = View.INVISIBLE
-    }
-    private fun showViewPager(){
-        binding.viewPager2.visibility = View.VISIBLE
-    }
-    private fun hideViewPager(){
-        binding.viewPager2.visibility = View.INVISIBLE
-    }
-    private fun showRvProgressBar(){
-        binding.rvProgressBar.visibility = View.VISIBLE
-    }
-    private fun hideRvProgressBar(){
-        binding.rvProgressBar.visibility = View.INVISIBLE
-    }
-    private fun showRv(){
-        binding.recyclerView.visibility = View.VISIBLE
-    }
-    private fun hideRv(){
-        binding.recyclerView.visibility = View.INVISIBLE
+
+    private fun showSnackbar(message: String){
+        Snackbar.make(requireView(), message, 2000).show()
     }
 
     override fun onLiveEventClickListner(event: Event) {

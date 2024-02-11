@@ -20,6 +20,7 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface ApiEndpoints {
+
     @POST("/register")
     fun register(
         @Body
@@ -31,21 +32,25 @@ interface ApiEndpoints {
         @Body
         userCredentials:UserLoginDetails?
     ) : Call<LoginReponse>
+
     @POST("/admin/create")
    fun createEvent(
         @Body
         event: EventX
     ): Call<ResponseEventModel>
+
     @GET("/admin/event")
     fun getEvent(
         @Query("owner")
         ownerID:Int
     ): Call<ResponseEventModel>
+
     @GET("/admin/event-details")
     fun getEventbyId(
         @Query("eid")
         eid:Int
     ): Call<ResponseEventModel>
+
     @GET("/event/event-details")
     fun getEventDetails(
         @Query("uid")
@@ -53,20 +58,25 @@ interface ApiEndpoints {
         @Query("eid")
         eid:Int
     ): Call<EventDetailsModel>
+
     @GET("/event/register")
     fun getRegisteredEventbyId(
         @Query("uid")
         uid:Int
     ): Call<ResponseEventModel>
+
     @GET("/event/history")
     fun getPreviousEventbyId(
         @Query("uid")
         uid:Int
     ): Call<ResponseEventModel>
+
     @GET("/event/live")
    fun getliveEvent(): Call<ResponseEventModel>
 
-    @GET("/event/upcoming")
+
+   //all events (live + upcoming)
+    @GET("/event/all")
     fun getupcomingEvent(): Call<ResponseEventModel>
 
     @POST("/admin/addRiddles")
@@ -74,6 +84,7 @@ interface ApiEndpoints {
         @Body
         tList:ArrayList<QuestionModel>
     ): Call<taskResponseModel>
+
     @GET("/event/event-registration")
     fun registerUserForRegistration(
         @Query("uid")
@@ -81,6 +92,7 @@ interface ApiEndpoints {
         @Query("eid")
         eid:Int
     ) : Call<StatusModel>
+
     @GET("/event/get-riddles")
     fun getRiddles(
         @Query("eid")
@@ -88,6 +100,7 @@ interface ApiEndpoints {
         @Query("uid")
         uid:Int
     ):Call<ResponseQuestionModel>
+
     @GET("/event/submit")
     fun getSubmissionDetails(
         @Query("eid")
@@ -95,10 +108,9 @@ interface ApiEndpoints {
         @Query("uid")
         uid:Int
     ):Call<NextRiddleModel>
+
     fun getStandings(
         @Query("eid")
         eid:Int
     ):Call<StandingModel>
-
-
 }

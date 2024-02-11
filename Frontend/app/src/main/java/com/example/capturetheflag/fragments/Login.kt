@@ -8,40 +8,34 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.findNavController
 import com.example.capturetheflag.R
 import com.example.capturetheflag.activities.HomeActivity
 import com.example.capturetheflag.apiServices.RetrofitInstances
 import com.example.capturetheflag.databinding.FragmentLoginBinding
 import com.example.capturetheflag.models.LoginReponse
 import com.example.capturetheflag.models.UserLoginDetails
-import com.example.capturetheflag.sharedprefrences.userPreferences
+import com.example.capturetheflag.session.Session
 import com.example.capturetheflag.ui.LoginViewModel
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.launch
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Response
-import java.util.regex.Pattern
-import javax.security.auth.callback.Callback
 
 class Login : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: LoginViewModel
-    private lateinit var sharedPref:userPreferences
+    private lateinit var sharedPref:Session
     private lateinit var emailEditText: TextInputEditText
     private lateinit var passwordEditText: TextInputEditText
     private lateinit var registerTextView: TextView
     private lateinit var loginButton: AppCompatButton
-    private lateinit var googleButton: ImageView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,19 +48,14 @@ class Login : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sharedPref = userPreferences((requireActivity()))
+        sharedPref = Session((requireActivity()))
         emailEditText = binding.etEmail
         passwordEditText = binding.etPassword
         registerTextView = binding.tvRegisternow
         loginButton = binding.btnLogin
-        googleButton = binding.btnGoogle
 
         if (sharedPref.isLogin()){
             moveToHome()
-        }
-
-        googleButton.setOnClickListener{
-            googleRegistration()
         }
         loginButton.setOnClickListener {
             if(!android.util.Patterns.EMAIL_ADDRESS.matcher(emailEditText.text.toString()).matches()){
@@ -129,10 +118,6 @@ class Login : Fragment() {
 
 
     }
-
-    private fun googleRegistration() {
-        TODO("Not yet implemented")
-    }
     private fun moveToHome(){
         val intent = Intent(requireContext(),HomeActivity::class.java)
         startActivity(intent)
@@ -141,7 +126,6 @@ class Login : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this)[LoginViewModel::class.java]
-        // TODO: Use the ViewModel
     }
 
 }
