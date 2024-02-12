@@ -131,7 +131,7 @@ class EventFragment : Fragment() {
                                 .show()
                         } else {
                             event = it.event[0]
-                            isRegister = it.isRegister
+                            isRegister = true
                             Log.w("sebastian", "event")
                             setCountDownTimer(event.start_time, event.end_time)
                             binding.contentDescription.text = event.description

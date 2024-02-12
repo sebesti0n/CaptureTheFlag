@@ -1,7 +1,7 @@
 const knex = require('knex')(require('../Configuration/knexfile')['development']);
 
 exports.userRegistration = async(req,res)=>{
-    const {Email, password, cnfpassword, FirstName, LastName, MobileNo, CollegeName, token} = req;
+    const {Email, password, cnfpassword, FirstName, LastName, MobileNo, CollegeName, token , enroll_id} = req;
     
     try {
         console.log(Email);
@@ -13,7 +13,8 @@ exports.userRegistration = async(req,res)=>{
             FirstName:FirstName,
             LastName:LastName,
             MobileNo:MobileNo,
-            CollegeName:CollegeName            
+            CollegeName:CollegeName,
+            enroll_id:enroll_id            
         }).returning('*');
         console.log(user);
 

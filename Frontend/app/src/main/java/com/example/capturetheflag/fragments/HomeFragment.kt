@@ -1,35 +1,23 @@
 package com.example.capturetheflag.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.viewpager.widget.ViewPager
-import com.example.capturetheflag.R
 import com.example.capturetheflag.adapters.EventAdapter
-import com.example.capturetheflag.adapters.ViewPagerAdapter
 import com.example.capturetheflag.databinding.FragmentHomefragmentBinding
 import com.example.capturetheflag.helper.NetworkHelper
 import com.example.capturetheflag.models.Event
-import com.example.capturetheflag.models.PagerContent
 import com.example.capturetheflag.ui.HomeFragmentViewModel
 import com.example.capturetheflag.util.EventItemClickListener
 import com.example.capturetheflag.util.LiveEventClickListner
 import com.example.capturetheflag.util.Resource
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 
 class HomeFragment : Fragment(),EventItemClickListener,LiveEventClickListner {
@@ -120,7 +108,14 @@ class HomeFragment : Fragment(),EventItemClickListener,LiveEventClickListner {
     }
 
     override fun onLiveEventClickListner(event: Event) {
-        val action = HomeFragmentDirections.actionHomefragmentToEventFragment(event.event_id.toLong(),true)
+        val isLive = isEventLive(event)
+        val action = HomeFragmentDirections.actionHomefragmentToEventFragment(event.event_id.toLong(),isLive)
         findNavController().navigate(action)
+    }
+    private fun isEventLive(event:Event):Boolean{
+        val currentTimeMillis = System.currentTimeMillis()
+        val startTimeMillis = event.start_ms.toLong()
+        val endTimeMillis = event.end_ms.toLong()
+        return currentTimeMillis in startTimeMillis..endTimeMillis
     }
 }

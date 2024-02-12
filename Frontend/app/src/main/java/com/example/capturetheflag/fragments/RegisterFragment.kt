@@ -30,6 +30,7 @@ class RegisterFragment : Fragment() {
     private lateinit var collegeName:String
     private lateinit var password:String
     private lateinit var cnfPassword:String
+    private lateinit var enrollmentID:String
 
 
 
@@ -44,7 +45,7 @@ class RegisterFragment : Fragment() {
 
     @SuppressLint("SuspiciousIndentation")
     private fun checkCredentials(): Boolean {
-    if(cnfPassword.isEmpty() || collegeName.isEmpty() || email.isEmpty() || firstName.isEmpty() || mobileNo.isEmpty() || password.isEmpty())
+    if(cnfPassword.isEmpty() || collegeName.isEmpty() || email.isEmpty() || firstName.isEmpty() || mobileNo.isEmpty() || password.isEmpty() || enrollmentID.isEmpty())
         return true
         return password != cnfPassword
     }
@@ -53,12 +54,7 @@ class RegisterFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         sharedPref = Session(requireActivity())
         viewModel = ViewModelProvider(this)[RegisterViewModel::class.java]
-
-
-
-
         binding.btnLogin.setOnClickListener {
-
             email = binding.etEmail.text.toString()
             firstName = binding.etFirstname.text.toString()
             lastName =binding.etLastname.text.toString()
@@ -66,6 +62,7 @@ class RegisterFragment : Fragment() {
             mobileNo = binding.etMobileNo.text.toString()
             password = binding.etPassword.text.toString()
             cnfPassword = binding.etCnfpassword.text.toString()
+            enrollmentID = binding.etEnrollmentId.text.toString()
 
             if(checkCredentials()){
                 showToastMessage("fill all details")
@@ -75,7 +72,7 @@ class RegisterFragment : Fragment() {
             }else
              {
                  showProgressBar()
-                val newUser = User(collegeName,email,firstName,lastName,mobileNo,cnfPassword,password)
+                val newUser = User(collegeName,email,firstName,lastName,mobileNo,cnfPassword,password,enrollmentID)
                 viewModel.register(newUser)
 
                 viewModel.get()?.observe(requireActivity(), Observer { it ->
@@ -87,7 +84,8 @@ class RegisterFragment : Fragment() {
                                         this.user_id,
                                         this.email,
                                         true,
-                                        it.message!!
+                                        it.message!!,
+                                        this.enroll_id
                                     )
                                     moveToHome()
                                 }

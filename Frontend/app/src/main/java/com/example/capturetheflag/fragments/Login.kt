@@ -97,7 +97,7 @@ class Login : Fragment() {
                                 sharedPref.logOut()
                                 Log.d("CTF Login1",receivedata.userDetails.toString())
                                 Log.d("CTF Login2",receivedata.userDetails.email.toString())
-                                sharedPref.createSession(receivedata.userDetails.user_id,receivedata.userDetails.email,true,"token")
+                                sharedPref.createSession(receivedata.userDetails.user_id,receivedata.userDetails.email,true,"token",receivedata.userDetails.enroll_id)
                                 moveToHome()
                             } else {
                                 hideProgressBar()

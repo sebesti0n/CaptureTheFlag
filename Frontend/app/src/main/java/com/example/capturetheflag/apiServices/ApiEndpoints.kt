@@ -1,6 +1,6 @@
 package com.example.capturetheflag.apiServices
 
-import com.example.capturetheflag.models.EventDetailsModel
+import com.example.capturetheflag.models.EventsSchema
 import com.example.capturetheflag.models.EventX
 import com.example.capturetheflag.models.LoginReponse
 import com.example.capturetheflag.models.NextRiddleModel
@@ -57,7 +57,7 @@ interface ApiEndpoints {
         uid:Int,
         @Query("eid")
         eid:Int
-    ): Call<EventDetailsModel>
+    ): Call<EventsSchema>
 
     @GET("/event/register")
     fun getRegisteredEventbyId(

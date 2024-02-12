@@ -6,7 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.capturetheflag.apiServices.RetrofitInstances
-import com.example.capturetheflag.models.EventDetailsModel
+import com.example.capturetheflag.models.EventsSchema
 import com.example.capturetheflag.models.ResponseEventModel
 import com.example.capturetheflag.models.StatusModel
 import com.example.capturetheflag.session.Session
@@ -24,18 +24,18 @@ class EventViewModel(app:Application):AndroidViewModel(app) {
     private val session = Session.getInstance(app.applicationContext)
     private val id = session.getUID()
 
-    fun eventDetails(eid:Int, callback: (EventDetailsModel?,Boolean?) -> Unit){
+    fun eventDetails(eid:Int, callback: (EventsSchema?, Boolean?) -> Unit){
         val call = RetrofitInstances.service
-        call.getEventDetails(id,eid).enqueue(object: Callback<EventDetailsModel>{
+        call.getEventDetails(id,eid).enqueue(object: Callback<EventsSchema>{
             override fun onResponse(
-                call: Call<EventDetailsModel>,
-                response: Response<EventDetailsModel>
+                call: Call<EventsSchema>,
+                response: Response<EventsSchema>
             ) {
                 response.body()?.let {
                     callback(it,false)
                 }
             }
-            override fun onFailure(call: Call<EventDetailsModel>, t: Throwable) {
+            override fun onFailure(call: Call<EventsSchema>, t: Throwable) {
                 callback(null,true)
             }
         })

@@ -16,17 +16,20 @@ class Session(
         id:Int,
         email: String,
         isLogin:Boolean,
-        token: String
+        token: String,
+        enrollmentID:String
     ){
         editor.putInt(ID, id)
         editor.putString(EMAIL, email)
         editor.putBoolean(IS_LOGIN,isLogin)
         editor.putString(TOKEN, token)
+        editor.putString(ENROLLMENT_ID,enrollmentID)
         editor.apply()
     }
 
     fun getUID() : Int = sharedPreferences.getInt(ID, -1)
 
+    fun getEnrollmentID() : String = sharedPreferences.getString(ENROLLMENT_ID, "111111")!!
     fun getUserEmail(): String = sharedPreferences.getString(EMAIL, "")!!
 
     fun isLogin(): Boolean = sharedPreferences.getBoolean(IS_LOGIN, false)
@@ -43,6 +46,7 @@ class Session(
         private const val IS_LOGIN = "first_time"
         private const val TOKEN = "token"
         private const val ID = "id"
+        private const val ENROLLMENT_ID = "enrollmentID"
 
         @Volatile
         private var instance: Session? = null

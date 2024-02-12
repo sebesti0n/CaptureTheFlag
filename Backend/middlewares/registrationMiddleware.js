@@ -5,7 +5,7 @@ const knex = require('knex')(require('../Configuration/knexfile')['development']
 
 const registrationMiddleware = async(req,res,next)=>{
     try {
-        let {Email, password, cnfpassword, FirstName, LastName, MobileNo, CollegeName} = req.body;
+        let {Email, password, cnfpassword, FirstName, LastName, MobileNo, CollegeName , enroll_id} = req.body;
         // console.log(newUser);
         const alreadyPresent = await knex('users').select('*').where('email','=',Email);
 
@@ -29,6 +29,7 @@ const registrationMiddleware = async(req,res,next)=>{
                 req.LastName =LastName
                 req.MobileNo =MobileNo
                 req.CollegeName=CollegeName
+                req.enroll_id = enroll_id
                 next();
             });
         }
