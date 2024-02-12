@@ -53,8 +53,8 @@ interface ApiEndpoints {
 
     @GET("/event/event-details")
     fun getEventDetails(
-        @Query("uid")
-        uid:Int,
+        @Query("enroll_id")
+        enrollID:String,
         @Query("eid")
         eid:Int
     ): Call<EventsSchema>

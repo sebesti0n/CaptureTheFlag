@@ -23,10 +23,11 @@ class EventViewModel(app:Application):AndroidViewModel(app) {
     }
     private val session = Session.getInstance(app.applicationContext)
     private val id = session.getUID()
+    private val enrollID = session.getEnrollmentID()
 
     fun eventDetails(eid:Int, callback: (EventsSchema?, Boolean?) -> Unit){
         val call = RetrofitInstances.service
-        call.getEventDetails(id,eid).enqueue(object: Callback<EventsSchema>{
+        call.getEventDetails(enrollID,eid).enqueue(object: Callback<EventsSchema>{
             override fun onResponse(
                 call: Call<EventsSchema>,
                 response: Response<EventsSchema>
