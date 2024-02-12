@@ -23,6 +23,7 @@ import com.example.capturetheflag.models.PagerContent
 import com.example.capturetheflag.ui.HomeFragmentViewModel
 import com.example.capturetheflag.util.EventItemClickListener
 import com.example.capturetheflag.util.LiveEventClickListner
+import com.example.capturetheflag.util.Resource
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -62,8 +63,30 @@ class HomeFragment : Fragment(),EventItemClickListener,LiveEventClickListner {
         else showSnackbar("Please connect to internet")
 
         viewModel.liveEventResponseLiveData.observe(viewLifecycleOwner, Observer {
-            adapter.setdata(it.event)
+
+            when(it){
+                is Resource.Error -> {
+                    hideProgressBar()
+                    showSnackbar("Some error occurred")
+                }
+                is Resource.Success -> {
+                    hideProgressBar()
+                    adapter.setdata(it.data!!.event)
+                }
+                is Resource.Loading ->{
+                    showProgressBar()
+                }
+            }
         })
+    }
+
+    private fun showProgressBar(){
+        binding.progressBar.visibility = View.VISIBLE
+        binding.eventsRcv.visibility = View.GONE
+    }
+    private fun hideProgressBar(){
+        binding.progressBar.visibility = View.GONE
+        binding.eventsRcv.visibility = View.VISIBLE
     }
 
     private fun setUpRecyclerView(){

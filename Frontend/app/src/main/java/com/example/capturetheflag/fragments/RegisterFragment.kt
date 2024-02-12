@@ -15,6 +15,7 @@ import com.example.capturetheflag.databinding.FragmentRegisterBinding
 import com.example.capturetheflag.models.User
 import com.example.capturetheflag.session.Session
 import com.example.capturetheflag.ui.RegisterViewModel
+import com.example.capturetheflag.util.Resource
 
 class RegisterFragment : Fragment() {
 
@@ -76,14 +77,25 @@ class RegisterFragment : Fragment() {
                  showProgressBar()
                 val newUser = User(collegeName,email,firstName,lastName,mobileNo,cnfPassword,password)
                 viewModel.register(newUser)
-                viewModel.get()?.observe(requireActivity(), Observer {
-                    if(it.success){
-                       sharedPref.createSession(it.user.user_id,it.user.email,true,it.message)
-                        moveToHome()
 
-                    }else{
-                        hideProgressBar()
-                        showToastMessage(it.message)
+                viewModel.get()?.observe(requireActivity(), Observer { it ->
+                    when(it){
+                        is Resource.Success -> {
+                            it.data?.let{ response ->
+                                response.user.apply {
+                                    sharedPref.createSession(
+                                        this.user_id,
+                                        this.email,
+                                        true,
+                                        it.message!!
+                                    )
+                                    moveToHome()
+                                }
+                            }
+                        }
+                        is Resource.Loading -> {}
+                        is Resource.Error -> { showToastMessage(it.message!!)}
+
                     }
                 })
             }

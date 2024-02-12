@@ -45,7 +45,7 @@ class ContestFragment : Fragment(),PermissionListener{
         binding.riddleDiscription.text = "Not Found";
         setupViewModel()
         rList = ArrayList()
-        getRiddlesList()
+        //getRiddlesList()
         permissionHelper = PermissionHelper(this,this)
         binding.btnScan.setOnClickListener {
             Log.w("sebastian ","button clicked")
@@ -68,16 +68,16 @@ class ContestFragment : Fragment(),PermissionListener{
         }
     }
 
-    private fun getRiddlesList() {
-        viewModel.getRiddles(eid)
-        Log.i("seb contest","eid${eid}")
-        viewModel.get().observe(viewLifecycleOwner, Observer {
-            rList = it!!
-            onCreateGetRiddleNumber()
-            updateDescriptionBox()
-            Log.i("sebastian rList2",rList.toString())
-        })
-    }
+//    private fun getRiddlesList() {
+//        viewModel.getRiddles(eid)
+//        Log.i("seb contest","eid${eid}")
+//        viewModel.get().observe(viewLifecycleOwner, Observer {
+//            rList = it!!
+//            onCreateGetRiddleNumber()
+//            updateDescriptionBox()
+//            Log.i("sebastian rList2",rList.toString())
+//        })
+//    }
 
     private fun onLaunchTimeRiddleNumber() {
         viewModel.getSubmissionDetails(eid) {
