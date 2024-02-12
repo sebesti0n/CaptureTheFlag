@@ -10,6 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
+import com.example.capturetheflag.R
 import com.example.capturetheflag.activities.HomeActivity
 import com.example.capturetheflag.databinding.FragmentRegisterBinding
 import com.example.capturetheflag.models.User
@@ -54,6 +56,11 @@ class RegisterFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         sharedPref = Session(requireActivity())
         viewModel = ViewModelProvider(this)[RegisterViewModel::class.java]
+
+        binding.signInBtn.setOnClickListener {
+            findNavController().navigate(R.id.action_registerFragment_to_login)
+        }
+
         binding.btnLogin.setOnClickListener {
             email = binding.etEmail.text.toString()
             firstName = binding.etFirstname.text.toString()
@@ -81,11 +88,13 @@ class RegisterFragment : Fragment() {
                             it.data?.let{ response ->
                                 response.user.apply {
                                     sharedPref.createSession(
-                                        this.user_id,
-                                        this.email,
-                                        true,
-                                        it.message!!,
-                                        this.enroll_id
+                                        college = this.CollegeName,
+                                        name = "${this.FirstName} ${this.LastName}",
+                                        mobile = this.MobileNo,
+                                        email = this.email,
+                                        enrollmentID = this.enroll_id,
+                                        id = this.user_id,
+                                        token = "token_String"
                                     )
                                     moveToHome()
                                 }
