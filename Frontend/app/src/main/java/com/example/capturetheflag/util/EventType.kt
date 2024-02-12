@@ -2,8 +2,8 @@ package com.example.capturetheflag.util
 
 class EventType{
     companion object{
-        const val CTF = 0
-        const val GOC = 1
-        const val SQUID_GAME = 2
+        const val TEAM_EVENT = 3
+        const val INDIVIDUAL_EVENT = 2
+        const val NO_REGISTRATION_EVENT = 1
     }
 }
