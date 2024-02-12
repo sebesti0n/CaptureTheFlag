@@ -1,6 +1,10 @@
 package com.example.capturetheflag.models
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
+
+@Parcelize
 data class Event(
     val event_id:Int,
     val title: String,
@@ -12,5 +16,5 @@ data class Event(
     val No_of_questions:Int,
     val organisation:String,
     val posterImage:String
-)
+): Parcelable
 

@@ -23,6 +23,7 @@ import com.example.capturetheflag.models.PagerContent
 import com.example.capturetheflag.ui.HomeFragmentViewModel
 import com.example.capturetheflag.util.EventItemClickListener
 import com.example.capturetheflag.util.LiveEventClickListner
+import com.example.capturetheflag.util.Resource
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -62,8 +63,29 @@ class HomeFragment : Fragment(),EventItemClickListener,LiveEventClickListner {
         else showSnackbar("Please connect to internet")
 
         viewModel.liveEventResponseLiveData.observe(viewLifecycleOwner, Observer {
-            adapter.setdata(it.event)
+            when(it){
+                is Resource.Error -> {
+                    hideProgressBar()
+                    showSnackbar("Some error occurred")
+                }
+                is Resource.Success -> {
+                    hideProgressBar()
+                    adapter.setdata(it.data!!.event)
+                }
+                is Resource.Loading ->{
+                    showProgressBar()
+                }
+            }
         })
+    }
+
+    private fun showProgressBar(){
+        binding.progressBar.visibility = View.VISIBLE
+        binding.eventsRcv.visibility = View.GONE
+    }
+    private fun hideProgressBar(){
+        binding.progressBar.visibility = View.GONE
+        binding.eventsRcv.visibility = View.VISIBLE
     }
 
     private fun setUpRecyclerView(){
@@ -84,20 +106,20 @@ class HomeFragment : Fragment(),EventItemClickListener,LiveEventClickListner {
     }
 
     override fun onEventClickListner(event: Event) {
-        moveToEventFragment(event.event_id)
+        moveToEventFragment(event)
     }
 
-    private fun moveToEventFragment(id: Int){
-        val action = HomeFragmentDirections.actionHomefragmentToEventFragment(id.toLong())
+    private fun moveToEventFragment(event: Event){
+        val action = HomeFragmentDirections.actionHomefragmentToEventFragment(
+            event
+        )
         findNavController().navigate(action)
     }
-
     private fun showSnackbar(message: String){
         Snackbar.make(requireView(), message, 2000).show()
     }
 
     override fun onLiveEventClickListner(event: Event) {
-        val action = HomeFragmentDirections.actionHomefragmentToEventFragment(event.event_id.toLong(),true)
-        findNavController().navigate(action)
+        moveToEventFragment(event)
     }
 }

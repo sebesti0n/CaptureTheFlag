@@ -43,19 +43,20 @@
                 android:text="YYYY:MM:DD:HH:MM:SS"
                 android:textColor="@color/black"
                 android:textSize="18sp"
-                app:layout_constraintTop_toBottomOf="@+id/banner"
+                app:layout_constraintTop_toBottomOf="@+id/event_banner"
                 app:layout_constraintEnd_toEndOf="parent"/>
+
             <com.google.android.material.imageview.ShapeableImageView
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
                 android:src="@drawable/upload_banner"
-                android:id="@+id/banner"
+                android:id="@+id/event_banner"
                 android:scaleType="center"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:background="@drawable/event_title"
-                />
+                android:background="@drawable/event_title" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
@@ -69,12 +70,13 @@
                 android:layout_height="wrap_content"
                 android:text="Title"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/banner"
+                app:layout_constraintBottom_toBottomOf="@+id/event_banner"
                 app:layout_constraintLeft_toLeftOf="parent"
                app:layout_constraintRight_toRightOf="parent"
                 android:gravity="start"
                 android:paddingVertical="12dp"
                 android:paddingStart="10dp"
+                android:id="@+id/event_title_tv"
                 android:textColor="@color/white"
                 android:textSize="25sp"
                 android:fontFamily="@font/robotobold"
@@ -82,7 +84,7 @@
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/contentDescription"
+                android:id="@+id/event_desc_tv"
                 android:layout_margin="5dp"
                 android:text="content"
                 android:textColor="@color/black"
@@ -92,26 +94,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/countDownTimer"
                 app:layout_constraintLeft_toLeftOf="parent"
                />
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginTop="10dp"-->
-<!--                android:layout_marginBottom="1dp"-->
-<!--                android:textStyle="bold"-->
-<!--                android:text="Details"-->
-<!--                android:textSize="20sp"-->
-<!--                android:textColor="@color/black"/>-->
-<!--            <com.google.android.material.divider.MaterialDivider-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="2dp"/>-->
-<!--            <com.google.android.material.textview.MaterialTextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:id="@+id/contentDetails"-->
-<!--                android:layout_margin="5dp"-->
-<!--                android:text="content"-->
-<!--                android:textSize="15sp"-->
-<!--                android:lineSpacingExtra="1dp"/>-->
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

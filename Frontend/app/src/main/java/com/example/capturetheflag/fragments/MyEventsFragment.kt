@@ -15,10 +15,10 @@ import com.example.capturetheflag.helper.NetworkHelper
 import com.example.capturetheflag.models.Event
 import com.example.capturetheflag.ui.RegisterHuntViewModel
 import com.example.capturetheflag.util.EventItemClickListener
+import com.example.capturetheflag.util.Resource
 import com.google.android.material.snackbar.Snackbar
-import okhttp3.internal.addHeaderLenient
 
-class RegisterHuntFragment : Fragment(), EventItemClickListener{
+class MyEventsFragment : Fragment(), EventItemClickListener{
     private lateinit var viewModel: RegisterHuntViewModel
     private var _binding: FragmentRegisterHuntBinding?=null
     private val binding get() = _binding!!
@@ -31,7 +31,11 @@ class RegisterHuntFragment : Fragment(), EventItemClickListener{
         savedInstanceState: Bundle?
     ): View? {
         listner = this
-        _binding = FragmentRegisterHuntBinding.inflate(inflater, container, false)
+        _binding = FragmentRegisterHuntBinding.inflate(
+            inflater,
+            container,
+            false
+        )
         return binding.root
     }
 
@@ -49,8 +53,32 @@ class RegisterHuntFragment : Fragment(), EventItemClickListener{
         viewModel.getRegisteredEvents()
 
         viewModel.eventResponseLiveData.observe(viewLifecycleOwner, Observer {
-            it?.let{ adapter.setdata(it.event) }
+            when(it){
+                is Resource.Success -> {
+                    hideProgessBar()
+                    it.data?.let{responseEventModel ->
+                        adapter.setdata(
+                            responseEventModel.event
+                        )
+                    }
+                }
+                is Resource.Loading -> showProgressBar()
+                is Resource.Error -> {
+                    hideProgessBar()
+                    showSnackbar("Error fetching details")
+                }
+            }
         })
+    }
+
+    private fun showProgressBar(){
+        binding.progressBar.visibility = View.VISIBLE
+        binding.recyclerView.visibility = View.GONE
+    }
+
+    private fun hideProgessBar(){
+        binding.progressBar.visibility = View.GONE
+        binding.recyclerView.visibility = View.VISIBLE
     }
 
     private fun setUpRecyclerView(){
@@ -62,7 +90,9 @@ class RegisterHuntFragment : Fragment(), EventItemClickListener{
     }
 
     override fun onEventClickListner(event: Event) {
-        val action = RegisterHuntFragmentDirections.actionRegisterHuntFragmentToEventFragment(event.event_id.toLong())
+        val action = MyEventsFragmentDirections.actionRegisterHuntFragmentToEventFragment(
+            event.event_id.toLong()
+        )
         findNavController().navigate(action)
     }
 
