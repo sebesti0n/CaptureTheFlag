@@ -1,7 +1,8 @@
 const express = require('express')
 const routes=require('./Routes/auth')
 const eventRouter = require('./Routes/event')
-const adminRouter = require('./Routes/admin')
+const adminRouter = require('./Routes/admin');
+const validationMiddleware = require('./middlewares/validationMiddleware');
 const knex = require('knex')(require('./Configuration/knexfile')['development']);
 const app= express();
 const PORT = 3008;

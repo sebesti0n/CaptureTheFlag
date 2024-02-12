@@ -9,9 +9,9 @@
               <option name="connection">
                 <ConnectionSetting>
                   <option name="appId" value="com.example.capturetheflag" />
-                  <option name="mobileSdkAppId" value="1:87940050614:android:c6c06fb1dd5f30d9ac8017" />
-                  <option name="projectId" value="capture-the-flag-9f489" />
-                  <option name="projectNumber" value="87940050614" />
+                  <option name="mobileSdkAppId" value="1:612477614643:android:ea294a8265165a15b84146" />
+                  <option name="projectId" value="capturetheflag-8af0f" />
+                  <option name="projectNumber" value="612477614643" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

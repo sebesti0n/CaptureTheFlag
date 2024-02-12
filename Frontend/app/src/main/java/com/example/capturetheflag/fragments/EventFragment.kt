@@ -18,6 +18,7 @@ import com.example.capturetheflag.databinding.FragmentEventBinding
 import com.example.capturetheflag.databinding.LayoutTeamRegistrationFormBinding
 import com.example.capturetheflag.models.Event
 import com.example.capturetheflag.models.TeamSchema
+import com.example.capturetheflag.session.Session
 import com.example.capturetheflag.ui.EventViewModel
 import com.example.capturetheflag.util.EventType
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -29,16 +30,18 @@ import java.util.concurrent.TimeUnit
 
 class EventFragment : Fragment() {
     private var _binding: FragmentEventBinding? = null
-    private val binding get() = _binding!!
-    private val args: EventFragmentArgs by navArgs()
-    private lateinit var viewModel: EventViewModel
-    private var eid: Long = -1
-    private lateinit var event: Event
-    private var isLive = false
-    private var isRegister = false
-    private var eventType = 1
-    private lateinit var dialog: BottomSheetDialog
     private lateinit var dialogBinding: LayoutTeamRegistrationFormBinding
+    private val args: EventFragmentArgs by navArgs()
+    private lateinit var dialog: BottomSheetDialog
+    private lateinit var viewModel: EventViewModel
+    private val binding get() = _binding!!
+    private lateinit var session: Session
+    private lateinit var event: Event
+    private var isRegister = false
+    private var eid: Long = -1
+    private var isLive = false
+    private var eventType = 1
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -52,12 +55,16 @@ class EventFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         eid = args.eid
         isLive = args.isLive
+        session = Session.getInstance(requireContext())
         updateUI()
+        hideRegisterButton()
         initializeTeamRegistrationBottomSheetDialog()
         binding.btnRegisteredEvent.setOnClickListener {
             if (!isRegister) {
                 if (eventType == EventType.TEAM_EVENT)
                     registerUserForEvent()
+                else if (eventType == EventType.INDIVIDUAL_EVENT)
+                    registerIndividuallyEvent()
 
             }
             if (isLive) {
@@ -67,6 +74,30 @@ class EventFragment : Fragment() {
             }
         }
 
+    }
+
+    private fun hideRegisterButton() {
+        if (eventType == EventType.NO_REGISTRATION_EVENT) {
+            binding.btnRegisteredEvent.visibility = View.GONE
+        }
+
+    }
+
+    private fun registerIndividuallyEvent() {
+
+        val newTeam = TeamSchema(
+            eid.toInt(),
+            session.getEmail(),
+            session.getEnrollmentID(),
+            session.getUserName(),
+            "",
+            "",
+            "",
+            "",
+            session.getCollege(),
+            session.getMobile()
+        )
+        registerTeamForEvent(newTeam)
     }
 
     @SuppressLint("SetTextI18n")
