@@ -31,7 +31,7 @@ class Login : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: LoginViewModel
-    private lateinit var sharedPref:Session
+    private lateinit var sharedPref: Session
     private lateinit var emailEditText: TextInputEditText
     private lateinit var passwordEditText: TextInputEditText
     private lateinit var registerTextView: TextView
@@ -97,7 +97,17 @@ class Login : Fragment() {
                                 sharedPref.logOut()
                                 Log.d("CTF Login1",receivedata.userDetails.toString())
                                 Log.d("CTF Login2",receivedata.userDetails.email.toString())
-                                sharedPref.createSession(receivedata.userDetails.user_id,receivedata.userDetails.email,true,"token",receivedata.userDetails.enroll_id)
+                                receivedata.userDetails.apply {
+                                    sharedPref.createSession(
+                                        name = "${this.FirstName} ${this.LastName}",
+                                        id = this.user_id,
+                                        enrollmentID = this.enroll_id,
+                                        college = this.CollegeName,
+                                        mobile = this.MobileNo,
+                                        token = "token_string",
+                                        email = this.email
+                                    )
+                                }
                                 moveToHome()
                             } else {
                                 hideProgressBar()

@@ -1,6 +1,7 @@
 package com.example.capturetheflag.activities
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -25,5 +26,13 @@ class HomeActivity : AppCompatActivity(){
         navController = navHostFragment.navController
         binding.bottomNav.setupWithNavController(navController)
     }
+
+    fun hideNavigation(){
+        binding.bottomNav.visibility = View.GONE
+    }
+    fun showNavigation(){
+        binding.bottomNav.visibility = View.VISIBLE
+    }
+
 }
 
