@@ -15,7 +15,6 @@
         android:elevation="32dp"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-
     <LinearLayout
         android:layout_marginStart="16dp"
         android:id="@+id/top_linear_layout"
