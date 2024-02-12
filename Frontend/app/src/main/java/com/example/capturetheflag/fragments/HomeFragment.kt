@@ -1,6 +1,7 @@
 package com.example.capturetheflag.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +21,7 @@ import com.example.capturetheflag.util.Resource
 import com.google.android.material.snackbar.Snackbar
 
 
-class HomeFragment : Fragment(),EventItemClickListener,LiveEventClickListner {
+class HomeFragment : Fragment(),EventItemClickListener{
     private var _binding: FragmentHomefragmentBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: HomeFragmentViewModel
@@ -28,14 +29,13 @@ class HomeFragment : Fragment(),EventItemClickListener,LiveEventClickListner {
     private lateinit var mUpcomingEvent: ArrayList<Event>
     private lateinit var adapter:EventAdapter
     private lateinit var listner: EventItemClickListener
-    private lateinit var listenerLive:LiveEventClickListner
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         listner = this
-        listenerLive = this
         _binding = FragmentHomefragmentBinding.inflate(inflater, container ,false)
         return binding.root
     }
@@ -49,7 +49,7 @@ class HomeFragment : Fragment(),EventItemClickListener,LiveEventClickListner {
             viewModel.getLiveEvents()
         }
         else showSnackbar("Please connect to internet")
-
+        binding.greetingText.text = "Hi, ${viewModel.enroll_id}"
         viewModel.liveEventResponseLiveData.observe(viewLifecycleOwner, Observer {
 
             when(it){
@@ -95,11 +95,12 @@ class HomeFragment : Fragment(),EventItemClickListener,LiveEventClickListner {
     }
 
     override fun onEventClickListner(event: Event) {
-        moveToEventFragment(event.event_id)
+        moveToEventFragment(event)
     }
 
-    private fun moveToEventFragment(id: Int){
-        val action = HomeFragmentDirections.actionHomefragmentToEventFragment(id.toLong())
+    private fun moveToEventFragment(event:Event){
+        val isLive = isEventLive(event)
+        val action = HomeFragmentDirections.actionHomefragmentToEventFragment(event.event_id.toLong(),isLive)
         findNavController().navigate(action)
     }
 
@@ -107,15 +108,11 @@ class HomeFragment : Fragment(),EventItemClickListener,LiveEventClickListner {
         Snackbar.make(requireView(), message, 2000).show()
     }
 
-    override fun onLiveEventClickListner(event: Event) {
-        val isLive = isEventLive(event)
-        val action = HomeFragmentDirections.actionHomefragmentToEventFragment(event.event_id.toLong(),isLive)
-        findNavController().navigate(action)
-    }
     private fun isEventLive(event:Event):Boolean{
         val currentTimeMillis = System.currentTimeMillis()
         val startTimeMillis = event.start_ms.toLong()
         val endTimeMillis = event.end_ms.toLong()
+        Log.d("CTF Home Fragment","currentMillisecond: ${currentTimeMillis}, start_ms: ${startTimeMillis}, end_ms: ${endTimeMillis}")
         return currentTimeMillis in startTimeMillis..endTimeMillis
     }
 }

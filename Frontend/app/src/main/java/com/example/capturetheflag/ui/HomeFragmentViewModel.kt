@@ -22,6 +22,7 @@ class HomeFragmentViewModel(
     var liveEventResponseLiveData= MutableLiveData<Resource<ResponseEventModel>>()
 
     private val session = Session.getInstance(app.applicationContext)
+    val enroll_id = session.getEnrollmentID()
 
     fun getUpcomingEvents() {
         eventResponseLiveData.postValue(Resource.Loading())

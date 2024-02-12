@@ -13,9 +13,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
+import com.example.capturetheflag.R
 import com.example.capturetheflag.databinding.FragmentEventBinding
+import com.example.capturetheflag.databinding.LayoutTeamRegistrationFormBinding
 import com.example.capturetheflag.models.Event
 import com.example.capturetheflag.ui.EventViewModel
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -30,6 +33,8 @@ class EventFragment : Fragment() {
     private lateinit var event: Event
     private var isLive = false
     private var isRegister = false
+    private lateinit var dialog : BottomSheetDialog
+    private lateinit var dialogBinding: LayoutTeamRegistrationFormBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -44,6 +49,7 @@ class EventFragment : Fragment() {
         Log.w("sebastian idk", "sex")
         eid = args.eid
         isLive = args.isLive
+        Log.d("CTF Event Fragment"," isLive variable value - ${isLive}")
         updateUI()
         binding.btnRegisteredEvent.setOnClickListener {
             if(!isRegister)registerUserForEvent()
@@ -56,7 +62,7 @@ class EventFragment : Fragment() {
     }
     @SuppressLint("SetTextI18n")
     private fun registerUserForEvent() {
-        viewModel.registerUserForEvent(eid.toInt())
+        initializeTeamRegistrationBottomSheetDialog()
     }
 
     private fun setCountDownTimer(dateString: String, endTime: String) {
@@ -131,9 +137,10 @@ class EventFragment : Fragment() {
                                 .show()
                         } else {
                             event = it.event[0]
-                            isRegister = true
+                            isRegister = it.isRegister
                             Log.w("sebastian", "event")
                             setCountDownTimer(event.start_time, event.end_time)
+                            binding.tvTitle.text = event.title
                             binding.contentDescription.text = event.description
 //                            binding.contentDetails.text = "Start At: ${event.start_time} \n End At: ${event.end_time}"
 //                            binding.contentPrizes.text = "Amazing Goodies"
@@ -157,6 +164,17 @@ class EventFragment : Fragment() {
                 binding.btnRegisteredEvent.text = "Start"
                 binding.btnRegisteredEvent.visibility = View.VISIBLE
             }
+        }
+    }
+
+    private fun initializeTeamRegistrationBottomSheetDialog() {
+        dialog = BottomSheetDialog(requireContext())
+        dialogBinding = LayoutTeamRegistrationFormBinding.inflate(layoutInflater)
+        dialog.setContentView(dialogBinding.root)
+        dialog.window?.attributes?.windowAnimations  = R.style.DialogAnimation
+        dialog.show()
+        dialogBinding.btnLogin.setOnClickListener {
+            dialog.dismiss()
         }
     }
 }

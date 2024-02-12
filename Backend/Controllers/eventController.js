@@ -154,7 +154,7 @@ exports.eventDetails = async (req, res) => {
       .select("team_id")
       .where("event_id", eid)
       .andWhere("player1_eid",enroll_id)
-      .orWhere("player3_eid",enroll_id)
+      .orWhere("player2_eid",enroll_id)
       .orWhere("player3_eid",enroll_id);
     let is_register = false;
     if (data.length > 0) is_register = true;
