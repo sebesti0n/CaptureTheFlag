@@ -65,6 +65,7 @@ class Login : Fragment() {
                 toastMessage("Password Field is blank")
             }
             else {
+                showProgressBar()
                 actionLoginButton()
             }
         }
@@ -99,11 +100,13 @@ class Login : Fragment() {
                                 sharedPref.createSession(receivedata.userDetails.user_id,receivedata.userDetails.email,true,"token")
                                 moveToHome()
                             } else {
+                                hideProgressBar()
                                 toastMessage(receivedata.message);
                             }
                         }
                     }
                     else{
+                        hideProgressBar()
                         toastMessage("unknown error")
                     }
                 }
@@ -119,6 +122,7 @@ class Login : Fragment() {
 
     }
     private fun moveToHome(){
+        hideProgressBar()
         val intent = Intent(requireContext(),HomeActivity::class.java)
         startActivity(intent)
     }
@@ -127,5 +131,10 @@ class Login : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this)[LoginViewModel::class.java]
     }
-
+    private fun showProgressBar(){
+        binding.progress.visibility=View.VISIBLE
+    }
+    private fun hideProgressBar(){
+        binding.progress.visibility=View.INVISIBLE
+    }
 }

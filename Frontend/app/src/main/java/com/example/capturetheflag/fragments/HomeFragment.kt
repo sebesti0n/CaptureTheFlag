@@ -63,6 +63,7 @@ class HomeFragment : Fragment(),EventItemClickListener,LiveEventClickListner {
         else showSnackbar("Please connect to internet")
 
         viewModel.liveEventResponseLiveData.observe(viewLifecycleOwner, Observer {
+
             when(it){
                 is Resource.Error -> {
                     hideProgressBar()

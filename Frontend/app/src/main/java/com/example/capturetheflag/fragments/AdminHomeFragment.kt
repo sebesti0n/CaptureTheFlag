@@ -61,6 +61,16 @@ class AdminHomeFragment : Fragment(),EventItemClickListener {
 //        }
 //
 //    }
+    private fun getEventList() {
+        viewModel.getAdminEvents()
+        viewModel.eventResponseLiveData.observe(requireActivity()) {
+            Log.w("Sebastian it", it.data?.event.toString())
+            eList = it.data?.event!!
+            adapter.setdata(eList)
+        }
+
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

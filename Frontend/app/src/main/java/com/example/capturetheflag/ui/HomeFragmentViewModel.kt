@@ -9,6 +9,7 @@ import com.example.capturetheflag.apiServices.RetrofitInstances
 import com.example.capturetheflag.models.ResponseEventModel
 import com.example.capturetheflag.session.Session
 import com.example.capturetheflag.util.Resource
+
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

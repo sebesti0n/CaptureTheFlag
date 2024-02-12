@@ -15,8 +15,12 @@ import com.example.capturetheflag.helper.NetworkHelper
 import com.example.capturetheflag.models.Event
 import com.example.capturetheflag.ui.RegisterHuntViewModel
 import com.example.capturetheflag.util.EventItemClickListener
+
 import com.example.capturetheflag.util.Resource
 import com.google.android.material.snackbar.Snackbar
+
+import okhttp3.internal.addHeaderLenient
+
 
 class RegisterHuntFragment : Fragment(), EventItemClickListener{
     private lateinit var viewModel: RegisterHuntViewModel
@@ -53,6 +57,7 @@ class RegisterHuntFragment : Fragment(), EventItemClickListener{
         viewModel.getRegisteredEvents()
 
         viewModel.eventResponseLiveData.observe(viewLifecycleOwner, Observer {
+
             when(it){
                 is Resource.Success -> {
                     hideProgessBar()
@@ -80,6 +85,7 @@ class RegisterHuntFragment : Fragment(), EventItemClickListener{
         binding.progressBar.visibility = View.GONE
         binding.recyclerView.visibility = View.VISIBLE
     }
+
 
     private fun setUpRecyclerView(){
         adapter = EventAdapter(listner)

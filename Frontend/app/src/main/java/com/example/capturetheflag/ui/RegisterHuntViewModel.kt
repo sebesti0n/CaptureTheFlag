@@ -9,6 +9,7 @@ import com.example.capturetheflag.apiServices.RetrofitInstances
 import com.example.capturetheflag.models.ResponseEventModel
 import com.example.capturetheflag.session.Session
 import com.example.capturetheflag.util.Resource
+
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -18,6 +19,7 @@ class RegisterHuntViewModel(
 ) : AndroidViewModel(app) {
 
     var eventResponseLiveData= MutableLiveData<Resource<ResponseEventModel>>()
+
 
     private val session = Session.getInstance(app.applicationContext)
     private val id = session.getUID()
@@ -42,6 +44,7 @@ class RegisterHuntViewModel(
                             }
                         }
                         else eventResponseLiveData.postValue(Resource.Error(response.message()))
+
                         Log.w("Sebastian", eventResponseLiveData.value.toString())
                     }
 
