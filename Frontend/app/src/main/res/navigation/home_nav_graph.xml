@@ -19,7 +19,7 @@
     </fragment>
     <fragment
         android:id="@+id/registerHuntFragment"
-        android:name="com.example.capturetheflag.fragments.MyEventsFragment"
+        android:name="com.example.capturetheflag.fragments.RegisterHuntFragment"
         android:label="Registered Event"
         tools:layout="@layout/fragment_register_hunt" >
         <action
@@ -42,6 +42,12 @@
         android:name="com.example.capturetheflag.fragments.EventFragment"
         android:label="Details"
         tools:layout="@layout/fragment_event" >
+
+
+        <argument
+            android:name="eid"
+            app:argType="long"
+            android:defaultValue="-1L" />
         <action
             android:id="@+id/action_eventFragment_to_contestFragment"
             app:destination="@id/contestFragment" />
@@ -49,8 +55,9 @@
             android:id="@+id/action_eventFragment_to_rankingFragment"
             app:destination="@id/rankingFragment" />
         <argument
-            android:name="event"
-            app:argType="com.example.capturetheflag.models.Event" />
+            android:name="isLive"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </fragment>
     <fragment
         android:id="@+id/contestFragment"

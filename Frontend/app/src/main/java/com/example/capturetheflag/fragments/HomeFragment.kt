@@ -106,20 +106,20 @@ class HomeFragment : Fragment(),EventItemClickListener,LiveEventClickListner {
     }
 
     override fun onEventClickListner(event: Event) {
-        moveToEventFragment(event)
+        moveToEventFragment(event.event_id)
     }
 
-    private fun moveToEventFragment(event: Event){
-        val action = HomeFragmentDirections.actionHomefragmentToEventFragment(
-            event
-        )
+    private fun moveToEventFragment(id: Int){
+        val action = HomeFragmentDirections.actionHomefragmentToEventFragment(id.toLong())
         findNavController().navigate(action)
     }
+
     private fun showSnackbar(message: String){
         Snackbar.make(requireView(), message, 2000).show()
     }
 
     override fun onLiveEventClickListner(event: Event) {
-        moveToEventFragment(event)
+        val action = HomeFragmentDirections.actionHomefragmentToEventFragment(event.event_id.toLong(),true)
+        findNavController().navigate(action)
     }
 }

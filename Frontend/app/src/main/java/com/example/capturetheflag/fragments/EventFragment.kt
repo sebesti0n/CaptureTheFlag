@@ -16,7 +16,6 @@ import com.bumptech.glide.Glide
 import com.example.capturetheflag.databinding.FragmentEventBinding
 import com.example.capturetheflag.models.Event
 import com.example.capturetheflag.ui.EventViewModel
-import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -25,16 +24,16 @@ import java.util.concurrent.TimeUnit
 class EventFragment : Fragment() {
     private var _binding: FragmentEventBinding? = null
     private val binding get() = _binding!!
+    private val args: EventFragmentArgs by navArgs()
     private lateinit var viewModel: EventViewModel
-    private var event: Event? = null
-
+    private var eid: Long = -1
+    private lateinit var event: Event
+    private var isLive = false
+    private var isRegister = false
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        arguments?.let {
-            event = it.getParcelable("event")
-        }
         viewModel = ViewModelProvider(this)[EventViewModel::class.java]
         _binding = FragmentEventBinding.inflate(inflater, container, false)
         return binding.root
@@ -43,14 +42,12 @@ class EventFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.w("sebastian idk", "sex")
-        if(event==null){
-            showSnackBar("Some error occured")
-            findNavController().popBackStack()
-        }
+        eid = args.eid
+        isLive = args.isLive
         updateUI()
         binding.btnRegisteredEvent.setOnClickListener {
             if(!isRegister)registerUserForEvent()
-            if(event.i){
+            if(isLive){
                 val action = EventFragmentDirections.actionEventFragmentToContestFragment(eid.toInt())
                 findNavController().navigate(action)
             }
@@ -116,19 +113,13 @@ class EventFragment : Fragment() {
         }
     }
 
-    private fun showSnackBar(message: String){
-        Snackbar.make(
-            requireView(),
-            message,
-            2000
-        ).show()
-    }
 
     @SuppressLint("SetTextI18n")
     private fun updateUI() {
         if (eid.toInt() == -1) {
-            showSnackBar("Some error occured")
-            findNavController().popBackStack()
+            binding.contentDescription.text = "Not found"
+//            binding.contentDetails.text = "Not Found"
+//            binding.contentPrizes.text = "Not Found"
         } else {
             viewModel.eventDetails(eid.toInt()) { it, error ->
                 if (error == true) {
@@ -141,15 +132,15 @@ class EventFragment : Fragment() {
                         } else {
                             event = it.event[0]
                             isRegister = it.isRegister
-                            binding.eventTitleTv.text = event.title
                             Log.w("sebastian", "event")
                             setCountDownTimer(event.start_time, event.end_time)
-                            binding.eventDescTv.text = event.description
+                            binding.contentDescription.text = event.description
+//                            binding.contentDetails.text = "Start At: ${event.start_time} \n End At: ${event.end_time}"
+//                            binding.contentPrizes.text = "Amazing Goodies"
+                            val imgview = binding.banner
                             Glide.with(requireContext())
                                 .load(event.posterImage)
-                                .into(
-                                    binding.eventBanner
-                                )
+                                .into(imgview)
                         }
                     }
                 }

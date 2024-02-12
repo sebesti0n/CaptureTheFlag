@@ -18,7 +18,7 @@ import com.example.capturetheflag.util.EventItemClickListener
 import com.example.capturetheflag.util.Resource
 import com.google.android.material.snackbar.Snackbar
 
-class MyEventsFragment : Fragment(), EventItemClickListener{
+class RegisterHuntFragment : Fragment(), EventItemClickListener{
     private lateinit var viewModel: RegisterHuntViewModel
     private var _binding: FragmentRegisterHuntBinding?=null
     private val binding get() = _binding!!
@@ -90,7 +90,7 @@ class MyEventsFragment : Fragment(), EventItemClickListener{
     }
 
     override fun onEventClickListner(event: Event) {
-        val action = MyEventsFragmentDirections.actionRegisterHuntFragmentToEventFragment(
+        val action = RegisterHuntFragmentDirections.actionRegisterHuntFragmentToEventFragment(
             event.event_id.toLong()
         )
         findNavController().navigate(action)
