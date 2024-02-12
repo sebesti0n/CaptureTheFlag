@@ -6,7 +6,6 @@ exports.upcomingEvents = (async (req, res) => {
         const currTime = currentDate.getTime()
         console.log(currTime);
         const events = await knex('events')
-
             .where('start_ms', '>=', currTime)
             .orWhere('end_ms', '>=', currTime).returning('*');
 
