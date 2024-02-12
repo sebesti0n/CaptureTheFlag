@@ -9,6 +9,7 @@ import com.example.capturetheflag.apiServices.RetrofitInstances
 import com.example.capturetheflag.models.EventsSchema
 import com.example.capturetheflag.models.ResponseEventModel
 import com.example.capturetheflag.models.StatusModel
+import com.example.capturetheflag.models.TeamSchema
 import com.example.capturetheflag.session.Session
 import com.example.capturetheflag.util.Resource
 
@@ -92,5 +93,22 @@ class EventViewModel(app:Application):AndroidViewModel(app) {
 
                     }
                 })
+    }
+    fun registerTeamForEvent(team:TeamSchema, callback:(Boolean?,String?)->Unit){
+        RetrofitInstances.service.registerTeamforEvents(team)
+            .enqueue(object: Callback<StatusModel>{
+
+                override fun onResponse(call: Call<StatusModel>, response: Response<StatusModel>) {
+                    response.body()?.let {
+                        callback(it.success,
+                        it.message)
+                    }
+                }
+
+                override fun onFailure(call: Call<StatusModel>, t: Throwable) {
+                    callback(false,"Something went Wrong! Try Again")
+                }
+
+            })
     }
 }
