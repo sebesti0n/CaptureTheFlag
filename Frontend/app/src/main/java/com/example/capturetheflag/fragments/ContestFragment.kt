@@ -72,10 +72,10 @@ class ContestFragment : Fragment(),PermissionListener{
 //        viewModel.getRiddles(eid)
 //        Log.i("seb contest","eid${eid}")
 //        viewModel.get().observe(viewLifecycleOwner, Observer {
-//            rList = it!!
+//            riddleModelList = it!!
 //            onCreateGetRiddleNumber()
 //            updateDescriptionBox()
-//            Log.i("sebastian rList2",rList.toString())
+//            Log.i("sebastian rList2",riddleModelList.toString())
 //        })
 //    }
 
