@@ -1,14 +1,21 @@
 package com.example.capturetheflag.activities
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.capturetheflag.R
+import com.example.capturetheflag.apiServices.BackupInstances
 import com.example.capturetheflag.databinding.ActivityMainBinding
+import com.example.capturetheflag.models.StatusModel
 import com.example.capturetheflag.session.Session
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class MainActivity : AppCompatActivity() {
@@ -22,6 +29,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.hide()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        isAllOkay()
         sharedPref =Session(this)
         if (sharedPref.isLogin()){
             val intent = Intent(this,HomeActivity::class.java)
@@ -36,6 +44,30 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+    }
+
+    private fun isAllOkay() {
+        val call = BackupInstances.service
+        call.allOkay().enqueue(object: Callback<StatusModel> {
+            override fun onResponse(call: Call<StatusModel>, response: Response<StatusModel>) {
+                if(response.isSuccessful){
+                    val isOkay = response.body()?.success
+                    if(isOkay == false)
+                        moveToBackupPlan()
+                }
+            }
+
+            override fun onFailure(call: Call<StatusModel>, t: Throwable) {
+                Log.e("sebastian MainActivity","backup Server Fail - ${t.message}")
+            }
+
+        })
+    }
+
+    private fun moveToBackupPlan() {
+        val intent = Intent(this,WebViewActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
 }
