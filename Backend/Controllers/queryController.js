@@ -2,7 +2,7 @@ const knex = require("knex")(
   require("../Configuration/knexfile")["development"]
 );
 const redis = require("ioredis");
-const client = new redis();
+const client = new redis('rediss://red-cn5kj0acn0vc73d75p7g:FDuY82rDmivduYhcp9YwW6PdRC2WOAZz@oregon-redis.render.com:6379');
 
 exports.submissionRiddle = async (req, res) => {
   try {
@@ -35,10 +35,10 @@ exports.submissionRiddle = async (req, res) => {
 
 exports.startEvent = async (req, res) => {
   try {
-    const key = req.url;
     const tid = req.query.tid;
     const eid = req.query.eid;
     const start_time = req.query.st;
+    const key = 'tid='+tid+'&eid='+eid;
 
     client.get(key, async function (err, result) {
       if (err) console.log("redis got fucked", err);
@@ -87,7 +87,7 @@ exports.startEvent = async (req, res) => {
           next: data[0],
           rList: rList,
         };
-        client.set(key, JSON.stringify(jsonData), (err, reply) => {
+        client.set(key, JSON.stringify(jsonData),'EX',18000, (err, reply) => {
           if (err) {
             console.error("Error setting data in Redis:", err);
           } else {
