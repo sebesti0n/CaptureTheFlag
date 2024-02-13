@@ -2,7 +2,7 @@ const knex = require("knex")(
   require("../Configuration/knexfile")["development"]
 );
 
-exports.upcomingEvents = async (req, res) => {
+exports.upcomingEvents =( async (req, res) => {
   try {
     const currentDate = new Date();
     const currTime = currentDate.getTime();
@@ -11,6 +11,21 @@ exports.upcomingEvents = async (req, res) => {
       .where("start_ms", ">=", currTime)
       .orWhere("end_ms", ">=", currTime)
       .returning("*");
+  }catch (err) {
+  console.log(err);
+  res
+    .status(500)
+    .json({ success: false, message: "unknown Error!", event: null });
+}
+});
+exports.upcomingEvents = (async (req, res) => {
+    try {
+        const currentDate = new Date();
+        const currTime = currentDate.getTime()
+        console.log(currTime);
+        const events = await knex('events')
+            .where('start_ms', '>=', currTime)
+            .orWhere('end_ms', '>=', currTime).returning('*');
 
     console.log(events);
     res.status(200).json({ success: true, message: "ok", event: events });
@@ -20,7 +35,7 @@ exports.upcomingEvents = async (req, res) => {
       .status(500)
       .json({ success: false, message: "unknown Error!", event: null });
   }
-};
+});
 
 exports.liveEvents = async (req, res) => {
   try {
