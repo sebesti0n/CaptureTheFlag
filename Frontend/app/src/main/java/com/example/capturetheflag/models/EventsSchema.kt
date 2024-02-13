@@ -1,8 +1,8 @@
 package com.example.capturetheflag.models
 
-data class EventDetailsModel(
+data class EventsSchema(
     val event: ArrayList<Event>,
     val message: String,
-    val success: Boolean,
-    val isRegister:Boolean
+    val isRegister:Boolean,
+    val success: Boolean
 )

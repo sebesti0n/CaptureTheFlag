@@ -22,6 +22,7 @@ import com.example.capturetheflag.models.QuestionModel
 import com.example.capturetheflag.ui.CreateEventViewModel
 import com.example.capturetheflag.util.QuestionAdapter
 import com.example.capturetheflag.util.QuestionItemClickListener
+import com.example.capturetheflag.util.Resource
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -150,9 +151,19 @@ class CreateEventFragment : Fragment(),QuestionItemClickListener {
                     Log.w("sebastian Poster", mEvent.toString())
                     viewModel.createEvent(mEvent)
                     viewModel.get()?.observe(requireActivity()) {
-                        eid = it.event[0].event_id
+                        when(it){
+                            is Resource.Success -> {
+                                eid = it.data!!.event[0].event_id
+                                addQuestionDialog()
+                            }
+                            is Resource.Error -> {
+                                showToast(it.message!!)
+                            }
+                            else -> {
+                                showToast("Loading")
+                            }
+                        }
                     }
-                    addQuestionDialog()
                 }
             }
                 if (problemList.size == flagCount) {

@@ -28,6 +28,29 @@ class AdminEventFragment : Fragment() {
         return binding.root
     }
 
+
+//    @SuppressLint("SetTextI18n")
+//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+//        super.onViewCreated(view, savedInstanceState)
+//        Log.w("sebastian idk","sex")
+//        val eid = args.eid
+//        if (eid.toInt() ==-1){
+//            binding.contentDescription.text =  "Not found"
+//            binding.contentDetails.text = "Not Found"
+//            binding.contentPrizes.text = "Not Found"
+//        }
+//        else{
+//        viewModel.getAdminEventbyId(eid.toInt())
+//        viewModel.get()?.observe(requireActivity()) {
+//            val event = it.event.get(0)
+//            Log.w("sebastian","event")
+//            binding.contentDescription.text =  event.description
+//            binding.contentDetails.text = "Start At: ${event.start_time} \n End At: ${event.end_time}"
+//            binding.contentPrizes.text = "Amazing Goodies"
+//        }
+//        }
+//
+//    }
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -41,7 +64,7 @@ class AdminEventFragment : Fragment() {
         else{
         viewModel.getAdminEventbyId(eid.toInt())
         viewModel.get()?.observe(requireActivity()) {
-            val event = it.event.get(0)
+            val event = it.data?.event!!.get(0)
             Log.w("sebastian","event")
             binding.contentDescription.text =  event.description
 //            binding.contentDetails.text = "Start At: ${event.start_time} \n End At: ${event.end_time}"
@@ -50,5 +73,6 @@ class AdminEventFragment : Fragment() {
         }
 
     }
+
 
 }

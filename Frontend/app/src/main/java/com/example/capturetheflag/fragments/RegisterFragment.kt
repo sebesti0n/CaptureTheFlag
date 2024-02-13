@@ -10,11 +10,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
+import com.example.capturetheflag.R
 import com.example.capturetheflag.activities.HomeActivity
 import com.example.capturetheflag.databinding.FragmentRegisterBinding
 import com.example.capturetheflag.models.User
 import com.example.capturetheflag.session.Session
 import com.example.capturetheflag.ui.RegisterViewModel
+import com.example.capturetheflag.util.Resource
 
 class RegisterFragment : Fragment() {
 
@@ -29,6 +32,7 @@ class RegisterFragment : Fragment() {
     private lateinit var collegeName:String
     private lateinit var password:String
     private lateinit var cnfPassword:String
+    private lateinit var enrollmentID:String
 
 
 
@@ -43,7 +47,7 @@ class RegisterFragment : Fragment() {
 
     @SuppressLint("SuspiciousIndentation")
     private fun checkCredentials(): Boolean {
-    if(cnfPassword.isEmpty() || collegeName.isEmpty() || email.isEmpty() || firstName.isEmpty() || mobileNo.isEmpty() || password.isEmpty())
+    if(cnfPassword.isEmpty() || collegeName.isEmpty() || email.isEmpty() || firstName.isEmpty() || mobileNo.isEmpty() || password.isEmpty() || enrollmentID.isEmpty())
         return true
         return password != cnfPassword
     }
@@ -53,11 +57,11 @@ class RegisterFragment : Fragment() {
         sharedPref = Session(requireActivity())
         viewModel = ViewModelProvider(this)[RegisterViewModel::class.java]
 
-
-
+        binding.signInBtn.setOnClickListener {
+            findNavController().navigate(R.id.action_registerFragment_to_login)
+        }
 
         binding.btnLogin.setOnClickListener {
-
             email = binding.etEmail.text.toString()
             firstName = binding.etFirstname.text.toString()
             lastName =binding.etLastname.text.toString()
@@ -65,6 +69,7 @@ class RegisterFragment : Fragment() {
             mobileNo = binding.etMobileNo.text.toString()
             password = binding.etPassword.text.toString()
             cnfPassword = binding.etCnfpassword.text.toString()
+            enrollmentID = binding.etEnrollmentId.text.toString()
 
             if(checkCredentials()){
                 showToastMessage("fill all details")
@@ -74,16 +79,30 @@ class RegisterFragment : Fragment() {
             }else
              {
                  showProgressBar()
-                val newUser = User(collegeName,email,firstName,lastName,mobileNo,cnfPassword,password)
+                val newUser = User(collegeName,email,firstName,lastName,mobileNo,cnfPassword,password,enrollmentID)
                 viewModel.register(newUser)
-                viewModel.get()?.observe(requireActivity(), Observer {
-                    if(it.success){
-                       sharedPref.createSession(it.user.user_id,it.user.email,true,it.message)
-                        moveToHome()
 
-                    }else{
-                        hideProgressBar()
-                        showToastMessage(it.message)
+                viewModel.get()?.observe(requireActivity(), Observer { it ->
+                    when(it){
+                        is Resource.Success -> {
+                            it.data?.let{ response ->
+                                response.user.apply {
+                                    sharedPref.createSession(
+                                        college = this.CollegeName,
+                                        name = "${this.FirstName} ${this.LastName}",
+                                        mobile = this.MobileNo,
+                                        email = this.email,
+                                        enrollmentID = this.enroll_id,
+                                        id = this.user_id,
+                                        token = "token_String"
+                                    )
+                                    moveToHome()
+                                }
+                            }
+                        }
+                        is Resource.Loading -> {}
+                        is Resource.Error -> { showToastMessage(it.message!!)}
+
                     }
                 })
             }

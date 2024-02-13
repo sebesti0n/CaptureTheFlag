@@ -13,9 +13,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
+import com.example.capturetheflag.R
 import com.example.capturetheflag.databinding.FragmentEventBinding
+import com.example.capturetheflag.databinding.LayoutTeamRegistrationFormBinding
 import com.example.capturetheflag.models.Event
+import com.example.capturetheflag.models.TeamSchema
+import com.example.capturetheflag.session.Session
 import com.example.capturetheflag.ui.EventViewModel
+import com.example.capturetheflag.util.EventType
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -23,13 +30,18 @@ import java.util.concurrent.TimeUnit
 
 class EventFragment : Fragment() {
     private var _binding: FragmentEventBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var dialogBinding: LayoutTeamRegistrationFormBinding
     private val args: EventFragmentArgs by navArgs()
+    private lateinit var dialog: BottomSheetDialog
     private lateinit var viewModel: EventViewModel
-    private var eid: Long = -1
+    private val binding get() = _binding!!
+    private lateinit var session: Session
     private lateinit var event: Event
-    private var isLive = false
     private var isRegister = false
+    private var eid: Long = -1
+    private var isLive = false
+    private var eventType = 1
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -41,22 +53,159 @@ class EventFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.w("sebastian idk", "sex")
         eid = args.eid
         isLive = args.isLive
+        session = Session.getInstance(requireContext())
         updateUI()
+        hideRegisterButton()
+        initializeTeamRegistrationBottomSheetDialog()
         binding.btnRegisteredEvent.setOnClickListener {
-            if(!isRegister)registerUserForEvent()
-            if(isLive){
-                val action = EventFragmentDirections.actionEventFragmentToContestFragment(eid.toInt())
+            if (!isRegister) {
+                if (eventType == EventType.TEAM_EVENT)
+                    registerUserForEvent()
+                else if (eventType == EventType.INDIVIDUAL_EVENT)
+                    registerIndividuallyEvent()
+
+            }
+            if (isLive) {
+                val action =
+                    EventFragmentDirections.actionEventFragmentToContestFragment(eid.toInt())
                 findNavController().navigate(action)
             }
         }
 
     }
+
+    private fun hideRegisterButton() {
+        if (eventType == EventType.NO_REGISTRATION_EVENT) {
+            binding.btnRegisteredEvent.visibility = View.GONE
+        }
+
+    }
+
+    private fun registerIndividuallyEvent() {
+
+        val newTeam = TeamSchema(
+            eid.toInt(),
+            session.getEmail(),
+            session.getEnrollmentID(),
+            session.getUserName(),
+            "",
+            "",
+            "",
+            "",
+            session.getCollege(),
+            session.getMobile()
+        )
+        registerTeamForEvent(newTeam)
+    }
+
     @SuppressLint("SetTextI18n")
     private fun registerUserForEvent() {
-        viewModel.registerUserForEvent(eid.toInt())
+        teamRegistrationForm()
+    }
+
+
+    @SuppressLint("SetTextI18n")
+    private fun updateUI() {
+        if (eid.toInt() == -1) {
+            binding.contentDescription.text = "Not found"
+//            binding.contentDetails.text = "Not Found"
+//            binding.contentPrizes.text = "Not Found"
+        } else {
+            viewModel.eventDetails(eid.toInt()) { it, error ->
+                if (error == true) {
+                    Toast.makeText(requireContext(), "Server Error", Toast.LENGTH_SHORT).show()
+                } else {
+                    if (it != null) {
+                        if (!it.success) {
+                            Toast.makeText(requireContext(), "Server Error", Toast.LENGTH_SHORT)
+                                .show()
+                        } else {
+                            event = it.event[0]
+                            isRegister = it.isRegister
+                            eventType = event.event_type
+                            Log.w("sebastian", "event")
+                            setCountDownTimer(event.start_time, event.end_time)
+                            binding.tvTitle.text = event.title
+                            binding.contentDescription.text = event.description
+//                            binding.contentDetails.text = "Start At: ${event.start_time} \n End At: ${event.end_time}"
+//                            binding.contentPrizes.text = "Amazing Goodies"
+                            val imgview = binding.banner
+                            Glide.with(requireContext())
+                                .load(event.posterImage)
+                                .into(imgview)
+                        }
+                    }
+                }
+            }
+        }
+        if (isRegister && !isLive) {
+            binding.btnRegisteredEvent.visibility = View.INVISIBLE
+        } else if (isLive && isRegister) {
+            binding.btnRegisteredEvent.visibility = View.VISIBLE
+            binding.btnRegisteredEvent.text = "Start"
+        } else {
+            if (isLive) {
+                binding.btnRegisteredEvent.text = "Start"
+                binding.btnRegisteredEvent.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private fun initializeTeamRegistrationBottomSheetDialog() {
+        dialog = BottomSheetDialog(requireContext())
+        dialogBinding = LayoutTeamRegistrationFormBinding.inflate(layoutInflater)
+        dialog.setContentView(dialogBinding.root)
+        dialog.window?.attributes?.windowAnimations = R.style.DialogAnimation
+    }
+
+    private fun teamRegistrationForm() {
+        dialog.show()
+        dialogBinding.btnLogin.setOnClickListener {
+            val teamName = dialogBinding.etTeamName.text.toString()
+            val player1Name = dialogBinding.etPlayer1Name.text.toString()
+            val player2Name = dialogBinding.etPlayer2Name.text.toString()
+            val player3Name = dialogBinding.etPlayer3Name.text.toString()
+            val player1EID = dialogBinding.etPlayer1EID.text.toString()
+            val player2EID = dialogBinding.etPlayer2EID.text.toString()
+            val player3EID = dialogBinding.etPlayer3EID.text.toString()
+            val leaderEmail = dialogBinding.etLeaderEmail.text.toString()
+            val waNumber = dialogBinding.etWaNumber.text.toString()
+
+            if (teamName.isEmpty() || player1Name.isEmpty() ||
+                player1EID.isEmpty() || player2EID.isEmpty() ||
+                player3EID.isEmpty() || player2Name.isEmpty() ||
+                player3Name.isEmpty() || leaderEmail.isEmpty() ||
+                waNumber.isEmpty()
+            ) {
+                Snackbar.make(requireView(), "Kindly Fill all Details", 2000).show()
+            } else {
+                val newTeam = TeamSchema(
+                    eid.toInt(),
+                    leaderEmail,
+                    player1EID,
+                    player1Name,
+                    player2EID,
+                    player2Name,
+                    player3EID,
+                    player3Name,
+                    teamName,
+                    waNumber
+                )
+                registerTeamForEvent(newTeam)
+                dialog.dismiss()
+            }
+        }
+
+
+    }
+
+    private fun registerTeamForEvent(newTeam: TeamSchema) {
+        viewModel.registerTeamForEvent(newTeam) { success, message ->
+            if (success == true) isRegister = true
+            Snackbar.make(requireView(), message.toString(), 2000).show()
+        }
     }
 
     private fun setCountDownTimer(dateString: String, endTime: String) {
@@ -110,53 +259,6 @@ class EventFragment : Fragment() {
             }
         } catch (e: Exception) {
             e.printStackTrace()
-        }
-    }
-
-
-    @SuppressLint("SetTextI18n")
-    private fun updateUI() {
-        if (eid.toInt() == -1) {
-            binding.contentDescription.text = "Not found"
-//            binding.contentDetails.text = "Not Found"
-//            binding.contentPrizes.text = "Not Found"
-        } else {
-            viewModel.eventDetails(eid.toInt()) { it, error ->
-                if (error == true) {
-                    Toast.makeText(requireContext(), "Server Error", Toast.LENGTH_SHORT).show()
-                } else {
-                    if (it != null) {
-                        if (!it.success) {
-                            Toast.makeText(requireContext(), "Server Error", Toast.LENGTH_SHORT)
-                                .show()
-                        } else {
-                            event = it.event[0]
-                            isRegister = it.isRegister
-                            Log.w("sebastian", "event")
-                            setCountDownTimer(event.start_time, event.end_time)
-                            binding.contentDescription.text = event.description
-//                            binding.contentDetails.text = "Start At: ${event.start_time} \n End At: ${event.end_time}"
-//                            binding.contentPrizes.text = "Amazing Goodies"
-                            val imgview = binding.banner
-                            Glide.with(requireContext())
-                                .load(event.posterImage)
-                                .into(imgview)
-                        }
-                    }
-                }
-            }
-        }
-        if (isRegister&&!isLive){
-            binding.btnRegisteredEvent.visibility = View.INVISIBLE
-        }
-        else if(isLive&&isRegister){
-            binding.btnRegisteredEvent.visibility = View.VISIBLE
-            binding.btnRegisteredEvent.text = "Start"
-        }else{
-            if(isLive){
-                binding.btnRegisteredEvent.text = "Start"
-                binding.btnRegisteredEvent.visibility = View.VISIBLE
-            }
         }
     }
 }

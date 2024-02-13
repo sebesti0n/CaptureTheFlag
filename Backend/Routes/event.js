@@ -6,6 +6,7 @@ const answercontroller = require('../Controllers/answerController');
 const eventregistrationcontroller = require('../Controllers/eventRegistrationController');
 const qc = require('../Controllers/queryController');
 const lc = require('../Controllers/leaderBoardController');
+const teamController = require('../Controllers/teamController')
 
 router.get('/all', eventcontroller.upcomingEvents);
 router.get('/live', eventcontroller.liveEvents);
@@ -23,5 +24,7 @@ router.get('/leaderboard',lc.getLeaderBoard);
 router.get('/event-details',eventcontroller.eventDetails)
 router.get('/submission',qc.submissionRiddle);
 router.get('/start-contest',qc.startEvent);
+router.post('/register_team',teamController.createTeam)
+
 module.exports = router;
 

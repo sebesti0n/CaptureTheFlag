@@ -34,8 +34,7 @@
             android:background="@drawable/auth_bg"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            />
+            app:layout_constraintBottom_toBottomOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="wrap_content"
@@ -74,6 +73,7 @@
                     app:boxCornerRadiusBottomStart="19dp"
                     app:boxCornerRadiusTopEnd="19dp"
                     app:hintAnimationEnabled="true"
+                    android:layout_marginEnd="4dp"
                     android:autofillHints="emailAddress"
                     app:boxStrokeWidth="3dp"
                     app:boxStrokeColor="@color/bgBlack"
@@ -103,7 +103,7 @@
                     app:boxStrokeWidth="3dp"
                     app:boxStrokeColor="@color/bgBlack"
                     android:layout_weight="1"
-                    >
+                    android:layout_marginStart="4dp">
 
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -156,6 +156,28 @@
                 app:boxCornerRadiusTopEnd="19dp"
                 app:boxStrokeWidth="3dp"
                 app:boxStrokeColor="@color/bgBlack"
+                android:imeOptions="actionNext">
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_enrollmentId"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:textSize="15sp"
+                android:hint="Enrollment ID"
+
+                />
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                app:boxCornerRadiusTopStart="19dp"
+                app:boxCornerRadiusBottomEnd="19dp"
+                app:boxCornerRadiusBottomStart="19dp"
+                app:boxCornerRadiusTopEnd="19dp"
+                app:boxStrokeWidth="3dp"
+                app:boxStrokeColor="@color/bgBlack"
                 android:imeOptions="actionNext"
 
                 >
@@ -173,6 +195,7 @@
                     />
 
             </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
@@ -266,7 +289,7 @@
         />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/tv_registernow"
+        android:id="@+id/signInBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Sign In"
