@@ -74,6 +74,9 @@
         <action
             android:id="@+id/action_contestFragment_to_rankingFragment"
             app:destination="@id/rankingFragment" />
+        <action
+            android:id="@+id/action_contestFragment_to_homefragment"
+            app:destination="@id/homefragment" />
     </fragment>
     <fragment
         android:id="@+id/rankingFragment"
