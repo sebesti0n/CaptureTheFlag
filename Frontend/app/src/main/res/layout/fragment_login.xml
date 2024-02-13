@@ -13,10 +13,12 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
-        <ImageView
+
+        <com.google.android.material.imageview.ShapeableImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@drawable/dcc_x_gdsc_2022_24_20240212_040539"
+            android:src="@drawable/dcc"
+            android:elevation="32dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
