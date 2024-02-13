@@ -5,6 +5,7 @@ const adminRouter = require('./Routes/admin');
 const cors = require('cors');
 const validationMiddleware = require('./middlewares/validationMiddleware');
 const knex = require('knex')(require('./Configuration/knexfile')['development']);
+// const client = require('./Configuration/redisConfig.js');
 const app= express();
 const PORT = 3008;
 app.use(cors());
