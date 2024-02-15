@@ -31,6 +31,9 @@ class RetrofitInstances {
         val service: ApiEndpoints by lazy {
             retrofit.create(ApiEndpoints::class.java)
         }
+        val ctfServices: CtfApiEndpoints by lazy {
+            retrofit.create(CtfApiEndpoints::class.java)
+        }
     }
 }
 
