@@ -1,10 +1,11 @@
-package com.example.capturetheflag
+package com.example.capturetheflag.util
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.capturetheflag.R
 import com.github.vipulasri.timelineview.TimelineView
 
 class TimeLineAdapter: RecyclerView.Adapter<TimeLineAdapter.TimeLineViewHolder>() {
