@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.capturetheflag.apiServices.RetrofitInstances
+import com.example.capturetheflag.models.CtfState
 import com.example.capturetheflag.models.NextRiddleModel
 import com.example.capturetheflag.models.QuestionModel
 import com.example.capturetheflag.models.ResponseQuestionModel
@@ -111,5 +112,34 @@ class ContestViewModel(
             e.printStackTrace()
             Log.d("sebastian riddleno First2", "Exception occurred: ${e.message}")
         }
+    }
+
+    fun startContest(
+        eid: Int,
+        teamId: Int,
+        st: Int,
+        callback: (CtfState?, String?)->Unit
+    ){
+        val res = RetrofitInstances.service.startContest(
+            id = eid,
+            teamId = teamId,
+            st = st
+        )
+
+        res.enqueue(object: Callback<CtfState>{
+            override fun onResponse(call: Call<CtfState>, response: Response<CtfState>) {
+                if(response.isSuccessful){
+                    callback(response.body(), null)
+                }
+                else{
+                    callback(null, response.message())
+                }
+            }
+
+            override fun onFailure(call: Call<CtfState>, t: Throwable) {
+                callback(null, t.message)
+            }
+
+        })
     }
 }

@@ -5,11 +5,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.capturetheflag.models.RiddleModel
+import com.example.capturetheflag.session.CtfSession
 import com.github.vipulasri.timelineview.TimelineView
 
 class TimeLineAdapter: RecyclerView.Adapter<TimeLineAdapter.TimeLineViewHolder>() {
 
-    private val list: List<Int> = listOf(1, 2, 3, 4, 5, 6, 7)
+    private var list: List<RiddleModel> = listOf()
+    private var session: CtfSession? = null
 
     inner class TimeLineViewHolder(view: View, viewType: Int): RecyclerView.ViewHolder(view) {
         val title = view.findViewById<TextView>(R.id.riddle_title)
@@ -36,25 +39,67 @@ class TimeLineAdapter: RecyclerView.Adapter<TimeLineAdapter.TimeLineViewHolder>(
         return list.size
     }
 
+    private fun currentQuestion(): Int = session!!.getLevel()
+
+    fun createSession(newSession: CtfSession) {
+        session = newSession
+        notifyDataSetChanged()
+    }
+
+    fun setData(newList: List<RiddleModel>){
+        list = newList
+        notifyDataSetChanged()
+    }
+
     override fun onBindViewHolder(holder: TimeLineViewHolder, position: Int) {
         val item = list[position]
         val res = holder.itemView.context.resources
         val itemType = TimelineView.getTimeLineViewType(position, itemCount)
         when{
-            item<=3 -> {
-                holder.timeline.marker = res.getDrawable(R.drawable.done_vector_marker)
-                holder.timeline.setEndLineColor(res.getColor(R.color.blue_light), itemType)
-                holder.timeline.setStartLineColor(res.getColor(R.color.blue_light), itemType)
+            position<currentQuestion() -> {
+                holder.apply {
+                    timeline.marker = res.getDrawable(R.drawable.done_vector_marker)
+                    timeline.setEndLineColor(
+                        res.getColor(R.color.blue_light),
+                        itemType
+                    )
+                    timeline.setStartLineColor(
+                        res.getColor(R.color.blue_light),
+                        itemType
+                    )
+                    title.text = "Submitted Successfully"
+                    desc.visibility = View.GONE
+                }
             }
-            item==4 ->{
-                holder.timeline.marker = res.getDrawable(R.drawable.current_riddle_marker)
-                holder.timeline.setStartLineColor(res.getColor(R.color.blue_light), itemType)
-                holder.timeline.setEndLineColor(res.getColor(R.color.text_color), itemType)
+            position==currentQuestion() ->{
+                holder.apply {
+                    timeline.marker = res.getDrawable(R.drawable.current_riddle_marker)
+                    timeline.setStartLineColor(
+                        res.getColor(R.color.blue_light),
+                        itemType
+                    )
+                    timeline.setEndLineColor(
+                        res.getColor(R.color.text_color),
+                        itemType
+                    )
+                    title.text = item.question_id.toString()
+                    desc.text = item.question
+                }
             }
             else -> {
-                holder.timeline.marker = res.getDrawable(R.drawable.upcoming_vector_marker)
-                holder.timeline.setStartLineColor(res.getColor(R.color.text_color), TimelineView.getTimeLineViewType(position, itemCount))
-                holder.timeline.setEndLineColor(res.getColor(R.color.text_color), TimelineView.getTimeLineViewType(position, itemCount))
+                holder.apply {
+                    timeline.marker = res.getDrawable(R.drawable.upcoming_vector_marker)
+                    timeline.setStartLineColor(
+                        res.getColor(R.color.text_color),
+                        TimelineView.getTimeLineViewType(position, itemCount)
+                    )
+                    timeline.setEndLineColor(
+                        res.getColor(R.color.text_color),
+                        TimelineView.getTimeLineViewType(position, itemCount)
+                    )
+                    title.text = "Upcoming"
+                    desc.visibility = View.GONE
+                }
             }
         }
         holder.desc.text = "This is riddle $item"

@@ -45,6 +45,7 @@ class ContestFragment : Fragment(),PermissionListener{
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
+        hideEndButton()
     }
 
     private fun setupRecyclerView(){
@@ -55,6 +56,13 @@ class ContestFragment : Fragment(),PermissionListener{
             adapter = adapter
             layoutManager = LinearLayoutManager(requireContext())
         }
+    }
+    private fun showEndButton(){
+        binding.endButton.visibility = View.VISIBLE
+    }
+
+    private fun hideEndButton(){
+        binding.endButton.visibility = View.GONE
     }
 
     override fun shouldShowRationaleInfo() {
