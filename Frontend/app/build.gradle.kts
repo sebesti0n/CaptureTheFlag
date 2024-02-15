@@ -54,6 +54,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("com.google.firebase:firebase-storage:20.3.0")
+    implementation("androidx.room:room-common:2.6.1")
     testImplementation("junit:junit:4.13.2")
     testImplementation ("junit:junit:4.13.2")
     implementation ("androidx.appcompat:appcompat:1.6.1")

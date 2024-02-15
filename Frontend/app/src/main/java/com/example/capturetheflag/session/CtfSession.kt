@@ -23,14 +23,13 @@ class CtfSession(context: Context) {
     }
 
 
-    fun updateLevel(): Int {
-        val curr = sharedPref.getInt(CURRENT_QUESTION, -1)
-        editor.putInt(CURRENT_QUESTION, curr+1)
+    fun setLevel(level: Int){
+        editor.putInt(CURRENT_QUESTION, level)
         editor.apply()
-        return curr.plus(1)
     }
 
     fun getLevel(): Int = sharedPref.getInt(CURRENT_QUESTION, 0)!!
+    fun getTeamId(): Int = sharedPref.getInt(TEAM_ID, 1)
 
     companion object{
         private const val PREF_NAME = "ctf_shared_pref"
