@@ -3,7 +3,6 @@ package com.example.capturetheflag.ui
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.capturetheflag.apiServices.RetrofitInstances
 import com.example.capturetheflag.models.ResponseEventModel

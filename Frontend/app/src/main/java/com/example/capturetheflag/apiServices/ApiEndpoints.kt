@@ -1,5 +1,6 @@
 package com.example.capturetheflag.apiServices
 
+import com.example.capturetheflag.models.CtfState
 import com.example.capturetheflag.models.EventsSchema
 import com.example.capturetheflag.models.EventX
 import com.example.capturetheflag.models.LoginReponse
@@ -121,4 +122,5 @@ interface ApiEndpoints {
         @Body
         team: TeamSchema
     ): Call<StatusModel>
+
 }

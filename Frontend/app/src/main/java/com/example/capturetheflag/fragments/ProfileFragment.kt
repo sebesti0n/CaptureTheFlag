@@ -6,8 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.bumptech.glide.Glide
-import com.example.capturetheflag.R
 import com.example.capturetheflag.activities.HomeActivity
 import com.example.capturetheflag.activities.MainActivity
 import com.example.capturetheflag.databinding.FragmentProfileBinding
