@@ -9,17 +9,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.capturetheflag.util.TimeLineAdapter
 import com.example.capturetheflag.databinding.FragmentContestBinding
 import com.example.capturetheflag.helper.PermissionHelper
 import com.example.capturetheflag.models.QuestionModel
+import com.example.capturetheflag.models.RiddleModel
 import com.example.capturetheflag.room.CtfDatabase
 import com.example.capturetheflag.ui.ContestViewModel
 import com.example.capturetheflag.util.PermissionListener
+import com.google.android.material.snackbar.Snackbar
 import com.google.zxing.integration.android.IntentIntegrator
 import kotlinx.coroutines.launch
 
@@ -27,43 +31,79 @@ class ContestFragment : Fragment(),PermissionListener{
     private var _binding:FragmentContestBinding?=null
     private val binding get() = _binding!!
     private val args:ContestFragmentArgs by navArgs()
-    private lateinit var roomDB:CtfDatabase
     private lateinit var viewModel: ContestViewModel
     private lateinit var permissionHelper: PermissionHelper
+    private var isFirstAttempted = false
     private var riddleNumber:Int=0
     private var eid =-1
-    private lateinit var rList:ArrayList<QuestionModel>
-    private lateinit var adapter: TimeLineAdapter
+    private lateinit var rList: List<RiddleModel>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        eid = args.eid
         _binding = FragmentContestBinding.inflate(inflater,container,false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupRecyclerView()
-        setupRoomDatabase()
+
+        setupRoomDatabase(){ message, success ->
+            if(success){
+                rList = viewModel.getRiddles()
+                //
+            }
+            else{
+                showSnackbar(message!!)
+                findNavController().popBackStack()
+            }
+        }
+
     }
 
-    private fun setupRoomDatabase() {
-        roomDB = CtfDatabase.getDatabase(requireContext())
-        viewLifecycleOwner.lifecycleScope.launch {
-           val count = roomDB.CtfTeamStateDao().isTeamRegistered()
+    private fun setupRoomDatabase(callback: (String?, Boolean)->Unit) {
+        if(!viewModel.checkIfDataCached()){
+            viewModel.onStartContest(
+                eid = eid,
+                tid = viewModel.getTeamId(),
+                startMs = System.currentTimeMillis()
+            ){ success, message, state ->
+                if(success!!){
+                    if(state==null){
+                        showSnackbar("state is null bitch")
+                    }
+                    else{
+                        viewModel.cacheData(state.riddleModelList)
+                        viewModel.setLevel(state.next.Number_correct_answer)
+                        viewModel.createSession(
+                            state.next.team_id,
+                            state.next.Number_correct_answer
+                        )
+                        callback(null, true)
+
+                    }
+                }
+                else {
+                    callback(message, false)
+                }
+
+            }
+        }
+        else {
+            callback(
+                null,
+                true
+            )
         }
     }
-
-    private fun setupRecyclerView(){
-        adapter = TimeLineAdapter()
-        binding.recyclerView.adapter = adapter
-        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerView.apply {
-            adapter = adapter
-            layoutManager = LinearLayoutManager(requireContext())
-        }
+    private fun showSnackbar(message: String){
+        Snackbar.make(
+            requireView(),
+            message,
+            2000
+        ).show()
     }
 
     private fun setupViewModel() {
@@ -112,8 +152,5 @@ class ContestFragment : Fragment(),PermissionListener{
             setupScanner()
         }
     }
-
-}
-
 
 }

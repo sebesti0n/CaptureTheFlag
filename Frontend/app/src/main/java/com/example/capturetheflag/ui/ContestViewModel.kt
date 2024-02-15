@@ -5,7 +5,9 @@ import androidx.lifecycle.AndroidViewModel
 import com.example.capturetheflag.apiServices.RetrofitInstances
 import com.example.capturetheflag.models.CtfState
 import com.example.capturetheflag.models.NextRiddleModel
-import com.example.capturetheflag.session.Session
+import com.example.capturetheflag.models.RiddleModel
+import com.example.capturetheflag.room.CtfDatabase
+import com.example.capturetheflag.session.CtfSession
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -13,9 +15,27 @@ import retrofit2.Response
 class ContestViewModel(
     app: Application
 ) : AndroidViewModel(app) {
-    private val session = Session.getInstance(app.applicationContext)
-    fun getUID() = session.getUID()
-    private val id = session.getUID()
+
+    private val session = CtfSession.getCtfSession(app.applicationContext)
+    private val db: CtfDatabase = CtfDatabase.getDatabase(app)
+    private val riddleDao = db.riddleDao()
+    private val ctfStateDao = db.CtfTeamStateDao()
+
+    fun getTeamId(): Int = session.getTeamId()
+    fun getLevel(): Int = session.getLevel()
+    fun setLevel(level: Int) = session.setLevel(level)
+
+    fun createSession(
+        teamId: Int,
+        questionNumber: Int
+    ){
+        session.createSession(
+            teamId = teamId,
+            questionNumber = questionNumber
+        )
+    }
+
+
     fun onStartContest(
         eid: Int,
         tid: Int,
@@ -44,6 +64,21 @@ class ContestViewModel(
             })
 
     }
+
+    fun checkIfDataCached(): Boolean{
+        return when(riddleDao.countRiddle()){
+            0 -> false
+            else -> true
+        }
+    }
+
+    fun cacheData(list: List<RiddleModel>){
+        riddleDao.insertRiddles(list)
+    }
+
+    fun getRiddles(): List<RiddleModel> = riddleDao.getRiddles()
+
+
 
 
     fun submitRiddleResponse(
@@ -74,5 +109,6 @@ class ContestViewModel(
 
         })
     }
+
 
 }

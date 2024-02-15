@@ -4,6 +4,7 @@ import androidx.room.TypeConverter
 import com.example.capturetheflag.models.Next
 import com.example.capturetheflag.models.RiddleModel
 import com.google.gson.Gson
+import java.lang.StringBuilder
 
 class TypeConverter {
     @TypeConverter
@@ -29,6 +30,20 @@ class TypeConverter {
             Gson().fromJson(it, Next::class.java)
         }
     }
+    
+    @TypeConverter
+    fun fromList(list: List<Integer>): String{
+        var stringBuilder: StringBuilder = StringBuilder()
+        for(ele in list) stringBuilder.append("$ele ")
+        return stringBuilder.toString()
+    }
 
+    @TypeConverter
+    fun toList(string: String): List<Int>{
+        val array = string.split(" ")
+        var list = arrayListOf<Int>()
+        for(ele in array) list.add(ele.toInt())
+        return list.toList()
+    }
 
 }

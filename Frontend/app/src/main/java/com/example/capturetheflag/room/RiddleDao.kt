@@ -10,12 +10,12 @@ import com.example.capturetheflag.models.RiddleModel
 interface RiddleDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertRiddles(riddles: List<RiddleModel>)
+    fun insertRiddles(riddles: List<RiddleModel>)
 
     @Query("SELECT * FROM riddle_table ORDER BY level ASC")
-    suspend fun getRiddles(): List<RiddleModel>
+    fun getRiddles(): List<RiddleModel>
 
     @Query("SELECT COUNT(*) FROM riddle_table")
-    suspend fun countRiddle(): Int
+    fun countRiddle(): Int
 
 }
