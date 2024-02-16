@@ -55,6 +55,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("com.google.firebase:firebase-storage:20.3.0")
     implementation("androidx.room:room-common:2.6.1")
+    implementation("com.google.android.gms:play-services-location:21.1.0")
     testImplementation("junit:junit:4.13.2")
     testImplementation ("junit:junit:4.13.2")
     implementation ("androidx.appcompat:appcompat:1.6.1")
