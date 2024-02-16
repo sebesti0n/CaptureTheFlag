@@ -9,33 +9,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.capturetheflag.util.TimeLineAdapter
 import com.example.capturetheflag.databinding.FragmentContestBinding
 import com.example.capturetheflag.helper.PermissionHelper
-import com.example.capturetheflag.models.QuestionModel
 import com.example.capturetheflag.models.RiddleModel
-import com.example.capturetheflag.room.CtfDatabase
 import com.example.capturetheflag.ui.ContestViewModel
 import com.example.capturetheflag.util.PermissionListener
 import com.google.android.material.snackbar.Snackbar
 import com.google.zxing.integration.android.IntentIntegrator
-import kotlinx.coroutines.launch
 
 class ContestFragment : Fragment(),PermissionListener{
-    private var _binding:FragmentContestBinding?=null
+    private var _binding: FragmentContestBinding? = null
     private val binding get() = _binding!!
     private val args:ContestFragmentArgs by navArgs()
     private lateinit var viewModel: ContestViewModel
     private lateinit var permissionHelper: PermissionHelper
     private var isFirstAttempted = false
-    private var riddleNumber:Int=0
-    private var eid =-1
+    private var riddleNumber: Int = 0
+    private var eid = -1
     private lateinit var rList: List<RiddleModel>
 
     override fun onCreateView(
@@ -124,11 +117,9 @@ class ContestFragment : Fragment(),PermissionListener{
 
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data);
-
+        super.onActivityResult(requestCode, resultCode, data)
         val scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
         if (scanResult != null) {
-
             if (scanResult.contents == null) {
                 Toast.makeText(requireContext(), "Cancelled", Toast.LENGTH_SHORT).show();
             } else {
@@ -138,9 +129,6 @@ class ContestFragment : Fragment(),PermissionListener{
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
-
-
-
     override fun shouldShowRationaleInfo() {
         permissionHelper.launchPermissionDialog(Manifest.permission.CAMERA)
     }

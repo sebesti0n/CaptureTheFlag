@@ -27,6 +27,9 @@ class ContestViewModel(
     fun getTeamId(): Int = session.getTeamId()
     fun getLevel(): Int = session.getLevel()
     fun setLevel(level: Int) = session.setLevel(level)
+    fun getRegistrationId(): String = userSession.getEnrollmentID()
+
+    
 
     fun createSession(
         teamId: Int,

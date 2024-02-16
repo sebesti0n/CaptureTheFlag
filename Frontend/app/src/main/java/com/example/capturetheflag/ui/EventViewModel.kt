@@ -24,7 +24,7 @@ class EventViewModel(app:Application):AndroidViewModel(app) {
     }
     private val session = Session.getInstance(app.applicationContext)
     private val id = session.getUID()
-    private val enrollID = session.getEnrollmentID()
+    val enrollID = session.getEnrollmentID()
 
     fun eventDetails(eid:Int, callback: (EventsSchema?, Boolean?) -> Unit){
         val call = RetrofitInstances.service
