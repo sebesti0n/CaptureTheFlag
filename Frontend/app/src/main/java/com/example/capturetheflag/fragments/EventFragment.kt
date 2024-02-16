@@ -171,9 +171,9 @@ class EventFragment : Fragment() {
 //                            binding.contentDetails.text = "Start At: ${event.start_time} \n End At: ${event.end_time}"
 //                            binding.contentPrizes.text = "Amazing Goodies"
                             val imgview = binding.banner
-//                            Glide.with(requireContext())
-//                                .load(event.posterImage)
-//                                .into(imgview)
+                            Glide.with(requireContext())
+                                .load(event.posterImage)
+                                .into(imgview)
                         }
                     }
                 }

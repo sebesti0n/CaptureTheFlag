@@ -35,6 +35,7 @@ class ContestFragment : Fragment(),PermissionListener{
     private lateinit var permissionHelper: PermissionHelper
     private var isFirstAttempted = false
     private var riddleNumber:Int=0
+    private var isCompleted = false
     private var eid =-1
     private lateinit var rList: List<RiddleModel>
 
@@ -54,14 +55,74 @@ class ContestFragment : Fragment(),PermissionListener{
         setupRoomDatabase(){ message, success ->
             if(success){
                 rList = viewModel.getRiddles()
-                //
+                updateUI()
+
             }
             else{
                 showSnackbar(message!!)
                 findNavController().popBackStack()
             }
         }
+        binding.endButton.setOnClickListener {
+            if(!isFirstAttempted){
+                if(binding.etCorrectAnswer.text.toString().isEmpty()){
+                    showSnackbar("Enter Answer")
+                }
+                else{
+                    if(binding.etCorrectAnswer.text.toString() == rList[riddleNumber].answer){
+                        isFirstAttempted = true
+                        updateDescription()
+                        binding.etCorrectAnswer.setText("")
+                    }
+                    else showSnackbar("Wrong Answer")
+                }
 
+            }
+            else{
+                if(binding.etCorrectAnswer.text.toString().isEmpty()){
+                    showSnackbar("Enter Answer")
+                }
+                else{
+                    if(binding.etCorrectAnswer.text.toString() == rList[riddleNumber].unique_code){
+                        showSnackbar("question Completed")
+                        viewModel.submitRiddleResponse(
+                            eid = eid,
+                            tid = viewModel.getTeamId(),
+                            sumitAt = System.currentTimeMillis()
+                        ){ success, message, nextRiddleNumber->
+                            if(success!!){
+                                riddleNumber = nextRiddleNumber!!
+                                isFirstAttempted = false
+                                updateUI()
+                                viewModel.setLevel(nextRiddleNumber)
+                            }
+                            else{
+                                showSnackbar(message!!)
+                            }
+                        }
+                    }
+                    else showSnackbar("Wrong Location")
+                }
+            }
+        }
+
+    }
+
+    private fun updateUI() {
+        riddleNumber = viewModel.getLevel()
+        if(riddleNumber >= rList.size){
+            binding.endButton.text = "Submit"
+            isCompleted = true
+        }
+        else{
+            updateDescription()
+        }
+    }
+
+    private fun updateDescription() {
+        if(!isFirstAttempted)
+        binding.questionTv.text = rList[riddleNumber].question
+        else binding.questionTv.text = rList[riddleNumber].storyline
     }
 
     private fun setupRoomDatabase(callback: (String?, Boolean)->Unit) {
@@ -105,10 +166,6 @@ class ContestFragment : Fragment(),PermissionListener{
             message,
             2000
         ).show()
-    }
-
-    private fun setupViewModel() {
-        viewModel = ViewModelProvider(this)[ContestViewModel::class.java]
     }
 
     private fun setupScanner() {

@@ -98,7 +98,7 @@ class ContestViewModel(
             ) {
                 if (response.isSuccessful) {
                     response.body()?.let {
-                        callback(true, "ok", it.next)
+                        callback(true, "ok", it.next.Number_correct_answer)
                     }
 
                 } else {
