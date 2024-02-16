@@ -9,7 +9,8 @@ import java.util.concurrent.TimeUnit
 class RetrofitInstances {
     companion object {
 
-        private val BASEURL="https://6dd6-49-38-253-153.ngrok-free.app/"
+        private val BASEURL="https://2265-49-38-242-115.ngrok-free.app/"
+//            "https://173d-49-38-252-217.ngrok-free.app/"
 //            "https://ctf-ndp3.onrender.com/"
 
         private val retrofit: Retrofit by lazy {
@@ -29,6 +30,9 @@ class RetrofitInstances {
 
         val service: ApiEndpoints by lazy {
             retrofit.create(ApiEndpoints::class.java)
+        }
+        val ctfServices: CtfApiEndpoints by lazy {
+            retrofit.create(CtfApiEndpoints::class.java)
         }
     }
 }

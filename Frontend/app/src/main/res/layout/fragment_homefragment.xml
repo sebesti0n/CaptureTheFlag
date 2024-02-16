@@ -13,6 +13,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:elevation="32dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <LinearLayout
@@ -21,25 +22,36 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
         android:layout_width="match_parent"
-        android:orientation="horizontal"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
         <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:textSize="24sp"
             android:layout_weight="1"
             android:text="Hi, Tejas"
             android:textStyle="bold"
-            android:textColor="@color/black"
+            android:textColor="@color/text_color"
             android:id="@+id/greeting_text"/>
-        <com.google.android.material.imageview.ShapeableImageView
-            android:layout_width="wrap_content"
-            android:src="@drawable/ic_search"
-            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="40dp"
+            app:strokeWidth="0dp"
+            app:cardBackgroundColor="@color/gray"
+            app:cardCornerRadius="20dp"
+            android:layout_height="40dp">
+            <com.google.android.material.imageview.ShapeableImageView
+                android:layout_width="24dp"
+                android:src="@drawable/ic_search"
+                android:layout_gravity="center"
+                app:shapeAppearanceOverlay="@style/ImageView.Circle"
+                android:layout_height="24dp"/>
+        </com.google.android.material.card.MaterialCardView>
+
     </LinearLayout>
+
 
     <com.google.android.material.textview.MaterialTextView
 
@@ -47,31 +59,30 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
         android:text="Upcoming"
         android:textColor="@color/black"
-        android:textSize="22sp"
+        android:textSize="34sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/top_linear_layout" />
 
-
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/events_rcv"
         android:layout_width="match_parent"
-        app:layout_constraintTop_toBottomOf="@id/upcoming_static_text"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_height="match_parent"
-
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="12dp"
         app:layout_constrainedHeight="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginStart="12dp"
-        android:layout_marginEnd="12dp"
-        tools:listitem="@layout/event_item"
-        android:layout_marginTop="12dp"
-        android:id="@+id/events_rcv"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/upcoming_static_text"
+        app:layout_constraintVertical_bias="0.0"
+        tools:listitem="@layout/event_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -121,4 +121,5 @@ interface ApiEndpoints {
         @Body
         team: TeamSchema
     ): Call<StatusModel>
+
 }

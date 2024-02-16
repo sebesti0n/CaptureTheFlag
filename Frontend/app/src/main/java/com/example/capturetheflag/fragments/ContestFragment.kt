@@ -2,7 +2,6 @@ package com.example.capturetheflag.fragments
 
 import android.Manifest
 import android.content.Intent
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -10,16 +9,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.lifecycle.Observer
-import androidx.navigation.NavArgs
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.capturetheflag.util.TimeLineAdapter
 import com.example.capturetheflag.databinding.FragmentContestBinding
 import com.example.capturetheflag.helper.PermissionHelper
 import com.example.capturetheflag.models.QuestionModel
+import com.example.capturetheflag.models.RiddleModel
+import com.example.capturetheflag.room.CtfDatabase
 import com.example.capturetheflag.ui.ContestViewModel
 import com.example.capturetheflag.util.PermissionListener
+import com.google.android.material.snackbar.Snackbar
 import com.google.zxing.integration.android.IntentIntegrator
+import kotlinx.coroutines.launch
 
 class ContestFragment : Fragment(),PermissionListener{
     private var _binding:FragmentContestBinding?=null
@@ -27,72 +33,139 @@ class ContestFragment : Fragment(),PermissionListener{
     private val args:ContestFragmentArgs by navArgs()
     private lateinit var viewModel: ContestViewModel
     private lateinit var permissionHelper: PermissionHelper
+    private var isFirstAttempted = false
     private var riddleNumber:Int=0
+    private var isCompleted = false
     private var eid =-1
-    private lateinit var rList:ArrayList<QuestionModel>
+    private lateinit var rList: List<RiddleModel>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        eid = args.eid
+        viewModel = ViewModelProvider(this)[ContestViewModel::class.java]
         _binding = FragmentContestBinding.inflate(inflater,container,false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        eid = args.eid
-        binding.riddleDiscription.text = "Not Found";
-        setupViewModel()
-        rList = ArrayList()
-        //getRiddlesList()
-        permissionHelper = PermissionHelper(this,this)
-        binding.btnScan.setOnClickListener {
-            Log.w("sebastian ","button clicked")
-            permissionHelper.checkPermissions(Manifest.permission.CAMERA)
-            setupScanner()
+
+        setupRoomDatabase(){ message, success ->
+            if(success){
+                rList = viewModel.getRiddles()
+                updateUI()
+
+            }
+            else{
+                showSnackbar(message!!)
+                findNavController().popBackStack()
+            }
         }
-        binding.submit.setOnClickListener {
-            handleOnClickofSubmitButton()
+        binding.endButton.setOnClickListener {
+            if(!isFirstAttempted){
+                if(binding.etCorrectAnswer.text.toString().isEmpty()){
+                    showSnackbar("Enter Answer")
+                }
+                else{
+                    if(binding.etCorrectAnswer.text.toString() == rList[riddleNumber].answer){
+                        isFirstAttempted = true
+                        updateDescription()
+                        binding.etCorrectAnswer.setText("")
+                    }
+                    else showSnackbar("Wrong Answer")
+                }
+
+            }
+            else{
+                if(binding.etCorrectAnswer.text.toString().isEmpty()){
+                    showSnackbar("Enter Answer")
+                }
+                else{
+                    if(binding.etCorrectAnswer.text.toString() == rList[riddleNumber].unique_code){
+                        showSnackbar("question Completed")
+                        viewModel.submitRiddleResponse(
+                            eid = eid,
+                            tid = viewModel.getTeamId(),
+                            sumitAt = System.currentTimeMillis()
+                        ){ success, message, nextRiddleNumber->
+                            if(success!!){
+                                riddleNumber = nextRiddleNumber!!
+                                isFirstAttempted = false
+                                updateUI()
+                                viewModel.setLevel(nextRiddleNumber)
+                            }
+                            else{
+                                showSnackbar(message!!)
+                            }
+                        }
+                    }
+                    else showSnackbar("Wrong Location")
+                }
+            }
         }
 
     }
 
-    private fun handleOnClickofSubmitButton() {
-        val code = binding.etCode.text.toString()
-        if (code != rList[riddleNumber].unique_code) {
-            Toast.makeText(requireContext(), "You are at Wrong place", Toast.LENGTH_SHORT).show()
-        } else {
-        Log.i("sebastian rList1",rList.toString()+riddleNumber)
-        updateDescriptionBox()
+    private fun updateUI() {
+        riddleNumber = viewModel.getLevel()
+        if(riddleNumber >= rList.size){
+            binding.endButton.text = "Submit"
+            isCompleted = true
+        }
+        else{
+            updateDescription()
         }
     }
 
-//    private fun getRiddlesList() {
-//        viewModel.getRiddles(eid)
-//        Log.i("seb contest","eid${eid}")
-//        viewModel.get().observe(viewLifecycleOwner, Observer {
-//            riddleModelList = it!!
-//            onCreateGetRiddleNumber()
-//            updateDescriptionBox()
-//            Log.i("sebastian rList2",riddleModelList.toString())
-//        })
-//    }
-
-    private fun onLaunchTimeRiddleNumber() {
-        viewModel.getSubmissionDetails(eid) {
-            riddleNumber = it!!
-        }
-
-    }
-    private fun onCreateGetRiddleNumber() {
-        viewModel.getRiddleNumberNumberFirst(eid){
-         riddleNumber = it!!
-        }
+    private fun updateDescription() {
+        if(!isFirstAttempted)
+        binding.questionTv.text = rList[riddleNumber].question
+        else binding.questionTv.text = rList[riddleNumber].storyline
     }
 
-    private fun setupViewModel() {
-        viewModel = ViewModelProvider(this)[ContestViewModel::class.java]
+    private fun setupRoomDatabase(callback: (String?, Boolean)->Unit) {
+        if(!viewModel.checkIfDataCached()){
+            viewModel.onStartContest(
+                eid = eid,
+                rid = viewModel.getRegId(),
+                startMs = System.currentTimeMillis()
+            ){ success, message, state ->
+                if(success!!){
+                    if(state==null){
+                        showSnackbar("state is null bitch")
+                    }
+                    else{
+                        viewModel.cacheData(state.riddleModelList)
+                        viewModel.setLevel(state.next.Number_correct_answer)
+                        viewModel.createSession(
+                            state.next.team_id,
+                            state.next.Number_correct_answer
+                        )
+                        callback(null, true)
+
+                    }
+                }
+                else {
+                    callback(message, false)
+                }
+
+            }
+        }
+        else {
+            callback(
+                null,
+                true
+            )
+        }
+    }
+    private fun showSnackbar(message: String){
+        Snackbar.make(
+            requireView(),
+            message,
+            2000
+        ).show()
     }
 
     private fun setupScanner() {
@@ -110,20 +183,15 @@ class ContestFragment : Fragment(),PermissionListener{
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.w("sebastian scanResult","not return")
         val scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
         if (scanResult != null) {
-            Log.w("sebastian scanResult","not return")
 
             if (scanResult.contents == null) {
                 Toast.makeText(requireContext(), "Cancelled", Toast.LENGTH_SHORT).show();
             } else {
-                Log.w("sebastian scanResult",scanResult.contents.toString())
-                binding.etCode.setText(scanResult.contents.toString())
+//                binding.etCode.setText(scanResult.contents.toString())
             }
         } else {
-            Log.w("sebastian scanResult","not return")
-
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
@@ -140,20 +208,6 @@ class ContestFragment : Fragment(),PermissionListener{
         if(isGranted){
             Log.w("sebastian scanResult","granted")
             setupScanner()
-        }
-    }
-    private fun updateDescriptionBox(){
-        if (riddleNumber == -1) {
-            binding.riddleDiscription.text = "Not Found"
-        } else if (riddleNumber >= rList.size) {
-            val action = ContestFragmentDirections.actionContestFragmentToEventFragment(eid.toLong())
-            findNavController().navigate(action)
-            Toast.makeText(requireContext(), "done ", Toast.LENGTH_SHORT).show()
-        } else {
-                onLaunchTimeRiddleNumber()
-            Log.w("riddle${riddleNumber}",rList[riddleNumber].question)
-            binding.riddleDiscription.text=rList[riddleNumber].question
-            riddleNumber++
         }
     }
 

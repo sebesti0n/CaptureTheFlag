@@ -27,37 +27,3 @@ exports.submitAnswer = (async (req,res)=>{
 });
 
 
-
-exports.getRiddles = (async (req,res) => {
-    const eid = req.query.eid;
-    try {
-        const data = await db('questions')
-        .select('*')
-        .where('event_id',eid)
-        
-        res.status(200).json({success:true,message:"ok",riddles:data});
-    } catch (error) {
-        console.log(error);
-        res.status(403).jsonC({success:false,message:"server unavailable",riddles:null});
-   
-    }
-})
-
-exports.getRiddleNumberFirsTime = ( async ( req , res ) => {
-    const uid = req.query.uid;
-    const eid = req.query.eid;
-    try{
-        const data = await db('user_event_participation')
-        .where('user_id',uid)
-        .andWhere('event_id',eid)
-        .returning('Number_correct_answer');
-        if(data.length>0)
-        res.status(200).json({next:data[0].Number_correct_answer});
-        else
-        res.status(200).json({next:-1});
-    }
-    catch(error){
-        console.log(error);
-        res.status(503).json({next:-1});
-    }
-});
