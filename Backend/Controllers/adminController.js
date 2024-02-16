@@ -97,17 +97,8 @@ exports.addRiddles = ( async(req,res) => {
     try {
         const rList=req.body;
         console.log(rList)
-        let eid;
-        if(rList.size!=0)eid=rList[0].event_id;
-
-        const data = await knex('events')
-                    .where('No_of_questions','=',rList.size)
-                    .andWhere('event_id','=',eid)
-                    .returning('event_id');
-        if(data.size==0)
-        return res.status(200).json({success: true,message:"Number of Problem is less than Listed"});
-
-        await knex('questions').insert(rList).returning('*');
+        const data = await knex('questions').insert(rList).returning('*');
+        console.log(data)
         console.log("inserted Successfully");
         return res.status(200).json({success: true,message:"inserted Successfully"});
     } catch (error) {
