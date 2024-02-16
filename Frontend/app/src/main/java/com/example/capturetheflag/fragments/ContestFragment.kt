@@ -34,8 +34,8 @@ class ContestFragment : Fragment(),PermissionListener{
     private lateinit var viewModel: ContestViewModel
     private lateinit var permissionHelper: PermissionHelper
     private var isFirstAttempted = false
-    private var riddleNumber:Int=0
-    private var eid =-1
+    private var riddleNumber: Int=0
+    private var eid = -1         
     private lateinit var rList: List<RiddleModel>
 
     override fun onCreateView(
