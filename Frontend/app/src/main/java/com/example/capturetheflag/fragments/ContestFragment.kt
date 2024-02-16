@@ -34,8 +34,8 @@ class ContestFragment : Fragment(),PermissionListener{
     private lateinit var viewModel: ContestViewModel
     private lateinit var permissionHelper: PermissionHelper
     private var isFirstAttempted = false
-    private var riddleNumber: Int=0
-    private var eid = -1         
+    private var riddleNumber:Int=0
+    private var eid =-1
     private lateinit var rList: List<RiddleModel>
 
     override fun onCreateView(
@@ -43,6 +43,7 @@ class ContestFragment : Fragment(),PermissionListener{
         savedInstanceState: Bundle?
     ): View {
         eid = args.eid
+        viewModel = ViewModelProvider(this)[ContestViewModel::class.java]
         _binding = FragmentContestBinding.inflate(inflater,container,false)
         return binding.root
     }
@@ -67,7 +68,7 @@ class ContestFragment : Fragment(),PermissionListener{
         if(!viewModel.checkIfDataCached()){
             viewModel.onStartContest(
                 eid = eid,
-                tid = viewModel.getTeamId(),
+                rid = viewModel.getRegId(),
                 startMs = System.currentTimeMillis()
             ){ success, message, state ->
                 if(success!!){

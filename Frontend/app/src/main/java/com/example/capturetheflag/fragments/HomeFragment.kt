@@ -51,10 +51,10 @@ class HomeFragment : Fragment(),EventItemClickListener{
         else showSnackbar("Please connect to internet")
         binding.greetingText.text = "Hi, ${viewModel.enroll_id}"
 
-        binding.gotocontest.setOnClickListener {
-            val action = HomeFragmentDirections.actionHomefragmentToContestFragment(-1)
-            findNavController().navigate(action)
-        }
+//        binding.gotocontest.setOnClickListener {
+//            val action = HomeFragmentDirections.actionHomefragmentToContestFragment(-1)
+//            findNavController().navigate(action)
+//        }
         viewModel.liveEventResponseLiveData.observe(viewLifecycleOwner, Observer {
 
             when(it){

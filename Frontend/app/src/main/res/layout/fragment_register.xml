@@ -284,8 +284,8 @@
         android:background="@drawable/auth_main_button_bg"
         android:layout_marginVertical="14dp"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/tv_registernow"
         app:layout_constraintTop_toBottomOf="@+id/ll_form"
+        app:layout_constraintLeft_toRightOf="@+id/signInBtn"
         />
 
     <androidx.appcompat.widget.AppCompatButton
@@ -302,7 +302,7 @@
         app:layout_constraintTop_toBottomOf="@+id/ll_form"
         app:layout_constraintRight_toLeftOf="@+id/btn_login"
         />
-    <com.google.android.material.progressindicator.CircularProgressIndicator
+    <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/progress"

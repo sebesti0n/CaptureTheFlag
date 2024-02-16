@@ -6,8 +6,9 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.capturetheflag.models.Next
+import com.example.capturetheflag.models.RiddleModel
 
-@Database(entities = [Next::class], version = 1, exportSchema = false)
+@Database(entities = [Next::class,RiddleModel::class], version = 1, exportSchema = false)
 @TypeConverters(TypeConverter::class)
 abstract class CtfDatabase : RoomDatabase() {
     abstract fun riddleDao(): RiddleDao
