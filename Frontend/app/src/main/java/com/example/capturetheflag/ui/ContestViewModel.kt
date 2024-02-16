@@ -2,6 +2,7 @@ package com.example.capturetheflag.ui
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
 import com.example.capturetheflag.apiServices.RetrofitInstances
 import com.example.capturetheflag.models.CtfState
 import com.example.capturetheflag.models.NextRiddleModel
@@ -21,6 +22,8 @@ class ContestViewModel(
     private val db: CtfDatabase = CtfDatabase.getDatabase(app)
     private val riddleDao = db.riddleDao()
     private val ctfStateDao = db.CtfTeamStateDao()
+    //first ele -> index, second ele -> question part
+    var questionState = MutableLiveData(arrayOf(-1, 0))
 
     fun getRegId():String = userSession.getEnrollmentID()
 
@@ -28,6 +31,11 @@ class ContestViewModel(
     fun getLevel(): Int = session.getLevel()
     fun setLevel(level: Int) = session.setLevel(level)
     fun getRegistrationId(): String = userSession.getEnrollmentID()
+
+    fun logOut(){
+        userSession.logOut()
+        riddleDao.deleteTable()
+    }
 
     
 
@@ -83,9 +91,6 @@ class ContestViewModel(
     }
 
     fun getRiddles(): List<RiddleModel> = riddleDao.getRiddles()
-
-
-
 
     fun submitRiddleResponse(
         eid: Int,

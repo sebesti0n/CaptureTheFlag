@@ -10,6 +10,7 @@ class Session(
     private val sharedPreferences: SharedPreferences =
         context.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE)
 
+
     private val editor: SharedPreferences.Editor = sharedPreferences.edit()
 
     fun createSession(

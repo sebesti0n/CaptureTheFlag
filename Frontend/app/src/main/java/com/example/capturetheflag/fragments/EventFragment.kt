@@ -99,8 +99,7 @@ class EventFragment : Fragment() {
 
     private fun moveToContestFragment() {
         if (isLive) {
-            val action =
-                EventFragmentDirections.actionEventFragmentToContestFragment(eid.toInt())
+            val action = EventFragmentDirections.actionEventFragmentToContestFragment(eid.toInt())
             findNavController().navigate(action)
         }
 
