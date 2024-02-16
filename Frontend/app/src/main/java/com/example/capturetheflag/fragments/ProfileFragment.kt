@@ -6,14 +6,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import com.example.capturetheflag.activities.HomeActivity
 import com.example.capturetheflag.activities.MainActivity
 import com.example.capturetheflag.databinding.FragmentProfileBinding
 import com.example.capturetheflag.session.Session
+import com.example.capturetheflag.ui.ContestViewModel
 
 class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
+    private lateinit var viewModel: ContestViewModel
     private lateinit var session: Session
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,9 +34,10 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         session = Session.getInstance(requireContext())
+        viewModel = ViewModelProvider(this)[ContestViewModel::class.java]
         updateUI()
         binding.logoutBtn.setOnClickListener {
-            session.logOut()
+            viewModel.logOut()
             moveToMainActivity()
         }
     }

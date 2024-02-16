@@ -8,7 +8,6 @@ import com.example.capturetheflag.models.RiddleModel
 
 @Dao
 interface RiddleDao {
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertRiddles(riddles: List<RiddleModel>)
 
@@ -17,5 +16,8 @@ interface RiddleDao {
 
     @Query("SELECT COUNT(*) FROM riddle_table")
     fun countRiddle(): Int
+
+    @Query("DELETE FROM riddle_table")
+    fun deleteTable()
 
 }

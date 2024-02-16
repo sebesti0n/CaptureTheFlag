@@ -99,8 +99,7 @@ class EventFragment : Fragment() {
 
     private fun moveToContestFragment() {
         if (isLive) {
-            val action =
-                EventFragmentDirections.actionEventFragmentToContestFragment(eid.toInt())
+            val action = EventFragmentDirections.actionEventFragmentToContestFragment(eid.toInt())
             findNavController().navigate(action)
         }
 
@@ -201,19 +200,19 @@ class EventFragment : Fragment() {
 
     private fun teamRegistrationForm(callback: (Boolean) -> Unit) {
         dialog.show()
+        dialogBinding.etPlayer1EID.isFocusable = false
+        dialogBinding.etPlayer1EID.setText(viewModel.enrollID)
         dialogBinding.btnLogin.setOnClickListener {
             val teamName = dialogBinding.etTeamName.text.toString()
             val player1Name = dialogBinding.etPlayer1Name.text.toString()
             val player2Name = dialogBinding.etPlayer2Name.text.toString()
             val player3Name = dialogBinding.etPlayer3Name.text.toString()
-            val player1EID = dialogBinding.etPlayer1EID.text.toString()
             val player2EID = dialogBinding.etPlayer2EID.text.toString()
             val player3EID = dialogBinding.etPlayer3EID.text.toString()
             val leaderEmail = dialogBinding.etLeaderEmail.text.toString()
             val waNumber = dialogBinding.etWaNumber.text.toString()
 
-            if (teamName.isEmpty() || player1Name.isEmpty() ||
-                player1EID.isEmpty() || player2EID.isEmpty() ||
+            if (teamName.isEmpty() || player1Name.isEmpty()  || player2EID.isEmpty() ||
                 player3EID.isEmpty() || player2Name.isEmpty() ||
                 player3Name.isEmpty() || leaderEmail.isEmpty() ||
                 waNumber.isEmpty()
@@ -223,7 +222,7 @@ class EventFragment : Fragment() {
                 val newTeam = TeamSchema(
                     eid.toInt(),
                     leaderEmail,
-                    player1EID,
+                    viewModel.enrollID,
                     player1Name,
                     player2EID,
                     player2Name,
