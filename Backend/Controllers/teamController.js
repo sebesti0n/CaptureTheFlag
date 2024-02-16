@@ -42,7 +42,7 @@ exports.createTeam = async (req, res) => {
         event_id: event_id,
       })
       .returning("*");
-      const tid = daat1[0].team_id;
+      const tid = data1[0].team_id;
     const data = await knex("events")
       .where("event_id", "=", event_id)
       .returning("levels", "node_at_each_level");

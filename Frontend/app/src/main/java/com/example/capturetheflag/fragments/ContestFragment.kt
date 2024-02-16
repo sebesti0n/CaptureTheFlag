@@ -9,26 +9,34 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.capturetheflag.util.TimeLineAdapter
 import com.example.capturetheflag.databinding.FragmentContestBinding
 import com.example.capturetheflag.helper.PermissionHelper
+import com.example.capturetheflag.models.QuestionModel
 import com.example.capturetheflag.models.RiddleModel
+import com.example.capturetheflag.room.CtfDatabase
 import com.example.capturetheflag.ui.ContestViewModel
 import com.example.capturetheflag.util.PermissionListener
 import com.google.android.material.snackbar.Snackbar
 import com.google.zxing.integration.android.IntentIntegrator
+import kotlinx.coroutines.launch
 
 class ContestFragment : Fragment(),PermissionListener{
-    private var _binding: FragmentContestBinding? = null
+    private var _binding:FragmentContestBinding?=null
     private val binding get() = _binding!!
     private val args:ContestFragmentArgs by navArgs()
     private lateinit var viewModel: ContestViewModel
     private lateinit var permissionHelper: PermissionHelper
     private var isFirstAttempted = false
-    private var riddleNumber: Int = 0
-    private var eid = -1
+    private var riddleNumber:Int=0
+    private var isCompleted = false
+    private var eid =-1
     private lateinit var rList: List<RiddleModel>
 
     override fun onCreateView(
@@ -47,14 +55,74 @@ class ContestFragment : Fragment(),PermissionListener{
         setupRoomDatabase(){ message, success ->
             if(success){
                 rList = viewModel.getRiddles()
-                //
+                updateUI()
+
             }
             else{
                 showSnackbar(message!!)
                 findNavController().popBackStack()
             }
         }
+        binding.endButton.setOnClickListener {
+            if(!isFirstAttempted){
+                if(binding.etCorrectAnswer.text.toString().isEmpty()){
+                    showSnackbar("Enter Answer")
+                }
+                else{
+                    if(binding.etCorrectAnswer.text.toString() == rList[riddleNumber].answer){
+                        isFirstAttempted = true
+                        updateDescription()
+                        binding.etCorrectAnswer.setText("")
+                    }
+                    else showSnackbar("Wrong Answer")
+                }
 
+            }
+            else{
+                if(binding.etCorrectAnswer.text.toString().isEmpty()){
+                    showSnackbar("Enter Answer")
+                }
+                else{
+                    if(binding.etCorrectAnswer.text.toString() == rList[riddleNumber].unique_code){
+                        showSnackbar("question Completed")
+                        viewModel.submitRiddleResponse(
+                            eid = eid,
+                            tid = viewModel.getTeamId(),
+                            sumitAt = System.currentTimeMillis()
+                        ){ success, message, nextRiddleNumber->
+                            if(success!!){
+                                riddleNumber = nextRiddleNumber!!
+                                isFirstAttempted = false
+                                updateUI()
+                                viewModel.setLevel(nextRiddleNumber)
+                            }
+                            else{
+                                showSnackbar(message!!)
+                            }
+                        }
+                    }
+                    else showSnackbar("Wrong Location")
+                }
+            }
+        }
+
+    }
+
+    private fun updateUI() {
+        riddleNumber = viewModel.getLevel()
+        if(riddleNumber >= rList.size){
+            binding.endButton.text = "Submit"
+            isCompleted = true
+        }
+        else{
+            updateDescription()
+        }
+    }
+
+    private fun updateDescription() {
+        if(!isFirstAttempted)
+        binding.questionTv.text = rList[riddleNumber].question
+        else binding.questionTv.text = rList[riddleNumber].storyline
     }
 
     private fun setupRoomDatabase(callback: (String?, Boolean)->Unit) {
@@ -100,10 +168,6 @@ class ContestFragment : Fragment(),PermissionListener{
         ).show()
     }
 
-    private fun setupViewModel() {
-        viewModel = ViewModelProvider(this)[ContestViewModel::class.java]
-    }
-
     private fun setupScanner() {
         val integrator = IntentIntegrator.forSupportFragment(this)
         integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES)
@@ -117,9 +181,11 @@ class ContestFragment : Fragment(),PermissionListener{
 
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
+        super.onActivityResult(requestCode, resultCode, data);
+
         val scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
         if (scanResult != null) {
+
             if (scanResult.contents == null) {
                 Toast.makeText(requireContext(), "Cancelled", Toast.LENGTH_SHORT).show();
             } else {
@@ -129,6 +195,9 @@ class ContestFragment : Fragment(),PermissionListener{
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
+
+
+
     override fun shouldShowRationaleInfo() {
         permissionHelper.launchPermissionDialog(Manifest.permission.CAMERA)
     }
