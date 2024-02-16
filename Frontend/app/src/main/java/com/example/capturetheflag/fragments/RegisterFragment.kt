@@ -18,6 +18,7 @@ import com.example.capturetheflag.models.User
 import com.example.capturetheflag.session.Session
 import com.example.capturetheflag.ui.RegisterViewModel
 import com.example.capturetheflag.util.Resource
+import com.google.android.material.snackbar.Snackbar
 
 class RegisterFragment : Fragment() {
 
@@ -80,31 +81,27 @@ class RegisterFragment : Fragment() {
              {
                  showProgressBar()
                 val newUser = User(collegeName,email,firstName,lastName,mobileNo,cnfPassword,password,enrollmentID)
-                viewModel.register(newUser)
-
-                viewModel.get()?.observe(requireActivity(), Observer { it ->
-                    when(it){
-                        is Resource.Success -> {
-                            it.data?.let{ response ->
-                                response.user.apply {
-                                    sharedPref.createSession(
-                                        college = this.CollegeName,
-                                        name = "${this.FirstName} ${this.LastName}",
-                                        mobile = this.MobileNo,
-                                        email = this.email,
-                                        enrollmentID = this.enroll_id,
-                                        id = this.user_id,
+                viewModel.register(newUser){success,message,user->
+                    if(success &&user!=null){
+                        user.let {
+                            sharedPref.createSession(
+                                        college = it.CollegeName,
+                                        name = "${it.FirstName} ${it.LastName}",
+                                        mobile = it.MobileNo,
+                                        email = it.email,
+                                        enrollmentID = it.enroll_id,
+                                        id = it.user_id,
                                         token = "token_String"
                                     )
-                                    moveToHome()
-                                }
-                            }
                         }
-                        is Resource.Loading -> {}
-                        is Resource.Error -> { showToastMessage(it.message!!)}
+                        moveToHome()
 
                     }
-                })
+                    else {
+                        hideProgressBar()
+                        Snackbar.make(requireView(), message!!, 2000).show()
+                    }
+                }
             }
         }
     }

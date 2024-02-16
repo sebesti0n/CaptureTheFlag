@@ -1,9 +1,6 @@
 const knex = require("knex")(
   require("../Configuration/knexfile")["development"]
 );
-const redis = require("ioredis");
-const client = new redis('rediss://red-cn5kj0acn0vc73d75p7g:FDuY82rDmivduYhcp9YwW6PdRC2WOAZz@oregon-redis.render.com:6379');
-
 exports.submissionRiddle = async (req, res) => {
   try {
     const end_time = req.query.et;
@@ -35,17 +32,16 @@ exports.submissionRiddle = async (req, res) => {
 
 exports.startEvent = async (req, res) => {
   try {
-    const tid = req.query.tid;
+    const rid = req.query.rid;
     const eid = req.query.eid;
     const start_time = req.query.st;
-    const key = 'tid='+tid+'&eid='+eid;
-
-    client.get(key, async function (err, result) {
-      if (err) console.log("redis got fucked", err);
-      if (result) {
-        console.log("from Redis");
-        return res.status(200).json(JSON.parse(result));
-      } else {
+    const team = await knex('teams')
+                .where("player1_eid",rid)
+                .orWhere("player2_eid",rid)
+                .orWhere("player3_eid",rid)
+                .returning('team_id');
+    console.log(team)
+    const tid = team[0].team_id;    
         await knex("user_event_participation")
           .whereNull("start_time")
           .orWhere("start_time", "=", 0)
@@ -87,20 +83,14 @@ exports.startEvent = async (req, res) => {
           next: data[0],
           rList: rList,
         };
-        client.set(key, JSON.stringify(jsonData),'EX',18000, (err, reply) => {
-          if (err) {
-            console.error("Error setting data in Redis:", err);
-          } else {
-            console.log("set!!!", reply);
-          }
-        });
         return res.status(200).json(jsonData);
-      }
-    });
-  } catch (error) {
+      
+    }
+  catch (error) {
     console.log(error);
     return res
       .status(500)
       .json({ success: false, message: "unknown Error!", next: null });
-  }
-};
+  
+}
+}

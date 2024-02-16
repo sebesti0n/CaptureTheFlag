@@ -43,6 +43,7 @@ class ContestFragment : Fragment(),PermissionListener{
         savedInstanceState: Bundle?
     ): View {
         eid = args.eid
+        viewModel = ViewModelProvider(this)[ContestViewModel::class.java]
         _binding = FragmentContestBinding.inflate(inflater,container,false)
         return binding.root
     }
@@ -67,7 +68,7 @@ class ContestFragment : Fragment(),PermissionListener{
         if(!viewModel.checkIfDataCached()){
             viewModel.onStartContest(
                 eid = eid,
-                tid = viewModel.getTeamId(),
+                rid = viewModel.getRegId(),
                 startMs = System.currentTimeMillis()
             ){ success, message, state ->
                 if(success!!){

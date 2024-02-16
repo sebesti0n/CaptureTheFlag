@@ -8,6 +8,7 @@ import com.example.capturetheflag.models.NextRiddleModel
 import com.example.capturetheflag.models.RiddleModel
 import com.example.capturetheflag.room.CtfDatabase
 import com.example.capturetheflag.session.CtfSession
+import com.example.capturetheflag.session.Session
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -15,11 +16,13 @@ import retrofit2.Response
 class ContestViewModel(
     app: Application
 ) : AndroidViewModel(app) {
-
+    private val userSession = Session.getInstance(app.applicationContext)
     private val session = CtfSession.getCtfSession(app.applicationContext)
     private val db: CtfDatabase = CtfDatabase.getDatabase(app)
     private val riddleDao = db.riddleDao()
     private val ctfStateDao = db.CtfTeamStateDao()
+
+    fun getRegId():String = userSession.getEnrollmentID()
 
     fun getTeamId(): Int = session.getTeamId()
     fun getLevel(): Int = session.getLevel()
@@ -38,11 +41,11 @@ class ContestViewModel(
 
     fun onStartContest(
         eid: Int,
-        tid: Int,
+        rid: String,
         startMs: Long,
         callback: (Boolean?, String?, CtfState?) -> Unit
     ) {
-        RetrofitInstances.ctfServices.getCtfState(eid, tid, startMs)
+        RetrofitInstances.ctfServices.getCtfState(eid, rid, startMs)
             .enqueue(object : Callback<CtfState> {
 
                 override fun onResponse(call: Call<CtfState>, response: Response<CtfState>) {

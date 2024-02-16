@@ -137,7 +137,7 @@
         app:layout_constraintTop_toBottomOf="@+id/til_password"
         app:layout_constraintRight_toLeftOf="@+id/btn_login"
         />
-    <com.google.android.material.progressindicator.CircularProgressIndicator
+    <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/progress"

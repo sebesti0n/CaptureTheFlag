@@ -12,8 +12,8 @@ interface CtfApiEndpoints {
     fun getCtfState(
         @Query("eid")
         eid: Int,
-        @Query("tid")
-        tid: Int,
+        @Query("rid")
+        rid: String,
         @Query("st")
         startMs: Long
     ): Call<CtfState>
