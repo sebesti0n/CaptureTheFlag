@@ -193,3 +193,32 @@ exports.eventDetails = async (req, res) => {
       });
   }
 };
+
+
+exports.getCurrentriddleStatus = async (req, res) => {
+  try {
+    const teamId = req.query.teamId;
+    const eventId = req.query.eventId;
+    const data = await knex('user_event_participation')
+                  .where('team_id','=',teamId)
+                  .andWhere('event_id','=',eventId)
+                  .returning('Number_correct_answer')
+    res
+       .status(200)
+       .json({
+        success:true,
+        message:"Count of correct answer",
+        next:data[0]
+       })
+    
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "unknown Error!",
+        next:-1
+      });
+  }
+}
