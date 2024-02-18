@@ -27,6 +27,8 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.hide()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        this.window.statusBarColor = resources.getColor(R.color.blue_darkest)
+
 //        isAllOkay()
         sharedPref =Session(this)
         if (sharedPref.isLogin()){

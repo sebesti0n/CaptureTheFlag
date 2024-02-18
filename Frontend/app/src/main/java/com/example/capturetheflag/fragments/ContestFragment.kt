@@ -22,6 +22,7 @@ import com.example.capturetheflag.models.RiddleModel
 import com.example.capturetheflag.ui.ContestViewModel
 import com.example.capturetheflag.util.PermissionListener
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
 import com.google.zxing.integration.android.IntentIntegrator
@@ -34,7 +35,6 @@ class ContestFragment : Fragment(), PermissionListener {
     private lateinit var permissionHelper: PermissionHelper
     private var eid = -1
     private lateinit var rList: List<RiddleModel>
-    private lateinit var calculateDistance: DistanceFinder
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,30 +47,40 @@ class ContestFragment : Fragment(), PermissionListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.w("ContestFragment","1")
         permissionHelper = PermissionHelper(this, this)
-        calculateDistance = DistanceFinder()
-        checkPermissions()
         viewModel = ViewModelProvider(this)[ContestViewModel::class.java]
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        Log.w("ContestFragment","2")
+        checkPermissions()
+        Log.w("ContestFragment","3")
         showProgressBar()
+        Log.w("ContestFragment","4")
         setupRoomDatabase() { message, success ->
+            Log.w("ContestFragment","5")
+
             if (success) {
+                Log.w("ContestFragment","51")
+
                 rList = viewModel.getRiddles()
             } else {
+                Log.w("ContestFragment","52")
+
                 showSnackbar(message!!)
                 findNavController().popBackStack()
             }
         }
+        Log.w("ContestFragment","6")
 
-
-        viewModel.questionState.observe(viewLifecycleOwner, Observer {
-            val index = it[0]
-            val question = it[1]
-            if (index != -1) {
-                hideProgressBar()
-                updateUI(index, question)
+        updateQuestionState()
+        Log.w("ContestFragment","7")
+        binding.swipeRefresLayout.setOnRefreshListener {
+            Log.w("ContestFragment","8")
+            refreshAction {
+                Log.w("ContestFragment","9")
             }
-        })
+            binding.swipeRefresLayout.isRefreshing = false
+        }
 
         binding.endButton.setOnClickListener {
             val answer = binding.etCorrectAnswer.text.toString()
@@ -116,6 +126,40 @@ class ContestFragment : Fragment(), PermissionListener {
         }
     }
 
+    private fun updateQuestionState() {
+        Log.w("ContestFragment","13")
+        viewModel.questionState.observe(viewLifecycleOwner, Observer {
+            Log.w("ContestFragment","13")
+            val index = it[0]
+            val question = it[1]
+            if (index != -1) {
+                Log.w("ContestFragment","13-1")
+                hideProgressBar()
+                updateUI(index, question)
+            }
+        })
+    }
+
+    private fun refreshAction(callback:()->Unit) {
+        Log.w("ContestFragment","10")
+        viewModel.closeCtfSession()
+        setupRoomDatabase() { message, success ->
+            Log.w("ContestFragment","11")
+            if (success) {
+                Log.w("ContestFragment","11-1")
+                rList = viewModel.getRiddles()
+                updateQuestionState()
+
+            } else {
+                Log.w("ContestFragment","11-2")
+                showSnackbar(message!!)
+                findNavController().popBackStack()
+            }
+            Log.w("ContestFragment","12")
+        }
+        callback()
+    }
+
     private fun checkPermissions() {
         permissionHelper.checkForMultiplePermissions(
             arrayOf(
@@ -140,13 +184,17 @@ class ContestFragment : Fragment(), PermissionListener {
         requestLocation(){success,lat,long->
             Log.w("Contest Fragment Location Callback",success.toString())
             if (success){
-                val distance = calculateDistance.calculateDistance(lat!!,long!!,lat,long)
-                Log.w("Contest Fragment Distance",distance.toString())
-                if(distance<=200)inRange = true
+                Log.w("Contest Fragment Distance","before callback fun of calc Distace: ${inRange}")
+                calculateDistance(lat!!,long!!,lat,long){
+                    inRange = it
+                }
+                Log.w("Contest Fragment Distance","after callback fun of calc Distace: ${inRange}")
                 showSnackbar("You too Far From Scanner. First Reach the Location then Scan QR")
             }
         }
-        return (answer == viewModel.getRiddles()[index].unique_code) && inRange
+        val flg = (answer == viewModel.getRiddles()[index].unique_code) and inRange
+        Log.w("contestFragment Flag", flg.toString())
+        return flg
     }
 
     private fun updateUI(index: Int, question: Int) {
@@ -265,6 +313,24 @@ class ContestFragment : Fragment(), PermissionListener {
             endButton.visibility = View.VISIBLE
         }
     }
+    private fun showView() {
+        binding.apply {
+            progressBar.visibility = View.GONE
+            image.visibility = View.GONE
+            tilCorrectAnswer.visibility = View.GONE
+            questionTv.visibility = View.GONE
+            endButton.visibility = View.GONE
+        }
+    }
+
+    private fun hideView() {
+        binding.apply {
+            image.visibility = View.VISIBLE
+            tilCorrectAnswer.visibility = View.VISIBLE
+            questionTv.visibility = View.VISIBLE
+            endButton.visibility = View.VISIBLE
+        }
+    }
 
     override fun shouldShowRationaleInfo() {
         permissionHelper.launchPermissionDialogForMultiplePermissions(
@@ -314,7 +380,7 @@ class ContestFragment : Fragment(), PermissionListener {
             callback(false,null,null)
             return
         }
-        fusedLocationClient.lastLocation
+        fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY,null)
             .addOnSuccessListener { location ->
                 if (location != null) {
                     val latitude = location.latitude
@@ -332,6 +398,21 @@ class ContestFragment : Fragment(), PermissionListener {
                 showSnackbar("Failed to get location: ${e.message}")
             }
     }
+    fun calculateDistance(
+        lat1: Double, lon1: Double,
+        lat2: Double, lon2: Double,
+        callback: (Boolean) -> Unit
+    ){
+        val R = 6371
+        val dLat = Math.toRadians(lat2 - lat1)
+        val dLon = Math.toRadians(lon2 - lon1)
+        val a = StrictMath.sin(dLat / 2) * StrictMath.sin(dLat / 2) +
+                StrictMath.cos(Math.toRadians(lat1)) * StrictMath.cos(Math.toRadians(lat2)) *
+                StrictMath.sin(dLon / 2) * StrictMath.sin(dLon / 2)
+        val c = 2 * StrictMath.atan2(StrictMath.sqrt(a), StrictMath.sqrt(1 - a))
+        callback(R * c * 1000<=200)
 
+
+    }
 
 }

@@ -26,6 +26,11 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:layout_width="match_parent"
         android:id="@+id/bottom_nav"
+        android:background="@color/gray"
+        app:itemIconTint="@color/bottom_nav_indicator"
+        app:itemTextColor="@color/bottom_nav_indicator"
+        app:itemIconSize="32dp"
+        app:itemActiveIndicatorStyle="@string/nulll"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

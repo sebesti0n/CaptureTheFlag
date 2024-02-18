@@ -36,7 +36,10 @@ class ContestViewModel(
         userSession.logOut()
         riddleDao.deleteTable()
     }
-
+    fun closeCtfSession(){
+        session.closeSession()
+        riddleDao.deleteTable()
+    }
     
 
     fun createSession(
