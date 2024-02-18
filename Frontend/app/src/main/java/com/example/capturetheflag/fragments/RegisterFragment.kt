@@ -79,10 +79,10 @@ class RegisterFragment : Fragment() {
                 showToastMessage("Enter Correct Email")
             }else
              {
-                 showProgressBar()
+                showProgressBar()
                 val newUser = User(collegeName,email,firstName,lastName,mobileNo,cnfPassword,password,enrollmentID)
                 viewModel.register(newUser){success,message,user->
-                    if(success &&user!=null){
+                    if(success && user!=null){
                         user.let {
                             sharedPref.createSession(
                                         college = it.CollegeName,
@@ -107,18 +107,25 @@ class RegisterFragment : Fragment() {
     }
 
     private fun moveToHome() {
-        hideProgressBar()
         val intent = Intent(requireContext(), HomeActivity::class.java)
         startActivity(intent)    }
 
     private fun showToastMessage(msg: String) {
-    Toast.makeText(requireActivity(),msg,Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireActivity(),msg,Toast.LENGTH_SHORT).show()
     }
-    private fun showProgressBar(){
-        binding.progress.visibility=View.VISIBLE
-    }
+
     private fun hideProgressBar(){
-        binding.progress.visibility=View.INVISIBLE
+        binding.apply {
+            progressBar.visibility = View.GONE
+            llForm.visibility = View.VISIBLE
+        }
+    }
+
+    private fun showProgressBar(){
+        binding.apply {
+            progressBar.visibility = View.VISIBLE
+            llForm.visibility = View.GONE
+        }
     }
 
 }

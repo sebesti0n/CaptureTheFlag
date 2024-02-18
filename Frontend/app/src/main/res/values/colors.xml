@@ -25,5 +25,6 @@
     <color name="blue_light">#0E6BA8</color>
     <color name="blue_lighest">#A6E1FA</color>
     <color name="text_color">#808080</color>
+    <color name="tab_color">#313030</color>
     <color name="gray">#EDEDED</color>
 </resources>

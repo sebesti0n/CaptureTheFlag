@@ -31,6 +31,7 @@ class Login : Fragment() {
     private val binding get() = _binding!!
     private lateinit var viewModel: LoginViewModel
     private lateinit var sharedPref: Session
+
     private lateinit var emailEditText: TextInputEditText
     private lateinit var passwordEditText: TextInputEditText
     private lateinit var registerTextView: TextView
@@ -142,8 +143,10 @@ class Login : Fragment() {
     }
     private fun showProgressBar(){
         binding.progress.visibility=View.VISIBLE
+        binding.formLl.visibility = View.GONE
     }
     private fun hideProgressBar(){
-        binding.progress.visibility=View.INVISIBLE
+        binding.formLl.visibility = View.VISIBLE
+        binding.progress.visibility=View.GONE
     }
 }
