@@ -8,312 +8,361 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:id="@+id/cl_header"
-        android:background="@drawable/auth_card_bg"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/dcc_x_gdsc_2022_24_20240212_040539"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginTop="45dp"
-            />
-        <com.google.android.material.imageview.ShapeableImageView
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/auth_bg"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-    <com.google.android.material.textview.MaterialTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tv_signup_header"
-        android:text="Create your account"
-        android:textStyle="bold"
-        android:textColor="@color/blue_darkest"
-        android:textSize="20sp"
-        app:layout_constraintTop_toBottomOf="@+id/cl_header"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:paddingVertical="35dp"
-        />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/ll_form"
-            android:orientation="vertical"
-            android:paddingHorizontal="22dp"
-            android:paddingVertical="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_signup_header"
-            >
+            android:layout_height="0dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:id="@+id/cl_header"
+                android:background="@drawable/auth_card_bg"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="100dp"
+                    app:shapeAppearanceOverlay="@style/ImageView.Circle"
+                    android:layout_height="100dp"
+                    android:src="@drawable/dcc_x_gdsc_2022_24_20240212_040539"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginTop="45dp" />
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/auth_bg"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_signup_header"
+                android:text="Create Account"
+                android:textStyle="bold"
+                android:textColor="@color/blue_darkest"
+                android:textSize="24sp"
+                app:layout_constraintTop_toBottomOf="@+id/cl_header"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="24dp" />
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="100dp"
+                android:id="@+id/progressBar"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/tv_signup_header"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
             <LinearLayout
+                android:id="@+id/ll_form"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="60dp"
-                    app:boxCornerRadiusTopStart="19dp"
-                    app:boxCornerRadiusBottomEnd="19dp"
-                    app:boxCornerRadiusBottomStart="19dp"
-                    app:boxCornerRadiusTopEnd="19dp"
-                    app:hintAnimationEnabled="true"
-                    android:layout_marginEnd="4dp"
-                    android:autofillHints="emailAddress"
-                    app:boxStrokeWidth="3dp"
-                    app:boxStrokeColor="@color/bgBlack"
-                    android:layout_weight="1"
-                    >
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_firstname"
+                android:orientation="vertical"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_signup_header">
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="52dp"
-                    android:hint="@string/first_name"
-                    android:textSize="15sp"
-                    android:inputType="text"
-                    android:paddingHorizontal="5dp"
-                    />
-                </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_weight="1"
+                        android:elevation="32dp"
+                        app:boxBackgroundColor="@color/gray"
+                        app:boxCornerRadiusBottomEnd="12dp"
+                        app:boxCornerRadiusBottomStart="12dp"
+                        app:boxCornerRadiusTopEnd="12dp"
+                        app:boxCornerRadiusTopStart="12dp"
+                        app:boxStrokeColor="@color/blue_darkest"
+                        app:boxStrokeWidth="0.5dp"
+                        app:boxStrokeWidthFocused="2dp"
+                        app:hintEnabled="false"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_sign_in_header">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_firstname"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="First Name"
+                            android:imeOptions="actionNext"
+                            android:inputType="textEmailAddress"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/black" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_weight="1"
+                        android:elevation="32dp"
+                        app:boxBackgroundColor="@color/gray"
+                        app:boxCornerRadiusBottomEnd="12dp"
+                        app:boxCornerRadiusBottomStart="12dp"
+                        app:boxCornerRadiusTopEnd="12dp"
+                        app:boxCornerRadiusTopStart="12dp"
+                        app:boxStrokeColor="@color/blue_darkest"
+                        app:boxStrokeWidth="0.5dp"
+                        app:boxStrokeWidthFocused="2dp"
+                        app:hintEnabled="false"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_sign_in_header">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_lastname"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Last Name"
+                            android:imeOptions="actionNext"
+                            android:inputType="textEmailAddress"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/black" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="60dp"
-                    app:boxCornerRadiusTopStart="19dp"
-                    app:boxCornerRadiusBottomEnd="19dp"
-                    app:boxCornerRadiusBottomStart="19dp"
-                    app:boxCornerRadiusTopEnd="19dp"
-                    app:hintAnimationEnabled="true"
-                    android:autofillHints="emailAddress"
-                    app:boxStrokeWidth="3dp"
-                    app:boxStrokeColor="@color/bgBlack"
-                    android:layout_weight="1"
-                    android:layout_marginStart="4dp">
-
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:elevation="32dp"
+                    app:boxBackgroundColor="@color/gray"
+                    app:boxCornerRadiusBottomEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:boxStrokeColor="@color/blue_darkest"
+                    app:boxStrokeWidth="0.5dp"
+                    app:boxStrokeWidthFocused="2dp"
+                    app:hintEnabled="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_sign_in_header"
+                    app:startIconDrawable="@drawable/ic_email">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_lastname"
+                        android:id="@+id/et_email"
                         android:layout_width="match_parent"
-                        android:inputType="text"
-                        android:layout_height="52dp"
-                        android:paddingHorizontal="5dp"
-                        android:hint="@string/last_name"
-                        android:textSize="15sp"
+                        android:layout_height="wrap_content"
+                        android:hint="Email"
+                        android:imeOptions="actionNext"
+                        android:inputType="textEmailAddress"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/black" />
 
-                        />
                 </com.google.android.material.textfield.TextInputLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:elevation="32dp"
+                    app:boxBackgroundColor="@color/gray"
+                    app:boxCornerRadiusBottomEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:boxStrokeColor="@color/blue_darkest"
+                    app:boxStrokeWidth="0.5dp"
+                    app:boxStrokeWidthFocused="2dp"
+                    app:hintEnabled="false"
+                    app:startIconDrawable="@drawable/ic_enrollment"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_sign_in_header">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_enrollmentId"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Enrollment"
+                        android:imeOptions="actionNext"
+                        android:inputType="textEmailAddress"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/black" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:elevation="32dp"
+                    app:boxBackgroundColor="@color/gray"
+                    app:boxCornerRadiusBottomEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:boxStrokeColor="@color/blue_darkest"
+                    app:boxStrokeWidth="0.5dp"
+                    app:boxStrokeWidthFocused="2dp"
+                    app:hintEnabled="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_sign_in_header"
+                    app:startIconDrawable="@drawable/ic_organisations">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_college"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="College"
+                        android:imeOptions="actionNext"
+                        android:inputType="textEmailAddress"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/black" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:elevation="32dp"
+                    app:boxBackgroundColor="@color/gray"
+                    app:boxCornerRadiusBottomEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:boxStrokeColor="@color/blue_darkest"
+                    app:boxStrokeWidth="0.5dp"
+                    app:boxStrokeWidthFocused="2dp"
+                    app:hintEnabled="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_sign_in_header"
+                    app:startIconDrawable="@drawable/ic_phone">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_mobileNo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Mobile Number"
+                        android:imeOptions="actionNext"
+                        android:inputType="textEmailAddress"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/black" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:elevation="32dp"
+                    app:boxBackgroundColor="@color/gray"
+                    app:boxCornerRadiusBottomEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:boxStrokeColor="@color/blue_darkest"
+                    app:boxStrokeWidth="0.5dp"
+                    app:boxStrokeWidthFocused="2dp"
+                    app:hintEnabled="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_sign_in_header"
+                    app:passwordToggleEnabled="true"
+                    app:startIconDrawable="@drawable/ic_password">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Password"
+                        android:imeOptions="actionNext"
+                        android:inputType="textEmailAddress"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/black" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:elevation="32dp"
+                    app:boxBackgroundColor="@color/gray"
+                    app:boxCornerRadiusBottomEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:boxStrokeColor="@color/blue_darkest"
+                    app:boxStrokeWidth="0.5dp"
+                    app:boxStrokeWidthFocused="2dp"
+                    app:hintEnabled="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_sign_in_header"
+                    app:passwordToggleEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_cnfpassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Confirm Password"
+                        android:imeOptions="actionDone"
+                        android:inputType="textPassword"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/black" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_login"
+                    android:layout_width="160dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="32dp"
+                    android:background="@drawable/auth_main_button_bg"
+                    android:text="Sign Up"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/signInBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="32dp"
+                    android:layout_marginTop="4dp"
+                    android:text="Already have an account? Login."
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                app:boxCornerRadiusTopStart="19dp"
-                app:boxCornerRadiusBottomEnd="19dp"
-                app:boxCornerRadiusBottomStart="19dp"
-                app:boxCornerRadiusTopEnd="19dp"
-                app:hintAnimationEnabled="true"
-                android:autofillHints="emailAddress"
-                app:boxStrokeWidth="3dp"
-                app:boxStrokeColor="@color/bgBlack"
-                >
 
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_email"
-                    android:layout_width="match_parent"
-                    android:paddingHorizontal="5dp"
-                    android:layout_height="52dp"
-                    android:hint="@string/e_mail_id"
-                    android:textSize="15sp"
-                    android:inputType="textEmailAddress"
-
-                    />
-
-            </com.google.android.material.textfield.TextInputLayout>
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                app:boxCornerRadiusTopStart="19dp"
-                app:boxCornerRadiusBottomEnd="19dp"
-                app:boxCornerRadiusBottomStart="19dp"
-                app:boxCornerRadiusTopEnd="19dp"
-                app:boxStrokeWidth="3dp"
-                app:boxStrokeColor="@color/bgBlack"
-                android:imeOptions="actionNext">
-
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_enrollmentId"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:textSize="15sp"
-                android:hint="Enrollment ID"
-
-                />
-            </com.google.android.material.textfield.TextInputLayout>
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                app:boxCornerRadiusTopStart="19dp"
-                app:boxCornerRadiusBottomEnd="19dp"
-                app:boxCornerRadiusBottomStart="19dp"
-                app:boxCornerRadiusTopEnd="19dp"
-                app:boxStrokeWidth="3dp"
-                app:boxStrokeColor="@color/bgBlack"
-                android:imeOptions="actionNext"
-
-                >
-
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_college"
-                    android:layout_width="match_parent"
-                    android:layout_height="52dp"
-                    android:textSize="15sp"
-                    android:imeOptions="actionNext"
-                    android:inputType="text"
-                    android:hint="@string/college_name"
-
-                    />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                app:boxCornerRadiusTopStart="19dp"
-                app:boxCornerRadiusBottomEnd="19dp"
-                app:boxCornerRadiusBottomStart="19dp"
-                app:boxCornerRadiusTopEnd="19dp"
-                app:boxStrokeWidth="3dp"
-                app:boxStrokeColor="@color/bgBlack"
-                android:imeOptions="actionNext">
-
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_mobileNo"
-                    android:layout_width="match_parent"
-                    android:inputType="phone"
-                    android:layout_height="52dp"
-                    android:textSize="15sp"
-                    android:hint="@string/mobile_no"
-
-                    />
-
-            </com.google.android.material.textfield.TextInputLayout>
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                app:boxCornerRadiusTopStart="19dp"
-                app:boxCornerRadiusBottomEnd="19dp"
-                app:boxCornerRadiusBottomStart="19dp"
-                app:boxCornerRadiusTopEnd="19dp"
-                app:boxStrokeWidth="3dp"
-                app:boxStrokeColor="@color/bgBlack"
-                android:imeOptions="actionNext"
-
-                >
-
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="52dp"
-                    android:inputType="textPassword"
-                    android:textSize="15sp"
-                    android:hint="@string/password"
-
-                    />
-
-            </com.google.android.material.textfield.TextInputLayout>
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                app:boxCornerRadiusTopStart="19dp"
-                app:boxCornerRadiusBottomEnd="19dp"
-                app:boxCornerRadiusBottomStart="19dp"
-                android:imeOptions="actionNext"
-
-                app:boxCornerRadiusTopEnd="19dp"
-                app:boxStrokeWidth="3dp"
-                app:boxStrokeColor="@color/bgBlack"
-                >
-
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_cnfpassword"
-                    android:layout_width="match_parent"
-                    android:layout_height="52dp"
-                    android:textSize="15sp"
-                    android:hint="@string/confirm_password"
-                    android:inputType="textPassword"
-                    />
-
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sign Up"
-        android:textStyle="bold"
-        android:textColor="@color/white"
-        android:layout_marginBottom="15dp"
-        android:background="@drawable/auth_main_button_bg"
-        android:layout_marginVertical="14dp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ll_form"
-        app:layout_constraintLeft_toRightOf="@+id/signInBtn"
-        />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/signInBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sign In"
-        android:textStyle="bold"
-        android:textColor="#4D4C4C"
-        android:layout_marginBottom="15dp"
-        android:background="@drawable/auth_secondary_button"
-        android:layout_marginVertical="14dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ll_form"
-        app:layout_constraintRight_toLeftOf="@+id/btn_login"
-        />
-    <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/progress"
-        android:visibility="gone"
-        android:layout_marginTop="14dp"
-        app:trackColor="@color/blue_darkest"
-        app:indicatorColor="@color/blue_lighest"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ll_form"
-        />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </LinearLayout>

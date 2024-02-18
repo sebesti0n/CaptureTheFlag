@@ -14,6 +14,7 @@ class WebViewActivity : AppCompatActivity() {
         supportActionBar?.hide()
         binding = ActivityWebViewBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        this.window.statusBarColor = resources.getColor(R.color.gray)
         binding.webview.loadUrl("https://github.com/sebesti0n");
         binding.webview.settings.javaScriptEnabled = true;
     }
