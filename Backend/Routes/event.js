@@ -24,6 +24,5 @@ router.get('/start-contest',qc.startEvent);
 router.post('/register-team',teamController.createTeam)
 
 router.get('/curr-status-riddle',eventcontroller.getCurrentriddleStatus);
-
 module.exports = router;
 
