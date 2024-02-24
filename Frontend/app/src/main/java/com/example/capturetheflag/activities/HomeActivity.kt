@@ -20,7 +20,7 @@ class HomeActivity : AppCompatActivity(){
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
-        this.window.statusBarColor = resources.getColor(R.color.white)
+        this.window.statusBarColor = resources.getColor(R.color.blue_darker)
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_home) as NavHostFragment
         navController = navHostFragment.navController

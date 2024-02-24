@@ -76,6 +76,7 @@
             app:destination="@id/rankingFragment" />
         <action
             android:id="@+id/action_contestFragment_to_homefragment"
+            app:popUpToInclusive="true"
             app:destination="@id/homefragment" />
     </fragment>
     <fragment

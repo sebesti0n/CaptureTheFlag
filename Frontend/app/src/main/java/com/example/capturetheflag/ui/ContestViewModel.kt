@@ -1,15 +1,19 @@
 package com.example.capturetheflag.ui
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.example.capturetheflag.apiServices.RetrofitInstances
 import com.example.capturetheflag.models.CtfState
+import com.example.capturetheflag.models.HintStatusModel
 import com.example.capturetheflag.models.NextRiddleModel
 import com.example.capturetheflag.models.RiddleModel
+import com.example.capturetheflag.models.SubmissionModel
 import com.example.capturetheflag.room.CtfDatabase
 import com.example.capturetheflag.session.CtfSession
 import com.example.capturetheflag.session.Session
+import com.google.zxing.DecodeHintType
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -95,34 +99,72 @@ class ContestViewModel(
 
     fun getRiddles(): List<RiddleModel> = riddleDao.getRiddles()
 
-    fun submitRiddleResponse(
-        eid: Int,
-        tid: Int,
-        sumitAt: Long,
+
+
+    fun submissionRiddleResponse(
+        eid:Int,
+        tid:Int,
+        currRid:Int,
+        nextRid:Int,
+        unqCode:String,
+        answer:String,
         callback: (Boolean?, String?, Int?) -> Unit
-    ) {
+    ){
         val call = RetrofitInstances.ctfServices
-        call.submitRiddle(eid, tid, sumitAt).enqueue(object : Callback<NextRiddleModel> {
+        call.submissionRiddle(SubmissionModel(eid,tid,currRid,nextRid,unqCode, answer)).enqueue(object :Callback<NextRiddleModel>{
+
             override fun onResponse(
                 call: Call<NextRiddleModel>,
                 response: Response<NextRiddleModel>
             ) {
-                if (response.isSuccessful) {
+                if(response.isSuccessful){
                     response.body()?.let {
-                        callback(true, "ok", it.next.Number_correct_answer)
+                        callback(true,"Okay",it.next)
                     }
 
-                } else {
-                    callback(false, "Failed to Submit", -1)
+                }
+                else{
+                    callback(false,"Failed to Submit",-1)
                 }
             }
 
             override fun onFailure(call: Call<NextRiddleModel>, t: Throwable) {
-                callback(false, "Internal Server Error", -1)
+                Log.d("sebasti0n ContestViewModel",t.toString())
+                callback(false,"Internal Server error",-1)
             }
 
         })
     }
 
+    fun getHintStatus(
+        eventId:Int,
+        teamId: Int,
+        riddleId:Int,
+        hintType: Int,
+        callback:(Boolean,String?,Long?,Boolean,Boolean,Boolean)->Unit
+    ){
+        val  call = RetrofitInstances.ctfServices
+        call.getHintStatus(eventId, teamId, riddleId, hintType).enqueue(object : Callback<HintStatusModel> {
+
+            override fun onResponse(
+                call: Call<HintStatusModel>,
+                response: Response<HintStatusModel>
+            ) {
+                if(response.isSuccessful){
+                    response.body()?.let {
+                        callback(true,it.message,it.unlockedIn,it.hint1,it.hint2,it.hint3)
+                    }
+                }
+                else{
+                    callback(false,"Something Went Wrong",0,false,false,false)
+                }
+            }
+
+            override fun onFailure(call: Call<HintStatusModel>, t: Throwable) {
+                callback(false,"Internal Server Error",0,false,false,false)
+            }
+
+        })
+    }
 
 }

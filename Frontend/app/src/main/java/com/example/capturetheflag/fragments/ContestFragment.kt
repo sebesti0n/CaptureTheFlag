@@ -9,14 +9,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.capturetheflag.R
 import com.example.capturetheflag.databinding.FragmentContestBinding
-import com.example.capturetheflag.helper.DistanceFinder
+import com.example.capturetheflag.databinding.LayoutHintDialogBinding
 import com.example.capturetheflag.helper.PermissionHelper
 import com.example.capturetheflag.models.RiddleModel
 import com.example.capturetheflag.ui.ContestViewModel
@@ -24,8 +29,10 @@ import com.example.capturetheflag.util.PermissionListener
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
+import com.google.android.material.divider.MaterialDivider
 import com.google.android.material.snackbar.Snackbar
 import com.google.zxing.integration.android.IntentIntegrator
+import org.w3c.dom.Text
 
 class ContestFragment : Fragment(), PermissionListener {
     private var _binding: FragmentContestBinding? = null
@@ -36,6 +43,8 @@ class ContestFragment : Fragment(), PermissionListener {
     private var eid = -1
     private lateinit var rList: List<RiddleModel>
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private var isPermissionsGranted = false
+    private var firstPartAnswer=""
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -47,39 +56,23 @@ class ContestFragment : Fragment(), PermissionListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.w("ContestFragment","1")
         permissionHelper = PermissionHelper(this, this)
         viewModel = ViewModelProvider(this)[ContestViewModel::class.java]
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
-        Log.w("ContestFragment","2")
         checkPermissions()
-        Log.w("ContestFragment","3")
         showProgressBar()
-        Log.w("ContestFragment","4")
         setupRoomDatabase() { message, success ->
-            Log.w("ContestFragment","5")
-
             if (success) {
-                Log.w("ContestFragment","51")
-
                 rList = viewModel.getRiddles()
             } else {
-                Log.w("ContestFragment","52")
-
                 showSnackbar(message!!)
                 findNavController().popBackStack()
             }
         }
-        Log.w("ContestFragment","6")
-
         updateQuestionState()
-        Log.w("ContestFragment","7")
         binding.swipeRefresLayout.setOnRefreshListener {
-            Log.w("ContestFragment","8")
             refreshAction {
-                Log.w("ContestFragment","9")
             }
-            binding.swipeRefresLayout.isRefreshing = false
         }
 
         binding.endButton.setOnClickListener {
@@ -90,33 +83,43 @@ class ContestFragment : Fragment(), PermissionListener {
             if (index == viewModel.getRiddles().size) {
                 endContest()
             } else if (part == 1) {
-                if (checkWithStoryLine(index, answer)) {
-                    viewModel.submitRiddleResponse(
-                        eid = eid,
-                        tid = viewModel.getTeamId(),
-                        sumitAt = System.currentTimeMillis()
-                    ) { success, message, nextRiddleNumber ->
-                        if (success!!) {
-                            viewModel.questionState.postValue(
-                                arrayOf(nextRiddleNumber!!, 0)
-                            )
-                            viewModel.setLevel(nextRiddleNumber)
-                            binding.etCorrectAnswer.setText("")
-                        } else {
-                            showSnackbar(message!!)
-                            hideProgressBar()
+                checkWithStoryLine(index, answer) { it, msg ->
+                    if (it) {
+                        viewModel.submissionRiddleResponse(
+                            eid = eid,
+                            tid = viewModel.getTeamId(),
+                            currRid = viewModel.getRiddles()[index].question_id,
+                            nextRid = if(index+1 == viewModel.getRiddles().size) -1
+                                      else viewModel.getRiddles()[index+1].question_id,
+                            unqCode = viewModel.getRiddles()[index].unique_code,
+                            answer = viewModel.getRiddles()[index].answer
+                        ){ success, message, nextRiddleNumber ->
+                            Log.d("sebasti0n riddle submission","${success} + ${message} + ${nextRiddleNumber}")
+                            if (success!! && nextRiddleNumber!=-1) {
+                                viewModel.questionState.postValue(
+                                    arrayOf(nextRiddleNumber!!, 0)
+                                )
+                                viewModel.setLevel(nextRiddleNumber)
+                                binding.etCorrectAnswer.setText("")
+                            } else {
+                                showSnackbar(message!!)
+                                hideProgressBar()
+                            }
                         }
-
+                    } else {
+                        hideProgressBar()
+                        if (msg != null) {
+                            showSnackbar(msg)
+                        }
                     }
-                } else {
-                    hideProgressBar()
-                    showSnackbar("Wrong Answer")
+
                 }
-            } else {
+            }else {
                 if (checkWithQuestion(index, answer)) {
                     viewModel.questionState.postValue(
                         arrayOf(index, 1)
                     )
+                    firstPartAnswer = binding.etCorrectAnswer.text.toString()
                     binding.etCorrectAnswer.setText("")
                 } else {
                     hideProgressBar()
@@ -124,38 +127,120 @@ class ContestFragment : Fragment(), PermissionListener {
                 }
             }
         }
+        binding.fabScan.setOnClickListener {
+            if(isPermissionsGranted){
+                setupScanner()
+            }
+            else {
+                showSnackbar("Please Grant Permissions")
+                checkPermissions()
+            }
+        }
+
+        binding.hint1Card.setOnClickListener {
+            openHintDialog(hintType = 1)
+        }
+        binding.hint2Card.setOnClickListener {
+            openHintDialog(2)
+        }
+        binding.hint3Card.setOnClickListener {
+            openHintDialog(3)
+        }
+
     }
 
+
+    private fun openHintDialog(hintType: Int){
+        val index = viewModel.questionState.value!![0]
+        val riddle = viewModel.getRiddles()[index]
+        val dialogBuilder = AlertDialog.Builder(requireContext(),R.style.AlertDialogTheme)
+        val dialogView = layoutInflater.inflate(R.layout.layout_hint_dialog, null)
+        dialogBuilder.setView(dialogView)
+
+        val progressBar = dialogView.findViewById<ProgressBar>(R.id.progress_bar_dialog)
+        val contentTextView = dialogView.findViewById<TextView>(R.id.tv_content_hint)
+        val btnDone= dialogView.findViewById<Button>(R.id.dialog_button)
+        val heading :TextView = dialogView.findViewById(R.id.hint_heading)
+        val divider: MaterialDivider = dialogView.findViewById(R.id.dialog_divider)
+
+        val alertDialog = dialogBuilder.create()
+        alertDialog.show()
+        progressBar.visibility = View.VISIBLE
+        contentTextView.visibility = View.GONE
+        heading.visibility = View.GONE
+        divider.visibility = View.GONE
+        var hint="No Hints Available"
+        handleHintStatus(hintType){success,message,UnlockedIn,hint1,hint2,hint3->
+            if(success){
+                if(hintType==1){
+                    hint = riddle.Hint1
+                } else if(hintType==2){
+                    hint =riddle.Hint2
+                } else{
+                    hint=riddle.Hint3
+                }
+                contentTextView.text = hint
+                progressBar.visibility = View.GONE
+                contentTextView.visibility = View.VISIBLE
+                heading.visibility = View.VISIBLE
+                divider.visibility = View.VISIBLE
+            } else if(UnlockedIn != 0L){
+                showSnackbar("Unlocked in ${convertMillisToTime(UnlockedIn!!)}")
+            }
+            else{
+                showSnackbar(message!!)
+            }
+        }
+        btnDone.setOnClickListener {
+            alertDialog.dismiss()
+        }
+
+    }
+
+    private fun convertMillisToTime(millis: Long): String {
+        val seconds = millis / 1000
+        val minutes = seconds / 60
+        val hours = minutes / 60
+        val remainingMinutes = minutes % 60
+        val remainingSeconds = seconds % 60
+        return String.format("%02dh %02dmin %02dsec", hours, remainingMinutes, remainingSeconds)
+
+    }
     private fun updateQuestionState() {
-        Log.w("ContestFragment","13")
         viewModel.questionState.observe(viewLifecycleOwner, Observer {
-            Log.w("ContestFragment","13")
             val index = it[0]
             val question = it[1]
             if (index != -1) {
-                Log.w("ContestFragment","13-1")
                 hideProgressBar()
                 updateUI(index, question)
             }
         })
     }
-
+    private fun handleHintStatus(
+        hintType:Int,
+        callback: (Boolean,String?,Long?,Boolean,Boolean,Boolean) -> Unit
+    ){
+        val index = viewModel.questionState.value!![0]
+        viewModel.getHintStatus(
+            eventId = eid,
+            teamId = viewModel.getTeamId(),
+            riddleId = viewModel.getRiddles()[index].question_id,
+            hintType
+        ){ success,message,UnlockedIn,hint1,hint2,hint3->
+            callback(success,message,UnlockedIn,hint1,hint2,hint3)
+        }
+    }
     private fun refreshAction(callback:()->Unit) {
-        Log.w("ContestFragment","10")
         viewModel.closeCtfSession()
         setupRoomDatabase() { message, success ->
-            Log.w("ContestFragment","11")
             if (success) {
-                Log.w("ContestFragment","11-1")
                 rList = viewModel.getRiddles()
                 updateQuestionState()
 
             } else {
-                Log.w("ContestFragment","11-2")
                 showSnackbar(message!!)
                 findNavController().popBackStack()
             }
-            Log.w("ContestFragment","12")
         }
         callback()
     }
@@ -179,44 +264,51 @@ class ContestFragment : Fragment(), PermissionListener {
         return answer == viewModel.getRiddles()[index].answer
     }
 
-    private fun checkWithStoryLine(index: Int, answer: String): Boolean {
-        var inRange = false
+    private fun checkWithStoryLine(index: Int, answer: String, callback: (Boolean,String?) -> Unit) {
         requestLocation(){success,lat,long->
-            Log.w("Contest Fragment Location Callback",success.toString())
             if (success){
-                Log.w("Contest Fragment Distance","before callback fun of calc Distace: ${inRange}")
                 calculateDistance(lat!!,long!!,lat,long){
-                    inRange = it
+                    if(it&&(answer == viewModel.getRiddles()[index].unique_code))
+                    callback( true, "Correct")
+                    else if(!it&&(answer == viewModel.getRiddles()[index].unique_code))
+                        callback(false, "You are at wrong place")
+                    else callback(false, "wrong answer")
                 }
-                Log.w("Contest Fragment Distance","after callback fun of calc Distace: ${inRange}")
-                showSnackbar("You too Far From Scanner. First Reach the Location then Scan QR")
+            }
+            else{
+                callback(false,"Location cannot detected")
             }
         }
-        val flg = (answer == viewModel.getRiddles()[index].unique_code) and inRange
-        Log.w("contestFragment Flag", flg.toString())
-        return flg
     }
 
     private fun updateUI(index: Int, question: Int) {
-        Log.w("ui-issue", "$index, $question, ${viewModel.getRiddles()}")
         if (index == viewModel.getRiddles().size) {
+            binding.fabScan.visibility=View.GONE
             binding.endButton.text = "End"
             binding.questionTv.text =
                 "Click on the button below to end the contest! Thanks for participating."
-            binding.tilCorrectAnswer.visibility = View.GONE
+            binding.apply {
+                tilCorrectAnswer.visibility = View.GONE
+                hint1Card.visibility =View.GONE
+                hint2Card.visibility = View.GONE
+                hint3Card.visibility = View.GONE
+            }
             return
         }
         when (question) {
             1 -> {
                 binding.questionTv.text = viewModel.getRiddles()[index].storyline
                 binding.endButton.text = "Scan"
+                binding.fabScan.visibility = View.VISIBLE
             }
 
             else -> {
                 binding.questionTv.text = viewModel.getRiddles()[index].question
                 binding.endButton.text = "Next"
+                binding.fabScan.visibility = View.GONE
             }
         }
+        binding.swipeRefresLayout.isRefreshing = false
     }
 
     private fun setupRoomDatabase(callback: (String?, Boolean) -> Unit) {
@@ -269,9 +361,9 @@ class ContestFragment : Fragment(), PermissionListener {
     private fun setupScanner() {
         val integrator = IntentIntegrator.forSupportFragment(this)
         integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES)
-        integrator.setPrompt("scan")
+        integrator.setPrompt("DEVELOPERS AND CODERS CLUB")
         integrator.setCameraId(0)
-        integrator.setOrientationLocked(true)
+        integrator.setOrientationLocked(false)
         integrator.setBeepEnabled(true)
         integrator.setBarcodeImageEnabled(false)
         integrator.initiateScan()
@@ -287,7 +379,7 @@ class ContestFragment : Fragment(), PermissionListener {
             if (scanResult.contents == null) {
                 Toast.makeText(requireContext(), "Cancelled", Toast.LENGTH_SHORT).show();
             } else {
-//                binding.etCode.setText(scanResult.contents.toString())
+                binding.etCorrectAnswer.setText(scanResult.contents.toString())
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
@@ -301,6 +393,9 @@ class ContestFragment : Fragment(), PermissionListener {
             tilCorrectAnswer.visibility = View.GONE
             questionTv.visibility = View.GONE
             endButton.visibility = View.GONE
+            hint1Card.visibility =View.GONE
+            hint2Card.visibility = View.GONE
+            hint3Card.visibility = View.GONE
         }
     }
 
@@ -311,24 +406,9 @@ class ContestFragment : Fragment(), PermissionListener {
             tilCorrectAnswer.visibility = View.VISIBLE
             questionTv.visibility = View.VISIBLE
             endButton.visibility = View.VISIBLE
-        }
-    }
-    private fun showView() {
-        binding.apply {
-            progressBar.visibility = View.GONE
-            image.visibility = View.GONE
-            tilCorrectAnswer.visibility = View.GONE
-            questionTv.visibility = View.GONE
-            endButton.visibility = View.GONE
-        }
-    }
-
-    private fun hideView() {
-        binding.apply {
-            image.visibility = View.VISIBLE
-            tilCorrectAnswer.visibility = View.VISIBLE
-            questionTv.visibility = View.VISIBLE
-            endButton.visibility = View.VISIBLE
+            hint1Card.visibility =View.VISIBLE
+            hint2Card.visibility = View.VISIBLE
+            hint3Card.visibility = View.VISIBLE
         }
     }
 
@@ -345,7 +425,7 @@ class ContestFragment : Fragment(), PermissionListener {
         Log.w("sebastian scanResult", "fun is permission granted")
 
         if (isGranted) {
-            showSnackbar("Permission Granted")
+            isPermissionsGranted=true
         } else permissionHelper.launchPermissionDialogForMultiplePermissions(
             arrayOf(
                 Manifest.permission.CAMERA,
@@ -410,7 +490,7 @@ class ContestFragment : Fragment(), PermissionListener {
                 StrictMath.cos(Math.toRadians(lat1)) * StrictMath.cos(Math.toRadians(lat2)) *
                 StrictMath.sin(dLon / 2) * StrictMath.sin(dLon / 2)
         val c = 2 * StrictMath.atan2(StrictMath.sqrt(a), StrictMath.sqrt(1 - a))
-        callback(R * c * 1000<=200)
+        callback(R * c * 1000<=100)
 
 
     }

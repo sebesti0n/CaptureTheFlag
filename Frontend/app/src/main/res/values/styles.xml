@@ -29,4 +29,8 @@
     <style name="ImageView.Rounded" parent="">
         <item name="cornerSize">7%</item>
     </style>
+    <style name="AlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
 </resources>
