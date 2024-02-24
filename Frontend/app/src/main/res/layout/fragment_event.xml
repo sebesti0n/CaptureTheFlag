@@ -50,7 +50,7 @@
             <com.google.android.material.imageview.ShapeableImageView
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
-                android:src="@drawable/upload_banner"
+                android:src="@drawable/dcc_x_gdsc_2022_24_20240212_040539"
                 android:id="@+id/banner"
                 android:scaleType="center"
                 app:layout_constraintTop_toTopOf="parent"

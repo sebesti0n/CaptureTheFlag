@@ -270,12 +270,12 @@ class EventFragment : Fragment() {
                 val countDownTimer = object : CountDownTimer(timeDifference, 1000L) {
                     override fun onTick(millisUntilFinished: Long) {
                         val days = TimeUnit.MILLISECONDS.toDays(millisUntilFinished)
-                        val hours = TimeUnit.MILLISECONDS.toHours(millisUntilFinished) % 24
+                        val hours = TimeUnit.MILLISECONDS.toHours(millisUntilFinished)
                         val minutes = TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) % 60
                         val seconds = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) % 60
+                        val countdownTime = String.format("%02d:%02d:%02d", days, hours, minutes, seconds)
 
-                        binding.countDownTimer.text =
-                            String.format("%d days, %02d:%02d:%02d", days, hours, minutes, seconds)
+                        binding.countDownTimer.text ="Starts in ${countdownTime}"
                     }
 
                     override fun onFinish() {
@@ -295,7 +295,7 @@ class EventFragment : Fragment() {
                         val seconds = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) % 60
 
                         binding.countDownTimer.text =
-                            String.format("%d days, %02d:%02d:%02d", days, hours, minutes, seconds)
+                            "Ends in "+String.format("%d days, %02d:%02d:%02d", days, hours, minutes, seconds)
                     }
 
                     override fun onFinish() {

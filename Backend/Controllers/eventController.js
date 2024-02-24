@@ -2,7 +2,7 @@ const knex = require("knex")(
   require("../Configuration/knexfile")["development"]
 );
 
-exports.upcomingEvents =( async (req, res) => {
+exports.upcomingEvents = async (req, res) => {
   try {
     const currentDate = new Date();
     const currTime = currentDate.getTime();
@@ -11,21 +11,22 @@ exports.upcomingEvents =( async (req, res) => {
       .where("start_ms", ">=", currTime)
       .orWhere("end_ms", ">=", currTime)
       .returning("*");
-  }catch (err) {
-  console.log(err);
-  res
-    .status(500)
-    .json({ success: false, message: "unknown Error!", event: null });
-}
-});
-exports.upcomingEvents = (async (req, res) => {
-    try {
-        const currentDate = new Date();
-        const currTime = currentDate.getTime()
-        console.log(currTime);
-        const events = await knex('events')
-            .where('start_ms', '>=', currTime)
-            .orWhere('end_ms', '>=', currTime).returning('*');
+  } catch (err) {
+    console.log(err);
+    res
+      .status(500)
+      .json({ success: false, message: "unknown Error!", event: null });
+  }
+};
+exports.upcomingEvents = async (req, res) => {
+  try {
+    const currentDate = new Date();
+    const currTime = currentDate.getTime();
+    console.log(currTime);
+    const events = await knex("events")
+      .where("start_ms", ">=", currTime)
+      .orWhere("end_ms", ">=", currTime)
+      .returning("*");
 
     console.log(events);
     res.status(200).json({ success: true, message: "ok", event: events });
@@ -35,7 +36,7 @@ exports.upcomingEvents = (async (req, res) => {
       .status(500)
       .json({ success: false, message: "unknown Error!", event: null });
   }
-});
+};
 
 exports.liveEvents = async (req, res) => {
   try {
@@ -56,7 +57,7 @@ exports.liveEvents = async (req, res) => {
 };
 
 exports.registeredEventforUser = async (req, res) => {
-  const uid = req.query.uid;
+  const enrollid = req.query.enrollid;
   try {
     const event = await knex("events")
       .innerJoin(
@@ -64,9 +65,11 @@ exports.registeredEventforUser = async (req, res) => {
         "events.event_id",
         "=",
         "user_event_participation.event_id"
-      )
-      .where("user_event_participation.user_id", "=", uid)
-      .andWhere("user_event_participation.is_registered", "=", false)
+      ).innerJoin("teams",
+      "teams.team_id","=","user_event_participation.team_id")
+      .where("teams.player1_eid", "=", enrollid)
+      .orWhere("teams.player2_eid", "=", enrollid)
+      .orWhere("teams.player3_eid", "=", enrollid)
       .select(
         "events.event_id",
         "events.title",
@@ -168,57 +171,47 @@ exports.eventDetails = async (req, res) => {
     const data = await knex("teams")
       .select("team_id")
       .where("event_id", eid)
-      .andWhere("player1_eid",enroll_id)
-      .orWhere("player2_eid",enroll_id)
-      .orWhere("player3_eid",enroll_id);
+      .andWhere("player1_eid", enroll_id)
+      .orWhere("player2_eid", enroll_id)
+      .orWhere("player3_eid", enroll_id);
     let is_register = false;
     if (data.length > 0) is_register = true;
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "ok",
-        isRegister: is_register,
-        event: events,
-      });
+    res.status(200).json({
+      success: true,
+      message: "ok",
+      isRegister: is_register,
+      event: events,
+    });
   } catch (error) {
     console.log(error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "unknown Error!",
-        isRegister: false,
-        event: null,
-      });
+    res.status(500).json({
+      success: false,
+      message: "unknown Error!",
+      isRegister: false,
+      event: null,
+    });
   }
 };
-
 
 exports.getCurrentriddleStatus = async (req, res) => {
   try {
     const teamId = req.query.teamId;
     const eventId = req.query.eventId;
-    const data = await knex('user_event_participation')
-                  .where('team_id','=',teamId)
-                  .andWhere('event_id','=',eventId)
-                  .returning('Number_correct_answer')
-    res
-       .status(200)
-       .json({
-        success:true,
-        message:"Count of correct answer",
-        next:data[0]
-       })
-    
+    const data = await knex("user_event_participation")
+      .where("team_id", "=", teamId)
+      .andWhere("event_id", "=", eventId)
+      .returning("Number_correct_answer");
+    res.status(200).json({
+      success: true,
+      message: "Count of correct answer",
+      next: data[0],
+    });
   } catch (error) {
     console.log(error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "unknown Error!",
-        next:-1
-      });
+    res.status(500).json({
+      success: false,
+      message: "unknown Error!",
+      next: -1,
+    });
   }
-}
+};
