@@ -26,7 +26,7 @@ router.post('/register-team',teamController.createTeam)
 router.post('/riddle-Submission',qc.onSubmit);
 
 router.get('/curr-status-riddle',eventcontroller.getCurrentriddleStatus);
-
 router.get('/hintStatus',hintController.updateHint)
+
 module.exports = router;
 
