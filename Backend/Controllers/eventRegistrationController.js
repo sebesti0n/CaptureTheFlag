@@ -3,11 +3,11 @@ const knex = require('knex')(require('../Configuration/knexfile')['development']
 exports.onEventPageOpen = ( async (req, res) => {
     try {
         const eid = req.query.eid;
-        const uid = req.query.uid;
+        const tid = req.query.tid;
         const data = await knex('user_event_participation')
             .select('is_registered')
             .where('event_id', eid)
-            .andWhere('user_id', uid)
+            .andWhere('team_id', tid)
         if(data.length>0 && data[0].is_registered){
             return res.status(200).json({buttonText:"Unregister"});
         }
@@ -24,7 +24,7 @@ exports.onEventPageOpen = ( async (req, res) => {
 exports.onOpenEventPage = (async (req, res) => {
     try {
         const eid = req.query.eid;
-        const uid = req.query.uid;
+        const tid = req.query.tid;
         const eventDetails = await knex('events')
             .select('*')
             .where('event_id', eid)
@@ -42,7 +42,7 @@ exports.onOpenEventPage = (async (req, res) => {
         const data = await knex('user_event_participation')
             .select('is_registered')
             .where('event_id', eid)
-            .andWhere('user_id', uid)
+            .andWhere('team_id', tid)
         if (data.length > 0) {
             const flg = data[0].is_registered;
             if (flg && isLive) {
@@ -72,8 +72,8 @@ exports.onOpenEventPage = (async (req, res) => {
 exports.isUserRegisterforEvents = (async (req, res) => {
     try {
         const eid = req.query.eid;
-        const uid = req.query.uid;
-        console.log('eid and uid - ',eid,uid);
+        const tid = req.query.tid;
+        console.log('eid and tid - ',eid,tid);
         const data =await knex('events')
                     .where('event_id','=',eid)
                     .returning('levels','node_at_each_level');
@@ -87,7 +87,7 @@ exports.isUserRegisterforEvents = (async (req, res) => {
 
             await knex('user_event_participation')
                 .insert({
-                    user_id: uid,
+                    team_id: tid,
                     event_id: eid,
                     is_registered: true,
                     sequence:seq

@@ -74,6 +74,10 @@
         <action
             android:id="@+id/action_contestFragment_to_rankingFragment"
             app:destination="@id/rankingFragment" />
+        <action
+            android:id="@+id/action_contestFragment_to_homefragment"
+            app:popUpToInclusive="true"
+            app:destination="@id/homefragment" />
     </fragment>
     <fragment
         android:id="@+id/rankingFragment"
@@ -84,4 +88,9 @@
             app:argType="integer"
             android:defaultValue="-1" />
     </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.capturetheflag.fragments.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
 </navigation>

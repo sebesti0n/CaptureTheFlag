@@ -1,0 +1,11 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Circular background -->
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="#0E6BA8" />
+        </shape>
+    </item>
+    <!-- Checked icon -->
+    <item android:drawable="@drawable/done_icon"
+        android:gravity="center" />
+</layer-list>

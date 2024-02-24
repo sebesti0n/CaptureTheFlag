@@ -42,7 +42,7 @@ class AdminHomeFragment : Fragment(),EventItemClickListener {
         adapter = EventAdapter(listner = this)
         binding.rvAdminEvent.adapter = adapter
         binding.rvAdminEvent.layoutManager = LinearLayoutManager(requireContext())
-        getEventList()
+//        getEventList()
         adapter.setdata(eList)
         adapter.notifyDataSetChanged()
         Log.w("Sebastian nds",eList.toString())
@@ -52,15 +52,25 @@ class AdminHomeFragment : Fragment(),EventItemClickListener {
 
     }
 
+//    private fun getEventList() {
+//        viewModel.getAdminEvents()
+//        viewModel.get()?.observe(requireActivity()) {
+//            Log.w("Sebastian it",it.event.toString())
+//            eList = it.event
+//            adapter.setdata(it.event)
+//        }
+//
+//    }
     private fun getEventList() {
         viewModel.getAdminEvents()
-        viewModel.get()?.observe(requireActivity()) {
-            Log.w("Sebastian it",it.event.toString())
-            eList = it.event
-            adapter.setdata(it.event)
+        viewModel.eventResponseLiveData.observe(requireActivity()) {
+            Log.w("Sebastian it", it.data?.event.toString())
+            eList = it.data?.event!!
+            adapter.setdata(eList)
         }
 
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

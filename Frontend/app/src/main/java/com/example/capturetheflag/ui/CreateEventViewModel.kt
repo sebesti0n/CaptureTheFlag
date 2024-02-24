@@ -2,46 +2,50 @@ package com.example.capturetheflag.ui
 
 import android.app.Application
 import android.util.Log
-import android.view.View
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.capturetheflag.apiServices.RetrofitInstances
 import com.example.capturetheflag.models.EventX
 import com.example.capturetheflag.models.QuestionModel
 import com.example.capturetheflag.models.ResponseEventModel
 import com.example.capturetheflag.models.taskResponseModel
-import com.example.capturetheflag.sharedprefrences.userPreferences
-import kotlinx.coroutines.launch
+import com.example.capturetheflag.session.Session
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import com.example.capturetheflag.util.Resource
 
 class CreateEventViewModel(
     private val app:Application
 ): AndroidViewModel(app) {
 
-    private var eventResposeLiveData= MutableLiveData<ResponseEventModel>()
-    fun get(): LiveData<ResponseEventModel>?{
+    private var eventResposeLiveData= MutableLiveData<Resource<ResponseEventModel>>()
+    fun get(): LiveData<Resource<ResponseEventModel>>?{
         return eventResposeLiveData!!
     }
-    private val session = userPreferences.getInstance(app.applicationContext)
+    private val session = Session.getInstance(app.applicationContext)
     fun getUID():Int = session.getUID()
 
     fun createEvent(event: EventX){
+        eventResposeLiveData.postValue(Resource.Loading())
             RetrofitInstances.service.createEvent(event)
                 .enqueue(object : Callback<ResponseEventModel> {
                     override fun onResponse(
                         call: Call<ResponseEventModel>,
                         response: Response<ResponseEventModel>
                     ) {
-                        eventResposeLiveData.value = response.body()
+                        if(response.isSuccessful){
+                            response.body()?.let {
+                                eventResposeLiveData.postValue(Resource.Success(it))
+                            }
+                        }
+                        else eventResposeLiveData.postValue(Resource.Error(response.message()))
                     }
 
                     override fun onFailure(call: Call<ResponseEventModel>, t: Throwable) {
                         Log.d("TAG", t.message.toString())
+                        eventResposeLiveData.postValue(Resource.Error(t.message))
                     }
 
                 })
@@ -53,7 +57,7 @@ class CreateEventViewModel(
                     call: Call<taskResponseModel>,
                     response: Response<taskResponseModel>
                 ) {
-//                Toast.makeText(,"hii",Toast.LENGTH_SHORT).show()
+
                 }
 
                 override fun onFailure(call: Call<taskResponseModel>, t: Throwable) {

@@ -9,16 +9,16 @@ import java.util.concurrent.TimeUnit
 class RetrofitInstances {
     companion object {
 
-        private val BASEURL="https://ctf-ndp3.onrender.com/"
-
+        private val BASEURL = "https://1675-2402-8100-2008-a323-9baf-7706-e920-c318.ngrok-free.app/"
+//            "https://ctf-ndp3.onrender.com/"
         private val retrofit: Retrofit by lazy {
             val interceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 
             val okHttpClient = OkHttpClient.Builder()
+                .readTimeout(120,TimeUnit.SECONDS)
+                .writeTimeout(120,TimeUnit.SECONDS)
+                .connectTimeout(120,TimeUnit.SECONDS)
                 .addInterceptor(interceptor)
-                .readTimeout(120, TimeUnit.SECONDS)
-                .writeTimeout(120, TimeUnit.SECONDS)
-                .connectTimeout(120, TimeUnit.SECONDS)
                 .build()
             Retrofit.Builder().baseUrl(BASEURL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -28,6 +28,9 @@ class RetrofitInstances {
 
         val service: ApiEndpoints by lazy {
             retrofit.create(ApiEndpoints::class.java)
+        }
+        val ctfServices: CtfApiEndpoints by lazy {
+            retrofit.create(CtfApiEndpoints::class.java)
         }
     }
 }

@@ -10,19 +10,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
-import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.example.capturetheflag.R
 import com.example.capturetheflag.activities.HomeActivity
 import com.example.capturetheflag.databinding.FragmentRegisterBinding
 import com.example.capturetheflag.models.User
-import com.example.capturetheflag.sharedprefrences.userPreferences
+import com.example.capturetheflag.session.Session
 import com.example.capturetheflag.ui.RegisterViewModel
+import com.example.capturetheflag.util.Resource
+import com.google.android.material.snackbar.Snackbar
 
 class RegisterFragment : Fragment() {
 
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding!!
-    private lateinit var sharedPref:userPreferences
+    private lateinit var sharedPref: Session
     private lateinit var viewModel: RegisterViewModel
     private lateinit var firstName:String
     private lateinit var lastName:String
@@ -31,6 +33,7 @@ class RegisterFragment : Fragment() {
     private lateinit var collegeName:String
     private lateinit var password:String
     private lateinit var cnfPassword:String
+    private lateinit var enrollmentID:String
 
 
 
@@ -45,21 +48,21 @@ class RegisterFragment : Fragment() {
 
     @SuppressLint("SuspiciousIndentation")
     private fun checkCredentials(): Boolean {
-    if(cnfPassword.isEmpty() || collegeName.isEmpty() || email.isEmpty() || firstName.isEmpty() || mobileNo.isEmpty() || password.isEmpty())
+    if(cnfPassword.isEmpty() || collegeName.isEmpty() || email.isEmpty() || firstName.isEmpty() || mobileNo.isEmpty() || password.isEmpty() || enrollmentID.isEmpty())
         return true
         return password != cnfPassword
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sharedPref = userPreferences(requireActivity())
+        sharedPref = Session(requireActivity())
         viewModel = ViewModelProvider(this)[RegisterViewModel::class.java]
 
-
-
+        binding.signInBtn.setOnClickListener {
+            findNavController().navigate(R.id.action_registerFragment_to_login)
+        }
 
         binding.btnLogin.setOnClickListener {
-
             email = binding.etEmail.text.toString()
             firstName = binding.etFirstname.text.toString()
             lastName =binding.etLastname.text.toString()
@@ -67,6 +70,7 @@ class RegisterFragment : Fragment() {
             mobileNo = binding.etMobileNo.text.toString()
             password = binding.etPassword.text.toString()
             cnfPassword = binding.etCnfpassword.text.toString()
+            enrollmentID = binding.etEnrollmentId.text.toString()
 
             if(checkCredentials()){
                 showToastMessage("fill all details")
@@ -75,17 +79,29 @@ class RegisterFragment : Fragment() {
                 showToastMessage("Enter Correct Email")
             }else
              {
-                val newUser = User(collegeName,email,firstName,lastName,mobileNo,cnfPassword,password)
-                viewModel.register(newUser)
-                viewModel.get()?.observe(requireActivity(), Observer {
-                    if(it.success){
-                       sharedPref.createSession(it.user.user_id,it.user.email,true,it.message)
+                showProgressBar()
+                val newUser = User(collegeName,email,firstName,lastName,mobileNo,cnfPassword,password,enrollmentID)
+                viewModel.register(newUser){success,message,user->
+                    if(success && user!=null){
+                        user.let {
+                            sharedPref.createSession(
+                                        college = it.CollegeName,
+                                        name = "${it.FirstName} ${it.LastName}",
+                                        mobile = it.MobileNo,
+                                        email = it.email,
+                                        enrollmentID = it.enroll_id,
+                                        id = it.user_id,
+                                        token = "token_String"
+                                    )
+                        }
                         moveToHome()
 
-                    }else{
-                        showToastMessage(it.message)
                     }
-                })
+                    else {
+                        hideProgressBar()
+                        Snackbar.make(requireView(), message!!, 2000).show()
+                    }
+                }
             }
         }
     }
@@ -95,7 +111,21 @@ class RegisterFragment : Fragment() {
         startActivity(intent)    }
 
     private fun showToastMessage(msg: String) {
-    Toast.makeText(requireActivity(),msg,Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireActivity(),msg,Toast.LENGTH_SHORT).show()
+    }
+
+    private fun hideProgressBar(){
+        binding.apply {
+            progressBar.visibility = View.GONE
+            llForm.visibility = View.VISIBLE
+        }
+    }
+
+    private fun showProgressBar(){
+        binding.apply {
+            progressBar.visibility = View.VISIBLE
+            llForm.visibility = View.GONE
+        }
     }
 
 }

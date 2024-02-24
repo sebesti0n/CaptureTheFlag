@@ -1,28 +1,39 @@
-const knex = require('knex')(require('../Configuration/knexfile')['development']);
+const knex = require("knex")(
+  require("../Configuration/knexfile")["development"]
+);
 
-exports.userRegistration = async(req,res)=>{
-    const {Email, password, cnfpassword, FirstName, LastName, MobileNo, CollegeName, token} = req;
-    
-    try {
-        console.log(Email);
-       const user = await knex('users')
-        .insert({
-            email:Email,
-            password:password,
-            cnfpassword:cnfpassword,
-            FirstName:FirstName,
-            LastName:LastName,
-            MobileNo:MobileNo,
-            CollegeName:CollegeName            
-        }).returning('*');
-        console.log(user);
+exports.userRegistration = async (req, res) => {
+  const {
+    Email,
+    password,
+    cnfpassword,
+    FirstName,
+    LastName,
+    MobileNo,
+    CollegeName,
+    token,
+    enroll_id,
+  } = req;
 
-        return res.status(200).json({success:true, message:token, user: user});
+  try {
+    console.log(Email);
+    const user = await knex("users")
+      .insert({
+        email: Email,
+        password: password,
+        cnfpassword: cnfpassword,
+        FirstName: FirstName,
+        LastName: LastName,
+        MobileNo: MobileNo,
+        CollegeName: CollegeName,
+        enroll_id: enroll_id,
+      })
+      .returning("*");
+    console.log(user);
 
-    } catch (error) {
-        console.log(error);
-        return res.status(400).json({success:false, message:error, user: null});
-        
-    }
-    
-}
+    return res.status(200).json({ success: true, message: token, user: user[0] });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ success: false, message: error, user: null });
+  }
+};

@@ -7,5 +7,6 @@ data class User(
     val LastName: String,
     val MobileNo: String,
     val cnfpassword: String,
-    val password: String
+    val password: String,
+    val enroll_id:String
 )

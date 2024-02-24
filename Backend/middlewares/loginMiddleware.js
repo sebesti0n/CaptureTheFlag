@@ -16,8 +16,14 @@ const loginMiddleware =async (req,res,next) =>{
 
             bcrypt.compare(userPass, finduser[0].password)
             .then((result) => {
+                let data={
+                    time:Date(),
+                    userEmail:finduser[0].email
+                }
+        const token = jwt.sign(data, process.env.JWT_SECRET_KEY);
                 if (result) {
                     req.finduser =finduser;
+                    req.token = token;
                     next();
                 } else { 
                     return res.status(200).json({ success : false,message:"Invalid Credentials", userDetails: null });

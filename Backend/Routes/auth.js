@@ -11,7 +11,8 @@ const knex = require('knex')(
 
 dotenv.config();
 router.get('/', async (req, res) => {
-  return res.send('Welcome to Capture the Flag');
+  const data = await knex('user_event_participation').returning('*');
+  res.status(200).json({ datas: data });
 });
 router.post(
   '/register',
@@ -19,10 +20,10 @@ router.post(
   userController.userRegistration
 );
 router.post('/login', loginMiddleware, (req, res) => {
-  const { finduser } = req;
+  const { finduser, token } = req;
   return res
     .status(200)
-    .json({ success: true, message: 'ok', userDetails: finduser[0] });
+    .json({ success: true, message: token, userDetails: finduser[0] });
 });
 router.get('/validate', validationMiddleware, (req, res) => {
   return res.send('Successfully Verified');

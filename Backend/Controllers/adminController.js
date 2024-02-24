@@ -55,7 +55,7 @@ return formattedIST;
 
 exports.addEvents = ( async(req,res)=>{
     try {
-        const {title , location, description,organisation, start_time, end_time, owner_id, No_of_questions, posterImage} = req.body;
+        const {title , location, description,organisation, start_time, end_time, owner_id, No_of_questions, posterImage, eventType , node_at_each_level, levels} = req.body;
         console.log(start_time)
         const startTimeDate = await getIstTimestamp(start_time);
         const endTimeDate = await getIstTimestamp(end_time);
@@ -77,7 +77,11 @@ exports.addEvents = ( async(req,res)=>{
             No_of_questions:No_of_questions,
             posterImage:posterImage,
             start_ms:millisecondsStart,
-            end_ms:millisecondsEnd
+            end_ms:millisecondsEnd,
+            levels:levels,
+            node_at_each_level:node_at_each_level,
+            event_type:eventType
+
         }).returning('*');
         res.status(200).json({success: true,message:"ok",event:data});
     } catch (error) {
@@ -93,14 +97,13 @@ exports.addRiddles = ( async(req,res) => {
     try {
         const rList=req.body;
         console.log(rList)
-        await knex('questions').insert(rList)
-        const data = await knex('questions').returning('*');
+        const data = await knex('questions').insert(rList).returning('*');
+        console.log(data)
         console.log("inserted Successfully");
-
-        res.status(200).json({success: true,message:"ok",question:data});
+        return res.status(200).json({success: true,message:"inserted Successfully"});
     } catch (error) {
         console.log(error);
-        res.status(500).json({success: false, message:"unknown Error!", event:null});  
+        res.status(500).json({success: false, message:"unknown Error!"});  
     }
 });
 

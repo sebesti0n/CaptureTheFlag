@@ -20,6 +20,7 @@ class AdminActivity : AppCompatActivity() {
 
         binding = ActivityAdminBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        this.window.statusBarColor = resources.getColor(R.color.gray)
 
         setSupportActionBar(binding.toolbar)
 
