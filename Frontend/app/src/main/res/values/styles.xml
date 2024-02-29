@@ -26,4 +26,7 @@
     <style name="ImageView.Circle" parent="">
         <item name="cornerSize">50%</item>
     </style>
+    <style name="ImageView.Rounded" parent="">
+        <item name="cornerSize">7%</item>
+    </style>
 </resources>

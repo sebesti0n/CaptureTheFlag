@@ -14,17 +14,14 @@ router.get('/register', eventcontroller.registeredEventforUser);
 router.get('/history', eventcontroller.historyEventofUser);
 router.get('/submit', answercontroller.submitAnswer);
 router.get('/event-registration', eventregistrationcontroller.isUserRegisterforEvents);
-router.get('/openStatus', eventregistrationcontroller.onOpenEventPage);
 router.get('/eventRegistration',eventcontroller.registerUserinEvents);
-router.get('/get-riddles', answercontroller.getRiddles);
-router.get('/get-firstTimeRiddleNumber',answercontroller.getRiddleNumberFirsTime);
 router.get('/leaderboard',lc.getLeaderBoard);
 
 
 router.get('/event-details',eventcontroller.eventDetails)
 router.get('/submission',qc.submissionRiddle);
 router.get('/start-contest',qc.startEvent);
-router.post('/register_team',teamController.createTeam)
+router.post('/register-team',teamController.createTeam)
 
 module.exports = router;
 

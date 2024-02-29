@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.capturetheflag.apiServices.RetrofitInstances
 import com.example.capturetheflag.models.RegisterResponse
 import com.example.capturetheflag.models.User
+import com.example.capturetheflag.models.UserSchema
 import com.example.capturetheflag.session.Session
 import com.example.capturetheflag.util.Resource
 
@@ -19,14 +20,9 @@ class RegisterViewModel(
     private val app:Application
 ) : AndroidViewModel(app) {
 
-    private var registerResponseLiveData= MutableLiveData<Resource<RegisterResponse>>()
-    fun get():LiveData<Resource<RegisterResponse>>?{
-        return registerResponseLiveData!!
-    }
     private val session = Session.getInstance(app.applicationContext)
 
-    fun register(user:User){
-        registerResponseLiveData.postValue(Resource.Loading())
+    fun register(user:User,callback:(Boolean,String?,UserSchema?)->Unit){
             RetrofitInstances.service.register(user).enqueue(object : Callback<RegisterResponse> {
                 override fun onResponse(
                     call: Call<RegisterResponse>,
@@ -34,19 +30,15 @@ class RegisterViewModel(
                 ) {
                     if(response.isSuccessful){
                         response.body()?.let{
-                            registerResponseLiveData.postValue(
-                                Resource.Success(it)
-                            )
+                            callback(true,it.message,it.user)
                         }
                     }
-                    else registerResponseLiveData.postValue(Resource.Error(response.message()))
+                    else callback(false,"Something Went Wrong. Try Again!!",null)
                 }
 
                 override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
-                    Log.d("TAG", t.message.toString())
-                    registerResponseLiveData.postValue(
-                        Resource.Error(t.message)
-                    )
+                    Log.d("sebastion Register", t.message.toString())
+                    callback(false,"Internal Server Error!",null)
                 }
 
             })

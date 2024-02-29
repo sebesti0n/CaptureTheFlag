@@ -1,115 +1,117 @@
 package com.example.capturetheflag.ui
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.capturetheflag.apiServices.RetrofitInstances
+import com.example.capturetheflag.models.CtfState
 import com.example.capturetheflag.models.NextRiddleModel
-import com.example.capturetheflag.models.QuestionModel
-import com.example.capturetheflag.models.ResponseQuestionModel
+import com.example.capturetheflag.models.RiddleModel
+import com.example.capturetheflag.room.CtfDatabase
+import com.example.capturetheflag.session.CtfSession
 import com.example.capturetheflag.session.Session
-
-import com.example.capturetheflag.util.Resource
-
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class ContestViewModel(
-    app:Application
+    app: Application
 ) : AndroidViewModel(app) {
+    private val userSession = Session.getInstance(app.applicationContext)
+    private val session = CtfSession.getCtfSession(app.applicationContext)
+    private val db: CtfDatabase = CtfDatabase.getDatabase(app)
+    private val riddleDao = db.riddleDao()
+    private val ctfStateDao = db.CtfTeamStateDao()
 
-    private var riddlesLivedata= MutableLiveData<Resource<ArrayList<QuestionModel>>>()
-    fun get():LiveData<Resource<ArrayList<QuestionModel>>>{
-        return riddlesLivedata
+    fun getRegId():String = userSession.getEnrollmentID()
+
+    fun getTeamId(): Int = session.getTeamId()
+    fun getLevel(): Int = session.getLevel()
+    fun setLevel(level: Int) = session.setLevel(level)
+
+    fun createSession(
+        teamId: Int,
+        questionNumber: Int
+    ){
+        session.createSession(
+            teamId = teamId,
+            questionNumber = questionNumber
+        )
     }
-    private val session = Session.getInstance(app.applicationContext)
-    fun getUID() = session.getUID()
-    private val id = session.getUID()
 
-    fun getRiddles(eid: Int) {
-        riddlesLivedata.postValue(Resource.Loading())
-            try {
-                val response = RetrofitInstances.service.getRiddles(eid, id)
-                response.enqueue(object : Callback<ResponseQuestionModel>{
-                    override fun onResponse(
-                        call: Call<ResponseQuestionModel>,
-                        response: Response<ResponseQuestionModel>
-                    ) {
-                        if(response.isSuccessful){
-                            response.body()?.let{
-                                riddlesLivedata.postValue(
-                                    Resource.Success(
-                                        it.riddles
-                                    )
-                                )
-                            }
+
+    fun onStartContest(
+        eid: Int,
+        rid: String,
+        startMs: Long,
+        callback: (Boolean?, String?, CtfState?) -> Unit
+    ) {
+        RetrofitInstances.ctfServices.getCtfState(eid, rid, startMs)
+            .enqueue(object : Callback<CtfState> {
+
+                override fun onResponse(call: Call<CtfState>, response: Response<CtfState>) {
+                    if (response.isSuccessful) {
+                        response.body()?.let {
+                            callback(it.success, it.message, it)
                         }
-                        else riddlesLivedata.postValue(Resource.Error(response.message()))
-                        Log.i("seb contest VM","response ${response} \n qList ${response.body()?.riddles}")
-                    }
-
-                    override fun onFailure(call: Call<ResponseQuestionModel>, t: Throwable) {
-                        Log.d("sebastian riddleList", "Unsuccessful response or empty body")
-                        riddlesLivedata.postValue(Resource.Error(t.message))
-                    }
-
-                })
-            } catch (e: Exception) {
-                e.printStackTrace()
-                Log.d("sebastian riddleList", "Exception occurred: ${e.message}")
-            }
-
-    }
-    fun getSubmissionDetails(eid: Int,callback:(Int?)->Unit){
-            try {
-                val res = RetrofitInstances.service.getSubmissionDetails(eid, id)
-                res.enqueue(object: Callback<NextRiddleModel>{
-                    override fun onResponse(
-                        call: Call<NextRiddleModel>,
-                        response: Response<NextRiddleModel>
-                    ) { Log.d("sebastian submissionDetails",response.body().toString())
-                        val rNo = response.body()
-                        rNo?.let {
-                            callback(it.next)
+                    } else {
+                        response.body()?.let {
+                            callback(it.success, it.message, it)
                         }
-                    }
-
-                    override fun onFailure(call: Call<NextRiddleModel>, t: Throwable) {
-                        Log.d("sebastian riddleNo", "getting error while this")
-                    }
-
-                })
-            }catch(e:Exception){
-                e.printStackTrace()
-                Log.d("sebastian riddleno", "Exception occurred: ${e.message}")
-            }
-        }
-
-    fun getRiddleNumberNumberFirst(eid:Int, callback:(Int?)->Unit){
-        try {
-            val res = RetrofitInstances.service.getSubmissionDetails(eid, id)
-            res.enqueue(object: Callback<NextRiddleModel>{
-                override fun onResponse(
-                    call: Call<NextRiddleModel>,
-                    response: Response<NextRiddleModel>
-                ) { Log.d("sebastian submissionDetails",response.body().toString())
-                    val rNo = response.body()
-                    rNo?.let {
-                        callback(it.next);
                     }
                 }
 
-                override fun onFailure(call: Call<NextRiddleModel>, t: Throwable) {
-                    Log.d("sebastian riddleNo First1", "getting error while this")
+                override fun onFailure(call: Call<CtfState>, t: Throwable) {
+                    callback(false, t.message, null)
                 }
 
             })
-        }catch(e:Exception){
-            e.printStackTrace()
-            Log.d("sebastian riddleno First2", "Exception occurred: ${e.message}")
+
+    }
+
+    fun checkIfDataCached(): Boolean{
+        return when(riddleDao.countRiddle()){
+            0 -> false
+            else -> true
         }
     }
+
+    fun cacheData(list: List<RiddleModel>){
+        riddleDao.insertRiddles(list)
+    }
+
+    fun getRiddles(): List<RiddleModel> = riddleDao.getRiddles()
+
+
+
+
+    fun submitRiddleResponse(
+        eid: Int,
+        tid: Int,
+        sumitAt: Long,
+        callback: (Boolean?, String?, Int?) -> Unit
+    ) {
+        val call = RetrofitInstances.ctfServices
+        call.submitRiddle(eid, tid, sumitAt).enqueue(object : Callback<NextRiddleModel> {
+            override fun onResponse(
+                call: Call<NextRiddleModel>,
+                response: Response<NextRiddleModel>
+            ) {
+                if (response.isSuccessful) {
+                    response.body()?.let {
+                        callback(true, "ok", it.next.Number_correct_answer)
+                    }
+
+                } else {
+                    callback(false, "Failed to Submit", -1)
+                }
+            }
+
+            override fun onFailure(call: Call<NextRiddleModel>, t: Throwable) {
+                callback(false, "Internal Server Error", -1)
+            }
+
+        })
+    }
+
+
 }

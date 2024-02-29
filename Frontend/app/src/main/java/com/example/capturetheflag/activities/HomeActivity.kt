@@ -5,11 +5,9 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.capturetheflag.R
 import com.example.capturetheflag.databinding.ActivityHomeBinding
-import com.example.capturetheflag.session.Session
 
 class HomeActivity : AppCompatActivity(){
 

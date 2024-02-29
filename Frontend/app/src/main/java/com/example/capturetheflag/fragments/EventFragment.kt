@@ -14,6 +14,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.capturetheflag.R
+import com.example.capturetheflag.activities.HomeActivity
+import com.example.capturetheflag.activities.MainActivity
 import com.example.capturetheflag.databinding.FragmentEventBinding
 import com.example.capturetheflag.databinding.LayoutTeamRegistrationFormBinding
 import com.example.capturetheflag.models.Event
@@ -46,34 +48,67 @@ class EventFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewModel = ViewModelProvider(this)[EventViewModel::class.java]
         _binding = FragmentEventBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(this)[EventViewModel::class.java]
         eid = args.eid
         isLive = args.isLive
         session = Session.getInstance(requireContext())
         updateUI()
-        hideRegisterButton()
+        hideBottomNavigationBar()
+//        hideRegisterButton()
         initializeTeamRegistrationBottomSheetDialog()
         binding.btnRegisteredEvent.setOnClickListener {
             if (!isRegister) {
                 if (eventType == EventType.TEAM_EVENT)
-                    registerUserForEvent()
+                    registerUserForEvent() {
+                        if(it) moveToContestFragment()
+                        else Snackbar.make(requireView(),"Team Registration Failed",2000).show()
+                    }
                 else if (eventType == EventType.INDIVIDUAL_EVENT)
-                    registerIndividuallyEvent()
+                    registerIndividuallyEvent(){
+                        if(it){
+                            Snackbar.make(
+                                requireView(),
+                                "Registered Successfully",
+                                2000)
+                                .show()
+                        }
+                        else{
+                            Snackbar.make(
+                                requireView(),
+                                "Registration Failed",
+                                2000)
+                                .show()
+                        }
+                    }
 
             }
-            if (isLive) {
-                val action =
-                    EventFragmentDirections.actionEventFragmentToContestFragment(eid.toInt())
-                findNavController().navigate(action)
+            else{
+                if(isLive){
+                    moveToContestFragment()
+                }
             }
         }
 
+    }
+
+    private fun moveToContestFragment() {
+        if (isLive) {
+            val action =
+                EventFragmentDirections.actionEventFragmentToContestFragment(eid.toInt())
+            findNavController().navigate(action)
+        }
+
+    }
+
+    private fun hideBottomNavigationBar() {
+        val homeActivity = activity as HomeActivity
+        homeActivity.hideNavigation()
     }
 
     private fun hideRegisterButton() {
@@ -83,7 +118,7 @@ class EventFragment : Fragment() {
 
     }
 
-    private fun registerIndividuallyEvent() {
+    private fun registerIndividuallyEvent(callback: (Boolean) -> Unit) {
 
         val newTeam = TeamSchema(
             eid.toInt(),
@@ -97,12 +132,16 @@ class EventFragment : Fragment() {
             session.getCollege(),
             session.getMobile()
         )
-        registerTeamForEvent(newTeam)
+        registerTeamForEvent(newTeam) {
+            callback(it)
+        }
     }
 
     @SuppressLint("SetTextI18n")
-    private fun registerUserForEvent() {
-        teamRegistrationForm()
+    private fun registerUserForEvent(callback: (Boolean) -> Unit) {
+        teamRegistrationForm() {
+            callback(it)
+        }
     }
 
 
@@ -160,7 +199,7 @@ class EventFragment : Fragment() {
         dialog.window?.attributes?.windowAnimations = R.style.DialogAnimation
     }
 
-    private fun teamRegistrationForm() {
+    private fun teamRegistrationForm(callback: (Boolean) -> Unit) {
         dialog.show()
         dialogBinding.btnLogin.setOnClickListener {
             val teamName = dialogBinding.etTeamName.text.toString()
@@ -193,18 +232,29 @@ class EventFragment : Fragment() {
                     teamName,
                     waNumber
                 )
-                registerTeamForEvent(newTeam)
-                dialog.dismiss()
+                registerTeamForEvent(newTeam) {
+                    if (it) {
+                        callback(true)
+                        dialog.dismiss()
+                    } else {
+                        callback(false)
+                    }
+                }
             }
         }
 
 
     }
 
-    private fun registerTeamForEvent(newTeam: TeamSchema) {
+    private fun registerTeamForEvent(newTeam: TeamSchema, callback: (Boolean) -> Unit) {
         viewModel.registerTeamForEvent(newTeam) { success, message ->
-            if (success == true) isRegister = true
-            Snackbar.make(requireView(), message.toString(), 2000).show()
+            if (success == true) {
+                isRegister = true
+                callback(true)
+            } else {
+                Snackbar.make(requireView(), message.toString(), 2000).show()
+                callback(false)
+            }
         }
     }
 
@@ -215,7 +265,7 @@ class EventFragment : Fragment() {
             var targetDate = dateFormat.parse(dateString)
             val currentDate = Date()
 
-            var timeDifference = targetDate.time - currentDate.time
+            var timeDifference = targetDate!!.time - currentDate.time
 
             if (timeDifference > 0) {
                 val countDownTimer = object : CountDownTimer(timeDifference, 1000L) {
