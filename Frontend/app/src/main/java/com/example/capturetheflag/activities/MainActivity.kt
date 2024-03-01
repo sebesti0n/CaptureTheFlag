@@ -33,8 +33,8 @@ class MainActivity : AppCompatActivity() {
         sharedPref =Session(this)
         if (sharedPref.isLogin()){
             val intent = Intent(this,HomeActivity::class.java)
-            startActivity(intent)
             finish()
+            startActivity(intent)
         }
         else {
             val navHostFragment = supportFragmentManager

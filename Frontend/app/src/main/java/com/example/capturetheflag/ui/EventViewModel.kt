@@ -33,6 +33,7 @@ class EventViewModel(app:Application):AndroidViewModel(app) {
                 call: Call<EventsSchema>,
                 response: Response<EventsSchema>
             ) {
+                Log.w("check-kar", response.toString())
                 response.body()?.let {
                     callback(it,false)
                 }

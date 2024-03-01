@@ -70,7 +70,7 @@ exports.registeredEventforUser = async (req, res) => {
       .where("teams.player1_eid", "=", enrollid)
       .orWhere("teams.player2_eid", "=", enrollid)
       .orWhere("teams.player3_eid", "=", enrollid)
-      .select(
+      .returning(
         "events.event_id",
         "events.title",
         "events.location",
