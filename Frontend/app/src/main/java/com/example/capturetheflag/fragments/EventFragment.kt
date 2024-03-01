@@ -1,6 +1,7 @@
 package com.example.capturetheflag.fragments
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -171,9 +172,11 @@ class EventFragment : Fragment() {
 //                            binding.contentDetails.text = "Start At: ${event.start_time} \n End At: ${event.end_time}"
 //                            binding.contentPrizes.text = "Amazing Goodies"
                             val imgview = binding.banner
-                            Glide.with(requireContext())
-                                .load(event.posterImage)
-                                .into(imgview)
+                            checkIfFragmentAttached {
+                                Glide.with(requireContext())
+                                    .load(event.posterImage)
+                                    .into(imgview)
+                            }
                         }
                     }
                 }
@@ -189,6 +192,12 @@ class EventFragment : Fragment() {
                 binding.btnRegisteredEvent.text = "Start"
                 binding.btnRegisteredEvent.visibility = View.VISIBLE
             }
+        }
+    }
+    private fun checkIfFragmentAttached(next: Context.()->Unit){
+        val context = requireContext()
+        context?.let{
+             next(it)
         }
     }
 
