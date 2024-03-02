@@ -171,16 +171,16 @@ class ContestFragment : Fragment(), PermissionListener {
         contentTextView.visibility = View.GONE
         heading.visibility = View.GONE
         divider.visibility = View.GONE
-        var hint="Hint are not unlocked"
+        var hint="ocked"
         handleHintStatus(hintType){success,message,UnlockedIn,hint1,hint2,hint3->
-            if(UnlockedIn != 0L){
-                hint = "Unlocked in ${convertMillisToTime(UnlockedIn!!)}"
-              }else if(success){
-                if(hintType==1){
+            if(success){
+                if(UnlockedIn != 0L){
+                    hint = "Unlocked in ${convertMillisToTime(UnlockedIn!!)}"
+                }else if(hintType==1&&hint1){
                     hint = riddle.Hint1
-                } else if(hintType==2){
+                } else if(hintType==2&&hint2){
                     hint =riddle.Hint2
-                } else{
+                } else if(hint3){
                     hint=riddle.Hint3
                 }
                 contentTextView.text = hint

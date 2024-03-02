@@ -61,7 +61,7 @@ class EventFragment : Fragment() {
         session = Session.getInstance(requireContext())
         updateUI()
         hideBottomNavigationBar()
-        hideRegisterButton()
+//        hideRegisterButton()
         initializeTeamRegistrationBottomSheetDialog()
         binding.btnRegisteredEvent.setOnClickListener {
             if (!isRegister) {

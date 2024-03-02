@@ -72,9 +72,9 @@ exports.updateHint = async (req, res) => {
           success: true,
           message: "Unlocked",
           unlockedIn: 0,
-          hint1: hintType === 1,
-          hint2: hintType === 2,
-          hint3: hintType === 3,
+          hint1: hintType == 1,
+          hint2: hintType == 2,
+          hint3: hintType == 3,
         };
         return res.status(200).json(response);
       }
