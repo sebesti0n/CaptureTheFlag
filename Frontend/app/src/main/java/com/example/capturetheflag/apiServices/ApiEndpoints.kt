@@ -63,7 +63,7 @@ interface ApiEndpoints {
     @GET("/event/register")
     fun getRegisteredEventbyId(
         @Query("enrollid")
-        enrollid: Int
+        enrollid: String
     ): Call<ResponseEventModel>
 
     @GET("/event/history")

@@ -5,6 +5,7 @@
     app:cardCornerRadius="6dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardElevation="12dp"
+    android:id="@+id/ll_event_item"
     android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView

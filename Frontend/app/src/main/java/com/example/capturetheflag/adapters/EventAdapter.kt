@@ -40,7 +40,7 @@ class EventAdapter(
 
     override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
         val currEvent = list[position]
-        val dayandDate = getDayandMonth(currEvent.start_time)
+//        val dayandDate = getDayandMonth(currEvent.start_time)
 
         Glide.with(holder.itemView.context)
             .load(currEvent.posterImage)
@@ -50,6 +50,9 @@ class EventAdapter(
         holder.organisationText.text = currEvent.organisation
         holder.locationText.text = currEvent.location
         holder.learnMoreBtn.setOnClickListener {
+            listner.onEventClickListner(currEvent)
+        }
+        holder.itemView.setOnClickListener {
             listner.onEventClickListner(currEvent)
         }
     }
