@@ -19,6 +19,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.capturetheflag.activities.HomeActivity
 import com.example.capturetheflag.adapters.EventAdapter
 import com.example.capturetheflag.databinding.FragmentHomefragmentBinding
 import com.example.capturetheflag.helper.NetworkHelper
@@ -54,7 +55,7 @@ class HomeFragment : Fragment(),EventItemClickListener{
         viewModel = ViewModelProvider(this)[HomeFragmentViewModel::class.java]
         initializeMembervariables()
         setUpRecyclerView()
-
+        showBottomNavigation()
         binding.searchEditText.addTextChangedListener(object: TextWatcher{
             override fun afterTextChanged(s: Editable?) {
                 filterList(s.toString())
@@ -92,6 +93,11 @@ class HomeFragment : Fragment(),EventItemClickListener{
                 }
             }
         })
+    }
+
+    private fun showBottomNavigation() {
+        val activity = activity as HomeActivity
+        activity.showNavigation()
     }
 
     private fun isTouchInsideView(view: View, event: MotionEvent): Boolean {

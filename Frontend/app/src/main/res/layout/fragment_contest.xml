@@ -71,11 +71,12 @@
         app:boxCornerRadiusBottomStart="7dp"
         app:boxCornerRadiusBottomEnd="7dp"
         android:layout_marginHorizontal="16dp"
+        app:counterMaxLength="15"
         >
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:imeOptions="actionNext"
+            android:imeOptions="actionDone"
             android:maxLines="1"
             android:id="@+id/et_correctAnswer"
             android:hint="Answer"/>

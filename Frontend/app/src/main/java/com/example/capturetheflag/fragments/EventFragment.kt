@@ -1,6 +1,7 @@
 package com.example.capturetheflag.fragments
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -164,15 +165,17 @@ class EventFragment : Fragment() {
                             isRegister = it.isRegister
                             eventType = event.event_type
                             Log.w("sebastian", "event")
+                            if(eventType==EventType.NO_REGISTRATION_EVENT)
+                                binding.btnRegisteredEvent.visibility=View.GONE
                             setCountDownTimer(event.start_time, event.end_time)
                             binding.tvTitle.text = event.title
                             binding.contentDescription.text = event.description
-//                            binding.contentDetails.text = "Start At: ${event.start_time} \n End At: ${event.end_time}"
-//                            binding.contentPrizes.text = "Amazing Goodies"
                             val imgview = binding.banner
-                            Glide.with(requireContext())
-                                .load(event.posterImage)
-                                .into(imgview)
+                            checkIfFragmentAttached {
+                                Glide.with(requireContext())
+                                    .load(event.posterImage)
+                                    .into(imgview)
+                            }
                         }
                     }
                 }
@@ -233,8 +236,9 @@ class EventFragment : Fragment() {
                 )
                 registerTeamForEvent(newTeam) {
                     if (it) {
-                        callback(true)
                         dialog.dismiss()
+                        callback(true)
+
                     } else {
                         callback(false)
                     }
@@ -259,7 +263,6 @@ class EventFragment : Fragment() {
 
     private fun setCountDownTimer(dateString: String, endTime: String) {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
-
         try {
             var targetDate = dateFormat.parse(dateString)
             val currentDate = Date()
@@ -282,12 +285,14 @@ class EventFragment : Fragment() {
                         Toast.makeText(requireContext(), "start contest", Toast.LENGTH_SHORT).show()
                     }
                 }
-
                 countDownTimer.start()
             } else {
                 targetDate = dateFormat.parse(endTime)
-                timeDifference = targetDate.time - currentDate.time
+                if (targetDate != null) {
+                    timeDifference = targetDate.time - currentDate.time
+                }
                 val countDownTimer = object : CountDownTimer(timeDifference, 1000L) {
+                    @SuppressLint("SetTextI18n")
                     override fun onTick(millisUntilFinished: Long) {
                         val days = TimeUnit.MILLISECONDS.toDays(millisUntilFinished)
                         val hours = TimeUnit.MILLISECONDS.toHours(millisUntilFinished) % 24
@@ -297,17 +302,21 @@ class EventFragment : Fragment() {
                         binding.countDownTimer.text =
                             "Ends in "+String.format("%d days, %02d:%02d:%02d", days, hours, minutes, seconds)
                     }
-
                     override fun onFinish() {
                         Toast.makeText(requireContext(), "contest is ended", Toast.LENGTH_SHORT)
                             .show()
                     }
                 }
-
                 countDownTimer.start()
             }
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+    private fun checkIfFragmentAttached(next: Context.()->Unit){
+        val context = requireContext()
+        context?.let{
+            next(it)
         }
     }
 }

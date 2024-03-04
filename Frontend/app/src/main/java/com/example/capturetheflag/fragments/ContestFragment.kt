@@ -1,6 +1,7 @@
 package com.example.capturetheflag.fragments
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -19,6 +20,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.Glide
 import com.example.capturetheflag.R
 import com.example.capturetheflag.databinding.FragmentContestBinding
 import com.example.capturetheflag.databinding.LayoutHintDialogBinding
@@ -169,14 +171,16 @@ class ContestFragment : Fragment(), PermissionListener {
         contentTextView.visibility = View.GONE
         heading.visibility = View.GONE
         divider.visibility = View.GONE
-        var hint="No Hints Available"
+        var hint="ocked"
         handleHintStatus(hintType){success,message,UnlockedIn,hint1,hint2,hint3->
             if(success){
-                if(hintType==1){
+                if(UnlockedIn != 0L){
+                    hint = "Unlocked in ${convertMillisToTime(UnlockedIn!!)}"
+                }else if(hintType==1&&hint1){
                     hint = riddle.Hint1
-                } else if(hintType==2){
+                } else if(hintType==2&&hint2){
                     hint =riddle.Hint2
-                } else{
+                } else if(hint3){
                     hint=riddle.Hint3
                 }
                 contentTextView.text = hint
@@ -184,8 +188,6 @@ class ContestFragment : Fragment(), PermissionListener {
                 contentTextView.visibility = View.VISIBLE
                 heading.visibility = View.VISIBLE
                 divider.visibility = View.VISIBLE
-            } else if(UnlockedIn != 0L){
-                showSnackbar("Unlocked in ${convertMillisToTime(UnlockedIn!!)}")
             }
             else{
                 showSnackbar(message!!)
@@ -267,7 +269,12 @@ class ContestFragment : Fragment(), PermissionListener {
     private fun checkWithStoryLine(index: Int, answer: String, callback: (Boolean,String?) -> Unit) {
         requestLocation(){success,lat,long->
             if (success){
-                calculateDistance(lat!!,long!!,lat,long){
+                calculateDistance(lat!!,
+                    long!!,
+                    viewModel.getRiddles()[index].Latitude,
+                    viewModel.getRiddles()[index].Longitude,
+                    viewModel.getRiddles()[index].Range)
+                {
                     if(it&&(answer == viewModel.getRiddles()[index].unique_code))
                     callback( true, "Correct")
                     else if(!it&&(answer == viewModel.getRiddles()[index].unique_code))
@@ -285,6 +292,7 @@ class ContestFragment : Fragment(), PermissionListener {
         if (index == viewModel.getRiddles().size) {
             binding.fabScan.visibility=View.GONE
             binding.endButton.text = "End"
+            binding.swipeRefresLayout.isRefreshing = false
             binding.questionTv.text =
                 "Click on the button below to end the contest! Thanks for participating."
             binding.apply {
@@ -298,15 +306,36 @@ class ContestFragment : Fragment(), PermissionListener {
         when (question) {
             1 -> {
                 binding.questionTv.text = viewModel.getRiddles()[index].storyline
-                binding.endButton.text = "Scan"
+                binding.endButton.text = "Submit"
                 binding.fabScan.visibility = View.VISIBLE
+                val imgLink=viewModel.getRiddles()[index].imageLink
+                checkIfFragmentAttached{
+                    if (imgLink != "null") {
+                        parentFragment?.let {
+                            Glide.with(it)
+                                .load(imgLink)
+                                .into(binding.image)
+                        }
+                    }
+                }
             }
 
             else -> {
                 binding.questionTv.text = viewModel.getRiddles()[index].question
                 binding.endButton.text = "Next"
                 binding.fabScan.visibility = View.GONE
+                val imgLink = viewModel.getRiddles()[index].imageLink
+                checkIfFragmentAttached{
+                    if (imgLink != "null") {
+                        parentFragment?.let {
+                            Glide.with(it)
+                                .load(imgLink)
+                                .into(binding.image)
+                        }
+                    }
+                }
             }
+
         }
         binding.swipeRefresLayout.isRefreshing = false
     }
@@ -422,8 +451,6 @@ class ContestFragment : Fragment(), PermissionListener {
     }
 
     override fun isPermissionGranted(isGranted: Boolean) {
-        Log.w("sebastian scanResult", "fun is permission granted")
-
         if (isGranted) {
             isPermissionsGranted=true
         } else permissionHelper.launchPermissionDialogForMultiplePermissions(
@@ -467,10 +494,9 @@ class ContestFragment : Fragment(), PermissionListener {
                     val longitude = location.longitude
                     Log.w("Contest Fragment Location", "Latitude: $latitude, Longitude: $longitude")
                     callback(true,latitude,longitude)
-                    showSnackbar("Latitude: $latitude, Longitude: $longitude")
                 } else {
                     callback(false,null,null)
-                    showSnackbar("Location is null")
+                    showSnackbar("Please Turn on your GPS")
                 }
             }
             .addOnFailureListener { e ->
@@ -481,6 +507,7 @@ class ContestFragment : Fragment(), PermissionListener {
     fun calculateDistance(
         lat1: Double, lon1: Double,
         lat2: Double, lon2: Double,
+        range: Int,
         callback: (Boolean) -> Unit
     ){
         val R = 6371
@@ -490,9 +517,15 @@ class ContestFragment : Fragment(), PermissionListener {
                 StrictMath.cos(Math.toRadians(lat1)) * StrictMath.cos(Math.toRadians(lat2)) *
                 StrictMath.sin(dLon / 2) * StrictMath.sin(dLon / 2)
         val c = 2 * StrictMath.atan2(StrictMath.sqrt(a), StrictMath.sqrt(1 - a))
-        callback(R * c * 1000<=100)
+        callback(R * c * 1000<=range)
 
 
+    }
+    private fun checkIfFragmentAttached(next: Context.()->Unit){
+        val context = requireContext()
+        context?.let{
+            next(it)
+        }
     }
 
 }

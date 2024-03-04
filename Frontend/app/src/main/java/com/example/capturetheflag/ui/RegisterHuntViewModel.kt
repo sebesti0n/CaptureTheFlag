@@ -21,7 +21,7 @@ class RegisterHuntViewModel(
 
 
     private val session = Session.getInstance(app.applicationContext)
-    private val id = session.getUID()
+    private val id = session.getEnrollmentID()
 
     fun getRegisteredEvents() {
         eventResponseLiveData.postValue(

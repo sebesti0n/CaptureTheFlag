@@ -2,6 +2,7 @@ package com.example.capturetheflag.fragments
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -97,7 +98,7 @@ class RegisterHuntFragment : Fragment(), EventItemClickListener{
 
     override fun onEventClickListner(event: Event) {
         val action = RegisterHuntFragmentDirections.actionRegisterHuntFragmentToEventFragment(
-            event.event_id.toLong()
+            event.event_id.toLong(),isEventLive(event)
         )
         findNavController().navigate(action)
     }
@@ -105,5 +106,11 @@ class RegisterHuntFragment : Fragment(), EventItemClickListener{
     private fun showSnackbar(message: String){
         Snackbar.make(requireView(), message, 2000).show()
     }
-
+    private fun isEventLive(event:Event):Boolean{
+        val currentTimeMillis = System.currentTimeMillis()
+        val startTimeMillis = event.start_ms.toLong()
+        val endTimeMillis = event.end_ms.toLong()
+        Log.d("CTF Home Fragment","currentMillisecond: ${currentTimeMillis}, start_ms: ${startTimeMillis}, end_ms: ${endTimeMillis}")
+        return currentTimeMillis in startTimeMillis..endTimeMillis
+    }
 }

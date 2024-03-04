@@ -73,7 +73,22 @@ exports.startEvent = async (req, res) => {
         .where("event_id", "=", eid)
         .andWhere("level", "=", i + 1)
         .orderBy(["level", "question_id"])
-        .returning("*");
+        .returning(
+          "question_id",
+          "event_id",
+          "question",
+          "answer",
+          "unique_code",
+          "storyline",
+          "level",
+          "Hint1",
+          "Hint2",
+          "Hint3",
+          "Latitude",
+          "Longitude",
+          "Range",
+          "imageLink"
+        );
 
       rList.push(level[seq[i]]);
     }
@@ -111,8 +126,13 @@ exports.onSubmit = async (req, res) => {
   try {
     const { eid, tid, currRid, nextRid, unqCode, answer } = req.body;
     console.log({
-      eid, tid, currRid, nextRid, unqCode, answer
-    })
+      eid,
+      tid,
+      currRid,
+      nextRid,
+      unqCode,
+      answer,
+    });
     const currentTime = Date.now();
 
     await knex.transaction(async (trx) => {
@@ -123,7 +143,7 @@ exports.onSubmit = async (req, res) => {
           answer: answer,
         })
         .select("point");
-        console.log('pointsArray',pointsArray);
+      console.log("pointsArray", pointsArray);
       if (pointsArray.size == 0) {
         return res
           .status(200)
@@ -139,7 +159,7 @@ exports.onSubmit = async (req, res) => {
         })
         .update({ endTime: currentTime })
         .returning("startTime");
-        console.log('currentRiddleStartMs',currentRiddleStartMs);
+      console.log("currentRiddleStartMs", currentRiddleStartMs);
 
       const earnedPoint = Math.max(
         250,
@@ -166,7 +186,7 @@ exports.onSubmit = async (req, res) => {
         .update({ end_time: currentTime })
         .returning("Number_correct_answer");
 
-        console.log('nextIndex',nextIndex);
+      console.log("nextIndex", nextIndex);
 
       await trx("pointsTable")
         .insert({
