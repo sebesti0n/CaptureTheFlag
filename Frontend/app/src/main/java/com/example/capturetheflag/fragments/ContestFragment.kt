@@ -406,7 +406,7 @@ class ContestFragment : Fragment(), PermissionListener {
         if (scanResult != null) {
 
             if (scanResult.contents == null) {
-                Toast.makeText(requireContext(), "Cancelled", Toast.LENGTH_SHORT).show();
+                Snackbar.make(requireView(), "Cancelled", 2000).show();
             } else {
                 binding.etCorrectAnswer.setText(scanResult.contents.toString())
             }

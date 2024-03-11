@@ -9,9 +9,7 @@ import java.util.concurrent.TimeUnit
 class RetrofitInstances {
     companion object {
 
-        private val BASEURL =
-            "https://ctf-ndp3.onrender.com/"
-//              "https://f1ab-49-38-250-122.ngrok-free.app/"
+        private val BASEURL ="https://node.arnabdaz.me/"
         private val retrofit: Retrofit by lazy {
             val interceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 

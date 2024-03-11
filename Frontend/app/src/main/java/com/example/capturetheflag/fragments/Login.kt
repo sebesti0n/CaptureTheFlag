@@ -17,10 +17,12 @@ import com.example.capturetheflag.R
 import com.example.capturetheflag.activities.HomeActivity
 import com.example.capturetheflag.apiServices.RetrofitInstances
 import com.example.capturetheflag.databinding.FragmentLoginBinding
+import com.example.capturetheflag.helper.NetworkHelper
 import com.example.capturetheflag.models.LoginReponse
 import com.example.capturetheflag.models.UserLoginDetails
 import com.example.capturetheflag.session.Session
 import com.example.capturetheflag.ui.LoginViewModel
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -36,6 +38,8 @@ class Login : Fragment() {
     private lateinit var passwordEditText: TextInputEditText
     private lateinit var registerTextView: TextView
     private lateinit var loginButton: AppCompatButton
+
+    private lateinit var networkHelper: NetworkHelper
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,14 +63,18 @@ class Login : Fragment() {
         }
         loginButton.setOnClickListener {
             if(!android.util.Patterns.EMAIL_ADDRESS.matcher(emailEditText.text.toString()).matches()){
-                toastMessage("Invalid Email Address")
+                showSnackBar("Invalid Email Address")
             }
             else if(passwordEditText.text.toString().isEmpty()){
-                toastMessage("Password Field is blank")
+                showSnackBar("Invalid Password")
             }
             else {
-                showProgressBar()
-                actionLoginButton()
+
+                if(!NetworkHelper.isInternetAvailable(requireContext()))showSnackBar("No Network Available")
+                else {
+                    showProgressBar()
+                    actionLoginButton()
+                }
             }
         }
         registerTextView.setOnClickListener {
@@ -75,8 +83,8 @@ class Login : Fragment() {
     }
 
 
-    private fun toastMessage(s: String) {
-    Toast.makeText(requireActivity(),s,Toast.LENGTH_SHORT).show();
+    private fun showSnackBar(s: String) {
+        Snackbar.make(requireView(),s,2000).show()
     }
 
     private fun actionRegisterNow() {
@@ -93,10 +101,8 @@ class Login : Fragment() {
                         val receivedata = response.body()
                         if (receivedata != null  ) {
                             if(receivedata.success == true){
-                                toastMessage("Login successfully")
+                                showSnackBar("Login successfully")
                                 sharedPref.logOut()
-                                Log.d("CTF Login1",receivedata.userDetails.toString())
-                                Log.d("CTF Login2",receivedata.userDetails.email.toString())
                                 receivedata.userDetails.apply {
                                     sharedPref.createSession(
                                         name = "${this.FirstName} ${this.LastName}",
@@ -111,19 +117,18 @@ class Login : Fragment() {
                                 moveToHome()
                             } else {
                                 hideProgressBar()
-                                toastMessage(receivedata.message);
+                                showSnackBar(receivedata.message);
                             }
                         }
                     }
                     else{
                         hideProgressBar()
-                        toastMessage("unknown error")
+                        showSnackBar("Something went wrong")
                     }
                 }
 
                 override fun onFailure(call: Call<LoginReponse>, t: Throwable) {
-                    Log.w("sebestion",t)
-                    toastMessage("Unknown Error!")
+                    showSnackBar("Something went wrong")
                 }
 
             })

@@ -26,6 +26,7 @@ import com.example.capturetheflag.util.Resource
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.MaterialTimePicker.INPUT_MODE_CLOCK
@@ -126,7 +127,7 @@ class CreateEventFragment : Fragment(),QuestionItemClickListener {
         val endTime = etEndTime.text.toString()
         val flgCnt = etFlagCount.text.toString()
         if (title.isEmpty() || des.isEmpty() || org.isEmpty() || location.isEmpty() || stDate.isEmpty() || endDate.isEmpty() || strtTime.isEmpty() || endTime.isEmpty()||flgCnt.isEmpty()) {
-            Toast.makeText(requireContext(), "Fill all the details!", Toast.LENGTH_SHORT).show()
+            Snackbar.make(requireView(),"Fill all the details!",2000).show()
         } else {
             flagCount = flgCnt.toInt()
             if (problemList.size == 0) {

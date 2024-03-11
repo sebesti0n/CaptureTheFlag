@@ -149,16 +149,14 @@ class EventFragment : Fragment() {
     private fun updateUI() {
         if (eid.toInt() == -1) {
             binding.contentDescription.text = "Not found"
-//            binding.contentDetails.text = "Not Found"
-//            binding.contentPrizes.text = "Not Found"
         } else {
             viewModel.eventDetails(eid.toInt()) { it, error ->
                 if (error == true) {
-                    Toast.makeText(requireContext(), "Server Error", Toast.LENGTH_SHORT).show()
+                    Snackbar.make(requireView(), "Server Error", 2000).show()
                 } else {
                     if (it != null) {
                         if (!it.success) {
-                            Toast.makeText(requireContext(), "Server Error", Toast.LENGTH_SHORT)
+                            Snackbar.make(requireView(), "Server Error", 2000)
                                 .show()
                         } else {
                             event = it.event[0]
@@ -282,7 +280,7 @@ class EventFragment : Fragment() {
                     }
 
                     override fun onFinish() {
-                        Toast.makeText(requireContext(), "start contest", Toast.LENGTH_SHORT).show()
+                        Snackbar.make(requireView(), "start contest", 2000).show()
                     }
                 }
                 countDownTimer.start()
@@ -303,7 +301,7 @@ class EventFragment : Fragment() {
                             "Ends in "+String.format("%d days, %02d:%02d:%02d", days, hours, minutes, seconds)
                     }
                     override fun onFinish() {
-                        Toast.makeText(requireContext(), "contest is ended", Toast.LENGTH_SHORT)
+                        Snackbar.make(requireView(), "contest is ended", 2000)
                             .show()
                     }
                 }

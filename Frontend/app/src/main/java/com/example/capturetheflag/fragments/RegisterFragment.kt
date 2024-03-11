@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.capturetheflag.R
 import com.example.capturetheflag.activities.HomeActivity
 import com.example.capturetheflag.databinding.FragmentRegisterBinding
+import com.example.capturetheflag.helper.NetworkHelper
 import com.example.capturetheflag.models.User
 import com.example.capturetheflag.session.Session
 import com.example.capturetheflag.ui.RegisterViewModel
@@ -78,31 +79,41 @@ class RegisterFragment : Fragment() {
             else if(!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                 showToastMessage("Enter Correct Email")
             }else
-             {
-                showProgressBar()
-                val newUser = User(collegeName,email,firstName,lastName,mobileNo,cnfPassword,password,enrollmentID)
-                viewModel.register(newUser){success,message,user->
-                    if(success && user!=null){
-                        user.let {
-                            sharedPref.createSession(
-                                        college = it.CollegeName,
-                                        name = "${it.FirstName} ${it.LastName}",
-                                        mobile = it.MobileNo,
-                                        email = it.email,
-                                        enrollmentID = it.enroll_id,
-                                        id = it.user_id,
-                                        token = "token_String"
-                                    )
-                        }
-                        moveToHome()
+             {if(!NetworkHelper.isInternetAvailable(requireContext()))showToastMessage("No Network Available")
+             else {
+                 showProgressBar()
+                 val newUser = User(
+                     collegeName,
+                     email,
+                     firstName,
+                     lastName,
+                     mobileNo,
+                     cnfPassword,
+                     password,
+                     enrollmentID
+                 )
+                 viewModel.register(newUser) { success, message, user ->
+                     if (success && user != null) {
+                         user.let {
+                             sharedPref.createSession(
+                                 college = it.CollegeName,
+                                 name = "${it.FirstName} ${it.LastName}",
+                                 mobile = it.MobileNo,
+                                 email = it.email,
+                                 enrollmentID = it.enroll_id,
+                                 id = it.user_id,
+                                 token = "token_String"
+                             )
+                         }
+                         moveToHome()
 
-                    }
-                    else {
-                        hideProgressBar()
-                        Snackbar.make(requireView(), message!!, 2000).show()
-                    }
-                }
-            }
+                     } else {
+                         hideProgressBar()
+                         Snackbar.make(requireView(), message!!, 2000).show()
+                     }
+                 }
+             }
+             }
         }
     }
 
@@ -111,7 +122,7 @@ class RegisterFragment : Fragment() {
         startActivity(intent)    }
 
     private fun showToastMessage(msg: String) {
-        Toast.makeText(requireActivity(),msg,Toast.LENGTH_SHORT).show()
+        Snackbar.make(requireView(),msg,2000).show()
     }
 
     private fun hideProgressBar(){
