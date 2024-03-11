@@ -10,11 +10,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.capturetheflag"
+    namespace = "com.sebesti0n.capturetheflag"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.capturetheflag"
+        applicationId = "com.sebesti0n.capturetheflag"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
