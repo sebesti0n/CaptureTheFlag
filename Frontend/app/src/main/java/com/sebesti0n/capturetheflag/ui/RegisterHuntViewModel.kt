@@ -23,11 +23,11 @@ class RegisterHuntViewModel(
     private val session = Session.getInstance(app.applicationContext)
     private val id = session.getEnrollmentID()
 
-    fun getRegisteredEvents() {
+    fun getAllEvents() {
         eventResponseLiveData.postValue(
             Resource.Loading()
         )
-            RetrofitInstances.service.getRegisteredEventbyId(id)
+            RetrofitInstances.service.getAllEvent()
                 .enqueue(object : Callback<ResponseEventModel> {
                     override fun onResponse(
                         call: Call<ResponseEventModel>,

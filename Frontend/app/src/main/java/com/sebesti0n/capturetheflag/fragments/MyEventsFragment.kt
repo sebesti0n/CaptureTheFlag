@@ -1,17 +1,20 @@
 package com.sebesti0n.capturetheflag.fragments
 
+import android.content.Context
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sebesti0n.capturetheflag.adapters.EventAdapter
-import com.sebesti0n.capturetheflag.databinding.FragmentRegisterHuntBinding
 import com.sebesti0n.capturetheflag.helper.NetworkHelper
 import com.sebesti0n.capturetheflag.models.Event
 import com.sebesti0n.capturetheflag.ui.RegisterHuntViewModel
@@ -19,11 +22,12 @@ import com.sebesti0n.capturetheflag.util.EventItemClickListener
 
 import com.sebesti0n.capturetheflag.util.Resource
 import com.google.android.material.snackbar.Snackbar
+import com.sebesti0n.capturetheflag.databinding.FragmentMyEventsBinding
 
 
-class RegisterHuntFragment : Fragment(), EventItemClickListener{
+class MyEventsFragment : Fragment(), EventItemClickListener{
     private lateinit var viewModel: RegisterHuntViewModel
-    private var _binding: FragmentRegisterHuntBinding?=null
+    private var _binding:FragmentMyEventsBinding?=null
     private val binding get() = _binding!!
     private var eList: ArrayList<Event> = arrayListOf()
     private lateinit var adapter: EventAdapter
@@ -34,7 +38,7 @@ class RegisterHuntFragment : Fragment(), EventItemClickListener{
         savedInstanceState: Bundle?
     ): View? {
         listner = this
-        _binding = FragmentRegisterHuntBinding.inflate(
+        _binding = FragmentMyEventsBinding.inflate(
             inflater,
             container,
             false
@@ -48,12 +52,11 @@ class RegisterHuntFragment : Fragment(), EventItemClickListener{
         setUpRecyclerView()
 
         if(NetworkHelper.isInternetAvailable(requireContext())){
-            viewModel.getRegisteredEvents()
+            viewModel.getAllEvents()
         }
         else{
-            showSnackbar("Please connect to internet")
+            showSnackbar("Network unavailable")
         }
-        viewModel.getRegisteredEvents()
 
         viewModel.eventResponseLiveData.observe(viewLifecycleOwner, Observer {
 
@@ -61,8 +64,10 @@ class RegisterHuntFragment : Fragment(), EventItemClickListener{
                 is Resource.Success -> {
                     hideProgessBar()
                     it.data?.let{responseEventModel ->
+                        val eventList = responseEventModel.event
+                        val sortedList = eventList.sortedByDescending { it.end_ms }
                         adapter.setdata(
-                            responseEventModel.event
+                            ArrayList(sortedList)
                         )
                     }
                 }
@@ -73,8 +78,73 @@ class RegisterHuntFragment : Fragment(), EventItemClickListener{
                 }
             }
         })
+        binding.searchEditText.addTextChangedListener(object: TextWatcher{
+            override fun afterTextChanged(s: Editable?) {
+                filterList(s.toString())
+            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+        })
+
+        binding.searchCard.setOnClickListener {
+            if(binding.searchBar.visibility == View.GONE){
+                showSearchBar()
+            }else{
+                hideSearchBar()
+            }
+        }
+    }
+    private fun showKeyboard() {
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
     }
 
+    private fun hideKeyboard(){
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(requireView().windowToken, 0)
+    }
+
+    private fun filterList(query: String){
+        when(viewModel.eventResponseLiveData.value){
+            is Resource.Success -> {
+                updateAdapterData(query)
+            }
+            else ->{
+                return
+            }
+        }
+    }
+
+    private fun showSearchBar(){
+        binding.searchBar.visibility = View.VISIBLE
+        showKeyboard()
+        binding.searchEditText.requestFocus()
+    }
+    private fun hideSearchBar(){
+        binding.searchBar.visibility = View.GONE
+        hideKeyboard()
+        binding.searchEditText.clearFocus()
+    }
+
+    private fun updateAdapterData(query: String){
+        val list = viewModel.eventResponseLiveData.value!!.data?.event
+        if(query.isNotEmpty()){
+            list?.filter { it.title.contains(query) }?.let {
+                ArrayList(
+                    it
+                )
+            }?.let {
+                adapter.setdata(
+                    it
+                )
+            }
+        }
+        else list?.let { ArrayList(it) }?.let {
+            adapter.setdata(
+                it
+            )
+        }
+    }
     private fun showProgressBar(){
         binding.progressBar.visibility = View.VISIBLE
         binding.recyclerView.visibility = View.GONE
@@ -95,7 +165,7 @@ class RegisterHuntFragment : Fragment(), EventItemClickListener{
     }
 
     override fun onEventClickListner(event: Event) {
-        val action = RegisterHuntFragmentDirections.actionRegisterHuntFragmentToEventFragment(
+        val action = MyEventsFragmentDirections.actionRegisterHuntFragmentToEventFragment(
             event.event_id.toLong(),isEventLive(event)
         )
         findNavController().navigate(action)

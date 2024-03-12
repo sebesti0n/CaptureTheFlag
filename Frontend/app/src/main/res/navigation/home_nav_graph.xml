@@ -19,9 +19,9 @@
     </fragment>
     <fragment
         android:id="@+id/registerHuntFragment"
-        android:name="com.sebesti0n.capturetheflag.fragments.RegisterHuntFragment"
+        android:name="com.sebesti0n.capturetheflag.fragments.MyEventsFragment"
         android:label="Registered Event"
-        tools:layout="@layout/fragment_register_hunt" >
+        tools:layout="@layout/fragment_my_events" >
         <action
             android:id="@+id/action_registerHuntFragment_to_eventFragment"
             app:destination="@id/eventFragment" />
@@ -31,7 +31,7 @@
         android:id="@+id/historyHuntFragment"
         android:name="com.sebesti0n.capturetheflag.fragments.HistoryHuntFragment"
         android:label="History"
-        tools:layout="@layout/fragment_register_hunt" >
+        tools:layout="@layout/fragment_my_events" >
         <action
             android:id="@+id/action_historyHuntFragment_to_eventFragment"
             app:destination="@id/eventFragment" />

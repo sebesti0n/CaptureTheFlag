@@ -9,14 +9,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sebesti0n.capturetheflag.adapters.EventAdapter
-import com.sebesti0n.capturetheflag.databinding.FragmentRegisterHuntBinding
+import com.sebesti0n.capturetheflag.databinding.FragmentMyEventsBinding
 import com.sebesti0n.capturetheflag.models.Event
 import com.sebesti0n.capturetheflag.ui.HistoryHuntViewModel
 import com.sebesti0n.capturetheflag.util.EventItemClickListener
 
 class HistoryHuntFragment:Fragment(),EventItemClickListener {
     private lateinit var viewModel: HistoryHuntViewModel
-    private var _binding: FragmentRegisterHuntBinding?=null
+    private var _binding: FragmentMyEventsBinding?=null
     private val binding get() = _binding!!
     private lateinit var eList:ArrayList<Event>
     private lateinit var adapter:EventAdapter
@@ -27,7 +27,7 @@ class HistoryHuntFragment:Fragment(),EventItemClickListener {
         savedInstanceState: Bundle?
     ): View? {
         listner = this
-        _binding = FragmentRegisterHuntBinding.inflate(inflater, container, false)
+        _binding = FragmentMyEventsBinding.inflate(inflater, container, false)
         return binding.root
     }
 

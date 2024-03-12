@@ -78,7 +78,7 @@ interface ApiEndpoints {
 
     //all events (live + upcoming)
     @GET("/event/all")
-    fun getupcomingEvent(): Call<ResponseEventModel>
+    fun getAllEvent(): Call<ResponseEventModel>
 
     @POST("/admin/addRiddles")
     fun addTasks(

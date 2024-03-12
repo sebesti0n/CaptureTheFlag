@@ -25,7 +25,7 @@ class HomeFragmentViewModel(
 
     fun getUpcomingEvents() {
         eventResponseLiveData.postValue(Resource.Loading())
-            RetrofitInstances.service.getupcomingEvent()
+            RetrofitInstances.service.getAllEvent()
                 .enqueue(object : Callback<ResponseEventModel> {
                     override fun onResponse(
                         call: Call<ResponseEventModel>,
