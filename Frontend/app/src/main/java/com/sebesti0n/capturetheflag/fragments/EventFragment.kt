@@ -2,8 +2,11 @@ package com.sebesti0n.capturetheflag.fragments
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Typeface
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.text.SpannableStringBuilder
+import android.text.style.StyleSpan
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -59,7 +62,7 @@ class EventFragment : Fragment() {
         session = Session.getInstance(requireContext())
         updateUI()
         hideBottomNavigationBar()
-//        hideRegisterButton()
+        hideRegisterButton()
         initializeTeamRegistrationBottomSheetDialog()
         binding.btnRegisteredEvent.setOnClickListener {
             if (!isRegister) {
@@ -164,6 +167,7 @@ class EventFragment : Fragment() {
                             if(eventType==EventType.NO_REGISTRATION_EVENT)
                                 binding.btnRegisteredEvent.visibility=View.GONE
                             setCountDownTimer(event.start_time, event.end_time)
+                            setContent(event)
                             binding.tvTitle.text = event.title
                             binding.contentDescription.text = event.description
                             val imgview = binding.banner
@@ -188,6 +192,17 @@ class EventFragment : Fragment() {
                 binding.btnRegisteredEvent.visibility = View.VISIBLE
             }
         }
+    }
+
+    private fun setContent(event: Event) {
+
+        val stringBuilder = SpannableStringBuilder()
+        stringBuilder.append("Start Time: ").bold { append(formatDate(event.start_ms.toLong())) }.append("\n")
+        stringBuilder.append("End Time: ").bold { append(formatDate(event.end_ms.toLong())) }.append("\n")
+        stringBuilder.append("Venue: ").bold { append(event.location) }.append("\n")
+        stringBuilder.append("Organizer: ").bold { append(event.organisation) }.append("\n")
+
+        binding.contentEventDetails.text = stringBuilder
     }
 
     private fun initializeTeamRegistrationBottomSheetDialog() {
@@ -314,5 +329,16 @@ class EventFragment : Fragment() {
         context?.let{
             next(it)
         }
+    }
+    private fun formatDate(timestampInMillis: Long): String {
+        val sdf = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
+        val date = Date(timestampInMillis)
+        return sdf.format(date)
+    }
+    private fun SpannableStringBuilder.bold(block: SpannableStringBuilder.() -> Unit): SpannableStringBuilder {
+        val start = length
+        block()
+        setSpan(StyleSpan(Typeface.BOLD), start, length, 0)
+        return this
     }
 }

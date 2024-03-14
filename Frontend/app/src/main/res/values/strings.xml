@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Capture The Flag</string>
+    <string name="app_name">The DCC App</string>
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
     <string name="e_mail_id">E-mail ID</string>
@@ -73,4 +73,7 @@
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
     <string name="riddle">Riddle flkbgnlknfgs sfbklnkn gsldfknbldn lskndblhlhinbtonukkkkkkkkkkkkkkkkkkkkkkkkkkkuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu</string>
+    <string name="title_activity_splah">SplahActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

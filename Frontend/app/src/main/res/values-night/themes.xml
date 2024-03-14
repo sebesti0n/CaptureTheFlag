@@ -1,5 +1,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+
     <style name="Base.Theme.CaptureTheFlag" parent="Theme.Material3.DayNight.NoActionBar">
 
+    </style>
+
+    <style name="ThemeOverlay.CaptureTheFlag.FullscreenContainer" parent="">
+        <item name="fullscreenBackgroundColor">@color/light_blue_900</item>
+        <item name="fullscreenTextColor">@color/light_blue_A400</item>
     </style>
 </resources>

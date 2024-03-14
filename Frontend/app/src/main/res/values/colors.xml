@@ -18,7 +18,7 @@
     <color name="transparentBgBlack">#BE989898</color>
     <color name="ic_blue">#00699C</color>
 
-<!--    actual color pallete-->
+    <!--    actual color pallete-->
     <color name="blue_darkest">#00072D</color>
     <color name="blue_darker">#001C55</color>
     <color name="blue">#0A2472</color>
@@ -27,4 +27,9 @@
     <color name="text_color">#808080</color>
     <color name="tab_color">#313030</color>
     <color name="gray">#EDEDED</color>
+    <color name="light_blue_600">#FF039BE5</color>
+    <color name="light_blue_900">#FF01579B</color>
+    <color name="light_blue_A200">#FF40C4FF</color>
+    <color name="light_blue_A400">#FF00B0FF</color>
+    <color name="black_overlay">#66000000</color>
 </resources>

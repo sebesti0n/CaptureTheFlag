@@ -41,7 +41,6 @@ class MainActivity : AppCompatActivity() {
             navController = navHostFragment.navController
             navController.navigate(R.id.login)
 //            setupActionBarWithNavController(navController)
-
         }
 
 
