@@ -1,4 +1,5 @@
 package com.sebesti0n.capturetheflag.apiServices
+import com.sebesti0n.capturetheflag.secrets.Secrets
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -9,7 +10,7 @@ import java.util.concurrent.TimeUnit
 class RetrofitInstances {
     companion object {
 
-        private val BASEURL ="https://node.arnabdaz.me/"
+        private val BASEURL = Secrets.BASE_URL
         private val retrofit: Retrofit by lazy {
             val interceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 

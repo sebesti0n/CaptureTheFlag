@@ -60,6 +60,7 @@ class EventFragment : Fragment() {
         eid = args.eid
         isLive = args.isLive
         session = Session.getInstance(requireContext())
+        showProgressBar()
         updateUI()
         hideBottomNavigationBar()
         hideRegisterButton()
@@ -179,6 +180,7 @@ class EventFragment : Fragment() {
                         }
                     }
                 }
+                hideProgressBar()
             }
         }
         if (isRegister && !isLive) {
@@ -340,5 +342,25 @@ class EventFragment : Fragment() {
         block()
         setSpan(StyleSpan(Typeface.BOLD), start, length, 0)
         return this
+    }
+    private fun showProgressBar(){
+        binding.banner.visibility =View.GONE
+        binding.contentEventDetails.visibility = View.GONE
+        binding.progressBar.visibility = View.VISIBLE
+        binding.countDownTimer.visibility = View.GONE
+        binding.contentDescription.visibility = View.GONE
+        binding.tvHeadEventDet.visibility = View.GONE
+        binding.tvTitle.visibility = View.GONE
+        binding.tvHeadDesc.visibility = View.GONE
+    }
+    private fun hideProgressBar(){
+        binding.banner.visibility =View.VISIBLE
+        binding.contentEventDetails.visibility = View.VISIBLE
+        binding.progressBar.visibility = View.GONE
+        binding.countDownTimer.visibility = View.VISIBLE
+        binding.contentDescription.visibility = View.VISIBLE
+        binding.tvHeadEventDet.visibility = View.VISIBLE
+        binding.tvTitle.visibility = View.VISIBLE
+        binding.tvHeadDesc.visibility = View.VISIBLE
     }
 }

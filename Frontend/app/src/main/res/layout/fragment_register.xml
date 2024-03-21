@@ -109,7 +109,7 @@
                             android:layout_height="wrap_content"
                             android:hint="First Name"
                             android:imeOptions="actionNext"
-                            android:inputType="textEmailAddress"
+                            android:inputType="text"
                             android:textColor="@color/black"
                             android:textColorHint="@color/black" />
                     </com.google.android.material.textfield.TextInputLayout>
@@ -140,7 +140,7 @@
                             android:layout_height="wrap_content"
                             android:hint="Last Name"
                             android:imeOptions="actionNext"
-                            android:inputType="textEmailAddress"
+                            android:inputType="text"
                             android:textColor="@color/black"
                             android:textColorHint="@color/black" />
 
@@ -205,7 +205,7 @@
                         android:layout_height="wrap_content"
                         android:hint="Enrollment"
                         android:imeOptions="actionNext"
-                        android:inputType="textEmailAddress"
+                        android:inputType="textShortMessage"
                         android:textColor="@color/black"
                         android:textColorHint="@color/black" />
 
@@ -237,7 +237,7 @@
                         android:layout_height="wrap_content"
                         android:hint="College"
                         android:imeOptions="actionNext"
-                        android:inputType="textEmailAddress"
+                        android:inputType="text"
                         android:textColor="@color/black"
                         android:textColorHint="@color/black" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -268,7 +268,7 @@
                         android:layout_height="wrap_content"
                         android:hint="Mobile Number"
                         android:imeOptions="actionNext"
-                        android:inputType="textEmailAddress"
+                        android:inputType="phone"
                         android:textColor="@color/black"
                         android:textColorHint="@color/black" />
 
@@ -300,7 +300,7 @@
                         android:layout_height="wrap_content"
                         android:hint="Password"
                         android:imeOptions="actionNext"
-                        android:inputType="textEmailAddress"
+                        android:inputType="textPassword"
                         android:textColor="@color/black"
                         android:textColorHint="@color/black" />
 

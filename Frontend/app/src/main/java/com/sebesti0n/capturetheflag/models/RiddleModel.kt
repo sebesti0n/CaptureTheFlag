@@ -17,6 +17,7 @@ data class RiddleModel(
     val Hint2:String,
     val Hint3:String,
     val imageLink:String,
+    val riddleImageLink:String,
     val Latitude:Double,
     val Longitude:Double,
     val Range:Int

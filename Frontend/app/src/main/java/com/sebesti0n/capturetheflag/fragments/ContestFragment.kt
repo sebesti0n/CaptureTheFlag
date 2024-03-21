@@ -313,6 +313,8 @@ class ContestFragment : Fragment(), PermissionListener {
                                 .load(imgLink)
                                 .into(binding.image)
                         }
+                    } else {
+                        binding.image.visibility = View.INVISIBLE
                     }
                 }
             }
@@ -321,14 +323,16 @@ class ContestFragment : Fragment(), PermissionListener {
                 binding.questionTv.text = viewModel.getRiddles()[index].question
                 binding.endButton.text = "Next"
                 binding.fabScan.visibility = View.GONE
-                val imgLink = viewModel.getRiddles()[index].imageLink
+                val imgLink=viewModel.getRiddles()[index].riddleImageLink
                 checkIfFragmentAttached{
-                    if (imgLink != "null") {
+                    if (imgLink != "null" && imgLink.isNotEmpty()) {
                         parentFragment?.let {
                             Glide.with(it)
                                 .load(imgLink)
                                 .into(binding.image)
                         }
+                    } else {
+                        binding.image.visibility = View.INVISIBLE
                     }
                 }
             }
