@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "612477614643",
-    "project_id": "capturetheflag-8af0f",
-    "storage_bucket": "capturetheflag-8af0f.appspot.com"
+    "project_number": "441520880549",
+    "project_id": "capturetheflag2-4667a",
+    "storage_bucket": "capturetheflag2-4667a.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:612477614643:android:ea294a8265165a15b84146",
+        "mobilesdk_app_id": "1:441520880549:android:3aeced784f5789bb5d864c",
         "android_client_info": {
-          "package_name": "com.sebesti0n.capturetheflag"
+          "package_name": "com.tejasdev.repospect"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCV9Qint3ON-UfSmoheXAg6DjXa5Yd15do"
+          "current_key": "AIzaSyCme8IPIwwIT5lX3PpnXxdd7-zyLVi5n_Y"
         }
       ],
       "services": {

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:elevation="32dp"
+        android:outlineAmbientShadowColor="@color/gray"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:strokeWidth="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_height="wrap_content"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:layout_width="120dp"
+                app:strokeWidth="3dp"
+                android:layout_marginTop="16dp"
+                app:strokeColor="@color/gray"
+                android:contentDescription="hello"
+                android:id="@+id/developer_image"
+                app:shapeAppearanceOverlay="@style/ImageView.Circle"
+                android:src="@drawable/default_profile"
+                android:layout_height="120dp"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:id="@+id/name"
+                android:layout_marginTop="12dp"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:text="Name"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="12dp"
+                android:gravity="center"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/github_mark_white"/>
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="42dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop=".5dp"
+                    android:layout_height="42dp"
+                    android:src="@drawable/linkedin_icon"/>
+
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
