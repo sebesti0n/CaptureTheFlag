@@ -71,7 +71,7 @@ class RegisterFragment : Fragment() {
             enrollmentID = binding.etEnrollmentId.text.toString()
 
             if(checkCredentials()){
-                showToastMessage("fill all details")
+                showToastMessage("Enter all details")
             }
             else if(!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                 showToastMessage("Enter Correct Email")
@@ -87,7 +87,7 @@ class RegisterFragment : Fragment() {
                      mobileNo,
                      cnfPassword,
                      password,
-                     enrollmentID
+                     enrollmentID.uppercase()
                  )
                  viewModel.register(newUser) { success, message, user ->
                      if (success && user != null) {
@@ -116,7 +116,10 @@ class RegisterFragment : Fragment() {
 
     private fun moveToHome() {
         val intent = Intent(requireContext(), HomeActivity::class.java)
-        startActivity(intent)    }
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+        activity?.finish()
+    }
 
     private fun showToastMessage(msg: String) {
         Snackbar.make(requireView(),msg,2000).show()

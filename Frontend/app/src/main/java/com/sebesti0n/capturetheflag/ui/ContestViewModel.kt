@@ -110,7 +110,7 @@ class ContestViewModel(
         callback: (Boolean?, String?, Int?) -> Unit
     ){
         val call = RetrofitInstances.ctfServices
-        call.submissionRiddle(SubmissionModel(eid,tid,currRid,nextRid,unqCode, answer)).enqueue(object :Callback<NextRiddleModel>{
+        call.submissionRiddle(SubmissionModel(eid,tid,currRid,nextRid,unqCode, answer.lowercase())).enqueue(object :Callback<NextRiddleModel>{
 
             override fun onResponse(
                 call: Call<NextRiddleModel>,
