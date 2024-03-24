@@ -10,11 +10,11 @@ plugins {
 }
 
 android {
-    namespace = "com.sebesti0n.capturetheflag"
+    namespace = "com.tejasdev.repospect"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.sebesti0n.capturetheflag"
+        applicationId = "com.tejasdev.repospect"
         minSdk = 24
         targetSdk = 34
         versionCode = 3

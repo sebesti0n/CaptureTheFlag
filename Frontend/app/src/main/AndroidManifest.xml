@@ -33,7 +33,7 @@
             android:screenOrientation="fullSensor"
             tools:replace="screenOrientation" />
         <activity
-            android:name=".activities.SplahActivity"
+            android:name="com.tejasdev.repospect.activities.SplahActivity"
             android:exported="true"
             android:theme="@style/Theme.CaptureTheFlag.NoActionBar"             >
             <intent-filter>
@@ -43,22 +43,22 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.WebViewActivity"
+            android:name="com.tejasdev.repospect.activities.WebViewActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.AdminActivity"
+            android:name="com.tejasdev.repospect.activities.AdminActivity"
             android:exported="false"
             android:label="@string/title_activity_admin"
             android:theme="@style/Theme.CaptureTheFlag"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".activities.HomeActivity"
+            android:name="com.tejasdev.repospect.activities.HomeActivity"
             android:exported="false"
             android:label="@string/title_activity_home"
             android:theme="@style/Theme.CaptureTheFlag.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".activities.MainActivity"
+            android:name="com.tejasdev.repospect.activities.MainActivity"
             android:exported="false"
             android:theme="@style/Theme.CaptureTheFlag.NoActionBar">
 

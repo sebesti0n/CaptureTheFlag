@@ -7,7 +7,7 @@
     >
     <fragment
         android:id="@+id/homefragment"
-        android:name="com.sebesti0n.capturetheflag.fragments.HomeFragment"
+        android:name="com.tejasdev.repospect.fragments.HomeFragment"
         android:label="Home"
         tools:layout="@layout/fragment_homefragment" >
         <action
@@ -19,7 +19,7 @@
     </fragment>
     <fragment
         android:id="@+id/registerHuntFragment"
-        android:name="com.sebesti0n.capturetheflag.fragments.MyEventsFragment"
+        android:name="com.tejasdev.repospect.fragments.MyEventsFragment"
         android:label="Registered Event"
         tools:layout="@layout/fragment_my_events" >
         <action
@@ -29,7 +29,7 @@
     </fragment>
     <fragment
         android:id="@+id/historyHuntFragment"
-        android:name="com.sebesti0n.capturetheflag.fragments.HistoryHuntFragment"
+        android:name="com.tejasdev.repospect.fragments.HistoryHuntFragment"
         android:label="History"
         tools:layout="@layout/fragment_my_events" >
         <action
@@ -39,7 +39,7 @@
 
     <fragment
         android:id="@+id/eventFragment"
-        android:name="com.sebesti0n.capturetheflag.fragments.EventFragment"
+        android:name="com.tejasdev.repospect.fragments.EventFragment"
         android:label="Details"
         tools:layout="@layout/fragment_event" >
 
@@ -61,7 +61,7 @@
     </fragment>
     <fragment
         android:id="@+id/contestFragment"
-        android:name="com.sebesti0n.capturetheflag.fragments.ContestFragment"
+        android:name="com.tejasdev.repospect.fragments.ContestFragment"
         android:label="fragment_contest"
         tools:layout="@layout/fragment_contest" >
         <argument
@@ -81,7 +81,7 @@
     </fragment>
     <fragment
         android:id="@+id/rankingFragment"
-        android:name="com.sebesti0n.capturetheflag.fragments.RankingFragment"
+        android:name="com.tejasdev.repospect.fragments.RankingFragment"
         android:label="RankingFragment" >
         <argument
             android:name="eid"
@@ -90,7 +90,7 @@
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.sebesti0n.capturetheflag.fragments.ProfileFragment"
+        android:name="com.tejasdev.repospect.fragments.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
 </navigation>
