@@ -30,7 +30,7 @@ class Session(
         editor.putString(EMAIL, email)
         editor.putBoolean(IS_LOGIN, true)
         editor.putString(TOKEN, token)
-        editor.putString(ENROLLMENT_ID,enrollmentID)
+        editor.putString(ENROLLMENT_ID,enrollmentID.uppercase())
         editor.putString(IMAGE, image)
         editor.apply()
     }
