@@ -104,10 +104,20 @@ class ContestFragment : Fragment(), PermissionListener {
                             } else {
                                 showSnackbar(message!!)
                                 hideProgressBar()
+                                binding.apply {
+                                    tilCorrectAnswer.visibility =View.GONE
+                                    tilUnqCode.visibility = View.VISIBLE
+                                    fabScan.visibility = View.VISIBLE
+                                }
                             }
                         }
                     } else {
                         hideProgressBar()
+                        binding.apply {
+                            tilCorrectAnswer.visibility =View.GONE
+                            tilUnqCode.visibility = View.VISIBLE
+                            fabScan.visibility = View.VISIBLE
+                        }
                         if (msg != null) {
                             showSnackbar(msg)
                         }
@@ -124,6 +134,11 @@ class ContestFragment : Fragment(), PermissionListener {
                     binding.etUniqueCode.setText("")
                 } else {
                     hideProgressBar()
+                    binding.apply {
+                        tilCorrectAnswer.visibility =View.VISIBLE
+                        tilUnqCode.visibility = View.GONE
+                        fabScan.visibility = View.GONE
+                    }
                     showSnackbar("Wrong Answer")
                 }
             }
@@ -446,7 +461,6 @@ class ContestFragment : Fragment(), PermissionListener {
         binding.apply {
             progressBar.visibility = View.GONE
             image.visibility = View.VISIBLE
-            tilCorrectAnswer.visibility = View.VISIBLE
             questionTv.visibility = View.VISIBLE
             endButton.visibility = View.VISIBLE
             hint1Card.visibility =View.VISIBLE

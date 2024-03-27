@@ -1,4 +1,5 @@
 package com.tejasdev.repospect.apiServices
+import com.tejasdev.repospect.secrets.Secrets
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -8,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class RetrofitInstances {
     companion object {
 
-        private val BASEURL = "https://be87-49-38-250-109.ngrok-free.app/"
+        private val BASEURL = Secrets.BASE_URL
         private val retrofit: Retrofit by lazy {
             val interceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 
