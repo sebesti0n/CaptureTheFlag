@@ -131,7 +131,9 @@ class Login : Fragment() {
     private fun moveToHome(){
         hideProgressBar()
         val intent = Intent(requireContext(),HomeActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(intent)
+        activity?.finish()
     }
     @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {

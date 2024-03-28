@@ -19,6 +19,7 @@ import com.tejasdev.repospect.helper.NetworkHelper
 import com.tejasdev.repospect.models.Event
 import com.tejasdev.repospect.ui.RegisterHuntViewModel
 import com.tejasdev.repospect.util.EventItemClickListener
+
 import com.tejasdev.repospect.util.Resource
 import com.google.android.material.snackbar.Snackbar
 import com.tejasdev.repospect.databinding.FragmentMyEventsBinding

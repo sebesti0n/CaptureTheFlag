@@ -100,13 +100,24 @@ class ContestFragment : Fragment(), PermissionListener {
                                 )
                                 viewModel.setLevel(nextRiddleNumber)
                                 binding.etCorrectAnswer.setText("")
+                                binding.etUniqueCode.setText("")
                             } else {
                                 showSnackbar(message!!)
                                 hideProgressBar()
+                                binding.apply {
+                                    tilCorrectAnswer.visibility =View.GONE
+                                    tilUnqCode.visibility = View.VISIBLE
+                                    fabScan.visibility = View.VISIBLE
+                                }
                             }
                         }
                     } else {
                         hideProgressBar()
+                        binding.apply {
+                            tilCorrectAnswer.visibility =View.GONE
+                            tilUnqCode.visibility = View.VISIBLE
+                            fabScan.visibility = View.VISIBLE
+                        }
                         if (msg != null) {
                             showSnackbar(msg)
                         }
@@ -120,8 +131,14 @@ class ContestFragment : Fragment(), PermissionListener {
                     )
                     firstPartAnswer = binding.etCorrectAnswer.text.toString()
                     binding.etCorrectAnswer.setText("")
+                    binding.etUniqueCode.setText("")
                 } else {
                     hideProgressBar()
+                    binding.apply {
+                        tilCorrectAnswer.visibility =View.VISIBLE
+                        tilUnqCode.visibility = View.GONE
+                        fabScan.visibility = View.GONE
+                    }
                     showSnackbar("Wrong Answer")
                 }
             }
@@ -168,11 +185,14 @@ class ContestFragment : Fragment(), PermissionListener {
         contentTextView.visibility = View.GONE
         heading.visibility = View.GONE
         divider.visibility = View.GONE
-        var hint="ocked"
+        var hint="Locked"
         handleHintStatus(hintType){success,message,UnlockedIn,hint1,hint2,hint3->
             if(success){
                 if(UnlockedIn != 0L){
-                    hint = "Unlocked in ${convertMillisToTime(UnlockedIn!!)}"
+                    if (hintType==1){
+                        hint = "Unlocked in ${convertMillisToTime(1800000L-UnlockedIn!!)}"
+                    }else if(hintType == 2)hint = "Unlocked in ${convertMillisToTime(3600000L-UnlockedIn!!)}"
+                    else hint = "Unlocked in ${convertMillisToTime(5400000L-UnlockedIn!!)}"
                 }else if(hintType==1&&hint1){
                     hint = riddle.Hint1
                 } else if(hintType==2&&hint2){
@@ -197,6 +217,7 @@ class ContestFragment : Fragment(), PermissionListener {
     }
 
     private fun convertMillisToTime(millis: Long): String {
+        Log.w("sebesti0n millis",millis.toString());
         val seconds = millis / 1000
         val minutes = seconds / 60
         val hours = minutes / 60
@@ -260,7 +281,7 @@ class ContestFragment : Fragment(), PermissionListener {
     }
 
     private fun checkWithQuestion(index: Int, answer: String): Boolean {
-        return answer == viewModel.getRiddles()[index].answer
+        return answer.lowercase() == viewModel.getRiddles()[index].answer.lowercase()
     }
 
     private fun checkWithStoryLine(index: Int, answer: String, callback: (Boolean,String?) -> Unit) {
@@ -288,6 +309,7 @@ class ContestFragment : Fragment(), PermissionListener {
     private fun updateUI(index: Int, question: Int) {
         if (index == viewModel.getRiddles().size) {
             binding.fabScan.visibility=View.GONE
+            binding.tilUnqCode.visibility = View.GONE
             binding.endButton.text = "End"
             binding.swipeRefresLayout.isRefreshing = false
             binding.questionTv.text =
@@ -305,6 +327,8 @@ class ContestFragment : Fragment(), PermissionListener {
                 binding.questionTv.text = viewModel.getRiddles()[index].storyline
                 binding.endButton.text = "Submit"
                 binding.fabScan.visibility = View.VISIBLE
+                binding.tilUnqCode.visibility = View.VISIBLE
+                binding.tilCorrectAnswer.visibility = View.INVISIBLE
                 val imgLink=viewModel.getRiddles()[index].imageLink
                 checkIfFragmentAttached{
                     if (imgLink != "null") {
@@ -323,6 +347,8 @@ class ContestFragment : Fragment(), PermissionListener {
                 binding.questionTv.text = viewModel.getRiddles()[index].question
                 binding.endButton.text = "Next"
                 binding.fabScan.visibility = View.GONE
+                binding.tilUnqCode.visibility = View.GONE
+                binding.tilCorrectAnswer.visibility = View.VISIBLE
                 val imgLink=viewModel.getRiddles()[index].riddleImageLink
                 checkIfFragmentAttached{
                     if (imgLink != "null" && imgLink.isNotEmpty()) {
@@ -393,7 +419,6 @@ class ContestFragment : Fragment(), PermissionListener {
         integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES)
         integrator.setPrompt("DEVELOPERS AND CODERS CLUB")
         integrator.setCameraId(0)
-        integrator.setOrientationLocked(false)
         integrator.setBeepEnabled(true)
         integrator.setBarcodeImageEnabled(false)
         integrator.initiateScan()
@@ -410,6 +435,7 @@ class ContestFragment : Fragment(), PermissionListener {
                 Snackbar.make(requireView(), "Cancelled", 2000).show();
             } else {
                 binding.etCorrectAnswer.setText(scanResult.contents.toString())
+                binding.etUniqueCode.setText("......")
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
@@ -426,6 +452,8 @@ class ContestFragment : Fragment(), PermissionListener {
             hint1Card.visibility =View.GONE
             hint2Card.visibility = View.GONE
             hint3Card.visibility = View.GONE
+            fabScan.visibility = View.GONE
+            tilUnqCode.visibility = View.GONE
         }
     }
 
@@ -433,7 +461,6 @@ class ContestFragment : Fragment(), PermissionListener {
         binding.apply {
             progressBar.visibility = View.GONE
             image.visibility = View.VISIBLE
-            tilCorrectAnswer.visibility = View.VISIBLE
             questionTv.visibility = View.VISIBLE
             endButton.visibility = View.VISIBLE
             hint1Card.visibility =View.VISIBLE

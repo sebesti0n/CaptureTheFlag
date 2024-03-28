@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -68,12 +69,12 @@ class EventFragment : Fragment() {
         binding.btnRegisteredEvent.setOnClickListener {
             if (!isRegister) {
                 if (eventType == EventType.TEAM_EVENT)
-                    registerUserForEvent() {
+                    registerUserForEvent() { it, message->
                         if(it) moveToContestFragment()
-                        else Snackbar.make(requireView(),"Team Registration Failed",2000).show()
+                        else Snackbar.make(requireView(),message!!,2000).show()
                     }
                 else if (eventType == EventType.INDIVIDUAL_EVENT)
-                    registerIndividuallyEvent(){
+                    registerIndividuallyEvent(){ it,message->
                         if(it){
                             Snackbar.make(
                                 requireView(),
@@ -84,7 +85,7 @@ class EventFragment : Fragment() {
                         else{
                             Snackbar.make(
                                 requireView(),
-                                "Registration Failed",
+                                message!!,
                                 2000)
                                 .show()
                         }
@@ -119,7 +120,7 @@ class EventFragment : Fragment() {
         }
     }
 
-    private fun registerIndividuallyEvent(callback: (Boolean) -> Unit) {
+    private fun registerIndividuallyEvent(callback: (Boolean, String?) -> Unit) {
 
         val newTeam = TeamSchema(
             eid.toInt(),
@@ -133,15 +134,15 @@ class EventFragment : Fragment() {
             session.getCollege(),
             session.getMobile()
         )
-        registerTeamForEvent(newTeam) {
-            callback(it)
+        registerTeamForEvent(newTeam) { it, message->
+            callback(it,message)
         }
     }
 
     @SuppressLint("SetTextI18n")
-    private fun registerUserForEvent(callback: (Boolean) -> Unit) {
-        teamRegistrationForm() {
-            callback(it)
+    private fun registerUserForEvent(callback: (Boolean, String?) -> Unit) {
+        teamRegistrationForm() { it, message->
+            callback(it, message)
         }
     }
 
@@ -213,31 +214,39 @@ class EventFragment : Fragment() {
         dialog.window?.attributes?.windowAnimations = R.style.DialogAnimation
     }
 
-    private fun teamRegistrationForm(callback: (Boolean) -> Unit) {
+    private fun teamRegistrationForm(callback: (Boolean,String?) -> Unit) {
         dialog.show()
         dialogBinding.etPlayer1EID.isFocusable = false
         dialogBinding.etPlayer1EID.setText(viewModel.enrollID)
         dialogBinding.btnLogin.setOnClickListener {
             val teamName = dialogBinding.etTeamName.text.toString()
             val player1Name = dialogBinding.etPlayer1Name.text.toString()
-            val player2Name = dialogBinding.etPlayer2Name.text.toString()
-            val player3Name = dialogBinding.etPlayer3Name.text.toString()
-            val player2EID = dialogBinding.etPlayer2EID.text.toString()
-            val player3EID = dialogBinding.etPlayer3EID.text.toString()
+            var player2Name = dialogBinding.etPlayer2Name.text.toString()
+            var player3Name = dialogBinding.etPlayer3Name.text.toString()
+            var player2EID = dialogBinding.etPlayer2EID.text.toString().uppercase()
+            var player3EID = dialogBinding.etPlayer3EID.text.toString().uppercase()
             val leaderEmail = dialogBinding.etLeaderEmail.text.toString()
             val waNumber = dialogBinding.etWaNumber.text.toString()
 
-            if (teamName.isEmpty() || player1Name.isEmpty()  || player2EID.isEmpty() ||
-                player3EID.isEmpty() || player2Name.isEmpty() ||
-                player3Name.isEmpty() || leaderEmail.isEmpty() ||
+            if (teamName.isEmpty() || player1Name.isEmpty()|| leaderEmail.isEmpty() ||
                 waNumber.isEmpty()
             ) {
-                Snackbar.make(requireView(), "Kindly Fill all Details", 2000).show()
+                Toast.makeText(dialog.context, "Kindly Fill all Details", Toast.LENGTH_SHORT).show()
             } else {
+                if(player2EID.isEmpty()){
+                    player2Name = player1Name
+                    player2EID = viewModel.enrollID
+                }
+                if(player3EID.isEmpty()){
+                    player3EID = viewModel.enrollID
+                    player3Name = player1Name
+                }
+                dialogBinding.btnLogin.visibility = View.GONE
+                dialogBinding.teamRegisterProgress.visibility = View.VISIBLE
                 val newTeam = TeamSchema(
                     eid.toInt(),
                     leaderEmail,
-                    viewModel.enrollID,
+                    viewModel.enrollID.uppercase(),
                     player1Name,
                     player2EID,
                     player2Name,
@@ -246,13 +255,16 @@ class EventFragment : Fragment() {
                     teamName,
                     waNumber
                 )
-                registerTeamForEvent(newTeam) {
+                registerTeamForEvent(newTeam) {it, message->
                     if (it) {
+                        dialogBinding.btnLogin.visibility = View.VISIBLE
+                        dialogBinding.teamRegisterProgress.visibility = View.GONE
                         dialog.dismiss()
-                        callback(true)
+                        callback(true,message)
 
                     } else {
-                        callback(false)
+                        dialog.dismiss()
+                        callback(false, message)
                     }
                 }
             }
@@ -261,14 +273,14 @@ class EventFragment : Fragment() {
 
     }
 
-    private fun registerTeamForEvent(newTeam: TeamSchema, callback: (Boolean) -> Unit) {
+    private fun registerTeamForEvent(newTeam: TeamSchema, callback: (Boolean, String?) -> Unit) {
         viewModel.registerTeamForEvent(newTeam) { success, message ->
             if (success == true) {
                 isRegister = true
-                callback(true)
+                callback(true, message)
             } else {
                 Snackbar.make(requireView(), message.toString(), 2000).show()
-                callback(false)
+                callback(false, message)
             }
         }
     }

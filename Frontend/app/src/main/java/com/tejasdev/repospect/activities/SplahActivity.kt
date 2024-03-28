@@ -9,8 +9,8 @@ import android.view.View
 import android.widget.TextView
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import com.tejasdev.repospect.R
 import com.tejasdev.repospect.databinding.ActivitySplahBinding
+import com.tejasdev.repospect.R
 
 class SplahActivity : AppCompatActivity() {
 
