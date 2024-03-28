@@ -17,8 +17,8 @@ android {
         applicationId = "com.tejasdev.repospect"
         minSdk = 24
         targetSdk = 34
-        versionCode = 5
-        versionName = "5.0"
+        versionCode = 6
+        versionName = "6.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 

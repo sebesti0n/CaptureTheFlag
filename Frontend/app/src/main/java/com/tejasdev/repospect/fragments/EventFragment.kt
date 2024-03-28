@@ -63,7 +63,7 @@ class EventFragment : Fragment() {
         showProgressBar()
         updateUI()
         hideBottomNavigationBar()
-        hideRegisterButton()
+       // hideRegisterButton()
         initializeTeamRegistrationBottomSheetDialog()
         binding.btnRegisteredEvent.setOnClickListener {
             if (!isRegister) {
@@ -117,7 +117,6 @@ class EventFragment : Fragment() {
         if (eventType == EventType.NO_REGISTRATION_EVENT) {
             binding.btnRegisteredEvent.visibility = View.GONE
         }
-
     }
 
     private fun registerIndividuallyEvent(callback: (Boolean) -> Unit) {

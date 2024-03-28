@@ -46,9 +46,7 @@ class RegisterFragment : Fragment() {
 
     @SuppressLint("SuspiciousIndentation")
     private fun checkCredentials(): Boolean {
-    if(cnfPassword.isEmpty() || collegeName.isEmpty() || email.isEmpty() || firstName.isEmpty() || mobileNo.isEmpty() || password.isEmpty() || enrollmentID.isEmpty())
-        return true
-        return password != cnfPassword
+        return cnfPassword.isEmpty() || collegeName.isEmpty() || email.isEmpty() || firstName.isEmpty() || mobileNo.isEmpty() || password.isEmpty() || enrollmentID.isEmpty()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -75,7 +73,11 @@ class RegisterFragment : Fragment() {
             }
             else if(!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                 showToastMessage("Enter Correct Email")
-            }else
+            }
+            else if(!cnfPassword.equals(password)) {
+                showToastMessage("Password's don't match")
+            }
+            else
              {if(!NetworkHelper.isInternetAvailable(requireContext()))showToastMessage("No Network Available")
              else {
                  showProgressBar()
