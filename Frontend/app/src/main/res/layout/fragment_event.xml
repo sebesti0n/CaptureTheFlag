@@ -39,6 +39,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        app:layout_constrainedHeight="true"
         app:layout_constraintBottom_toTopOf="@+id/btn_registeredEvent">
 
         <androidx.constraintlayout.widget.ConstraintLayout

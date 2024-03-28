@@ -36,7 +36,12 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8c93917f-d18e-4299-8d60-a4bcd978842a" name="Changes" comment="Setting Up Environment and Adding UI of Login and Home Page." />
+    <list default="true" id="8c93917f-d18e-4299-8d60-a4bcd978842a" name="Changes" comment="Setting Up Environment and Adding UI of Login and Home Page.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/app/release/app-release.aab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/app/src/main/res/drawable-new/dcc.png" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -63,6 +68,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -79,7 +87,8 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
-    "last_opened_file_path": "/home/prashan-kumar/AndroidStudioProjects/CaptureTheFlag/Frontend",
+    "git-widget-placeholder": "release-v2.0.1",
+    "last_opened_file_path": "C:/Users/tejas/AndroidStudioProjects/CTF",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.17",
     "project.structure.side.proportion": "0.2",
@@ -164,9 +173,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <option name="SEARCH_ACTIVITY_IN_GLOBAL_SCOPE" value="false" />
       <option name="SKIP_ACTIVITY_VALIDATION" value="false" />
-      <method v="2">
-        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-      </method>
+      <method v="2" />
     </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />

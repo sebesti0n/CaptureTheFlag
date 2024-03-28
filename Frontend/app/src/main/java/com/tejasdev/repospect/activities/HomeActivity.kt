@@ -10,10 +10,8 @@ import com.tejasdev.repospect.R
 import com.tejasdev.repospect.databinding.ActivityHomeBinding
 
 class HomeActivity : AppCompatActivity(){
-
     private lateinit var binding: ActivityHomeBinding
     private lateinit var navController:NavController
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
@@ -25,13 +23,11 @@ class HomeActivity : AppCompatActivity(){
         navController = navHostFragment.navController
         binding.bottomNav.setupWithNavController(navController)
     }
-
     fun hideNavigation(){
         binding.bottomNav.visibility = View.GONE
     }
     fun showNavigation(){
         binding.bottomNav.visibility = View.VISIBLE
     }
-
 }
 
