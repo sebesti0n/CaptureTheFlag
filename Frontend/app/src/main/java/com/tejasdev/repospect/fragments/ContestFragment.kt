@@ -4,10 +4,8 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,24 +17,26 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
-import com.tejasdev.repospect.R
-import com.tejasdev.repospect.databinding.FragmentContestBinding
-import com.tejasdev.repospect.helper.PermissionHelper
-import com.tejasdev.repospect.models.RiddleModel
-import com.tejasdev.repospect.ui.ContestViewModel
-import com.tejasdev.repospect.util.PermissionListener
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.divider.MaterialDivider
 import com.google.android.material.snackbar.Snackbar
 import com.google.zxing.integration.android.IntentIntegrator
+import com.tejasdev.repospect.R
+import com.tejasdev.repospect.databinding.FragmentContestBinding
+import com.tejasdev.repospect.helper.PermissionHelper
+import com.tejasdev.repospect.models.RiddleModel
+import com.tejasdev.repospect.ui.ContestViewModel
+import com.tejasdev.repospect.util.PermissionListener
 import kotlin.random.Random
+
 
 class ContestFragment : Fragment(), PermissionListener {
     private var _binding: FragmentContestBinding? = null
@@ -96,13 +96,16 @@ class ContestFragment : Fragment(), PermissionListener {
                             eid = eid,
                             tid = viewModel.getTeamId(),
                             currRid = viewModel.getRiddles()[index].question_id,
-                            nextRid = if(index+1 == viewModel.getRiddles().size) -1
-                                      else viewModel.getRiddles()[index+1].question_id,
+                            nextRid = if (index + 1 == viewModel.getRiddles().size) -1
+                            else viewModel.getRiddles()[index + 1].question_id,
                             unqCode = viewModel.getRiddles()[index].unique_code,
                             answer = viewModel.getRiddles()[index].answer
-                        ){ success, message, nextRiddleNumber ->
-                            Log.d("sebasti0n riddle submission","${success} + ${message} + ${nextRiddleNumber}")
-                            if (success!! && nextRiddleNumber!=-1) {
+                        ) { success, message, nextRiddleNumber ->
+                            Log.d(
+                                "sebasti0n riddle submission",
+                                "${success} + ${message} + ${nextRiddleNumber}"
+                            )
+                            if (success!! && nextRiddleNumber != -1) {
                                 viewModel.questionState.postValue(
                                     arrayOf(nextRiddleNumber!!, 0)
                                 )
@@ -114,7 +117,7 @@ class ContestFragment : Fragment(), PermissionListener {
                                 hideProgressBar()
                                 showMemeDialog()
                                 binding.apply {
-                                    tilCorrectAnswer.visibility =View.GONE
+                                    tilCorrectAnswer.visibility = View.GONE
                                     tilUnqCode.visibility = View.VISIBLE
                                     fabScan.visibility = View.VISIBLE
                                 }
@@ -122,10 +125,9 @@ class ContestFragment : Fragment(), PermissionListener {
                         }
                     } else {
                         showMemeDialog()
-                        Toast.makeText(requireContext(),msg,Toast.LENGTH_SHORT).show()
                         hideProgressBar()
                         binding.apply {
-                            tilCorrectAnswer.visibility =View.GONE
+                            tilCorrectAnswer.visibility = View.GONE
                             tilUnqCode.visibility = View.VISIBLE
                             fabScan.visibility = View.VISIBLE
                         }
@@ -135,7 +137,7 @@ class ContestFragment : Fragment(), PermissionListener {
                     }
 
                 }
-            }else {
+            } else {
                 if (checkWithQuestion(index, answer)) {
                     viewModel.questionState.postValue(
                         arrayOf(index, 1)
@@ -147,34 +149,32 @@ class ContestFragment : Fragment(), PermissionListener {
                     showMemeDialog()
                     hideProgressBar()
                     binding.apply {
-                        tilCorrectAnswer.visibility =View.VISIBLE
+                        tilCorrectAnswer.visibility = View.VISIBLE
                         tilUnqCode.visibility = View.GONE
                         fabScan.visibility = View.GONE
                     }
-                    Toast.makeText(requireContext(),"Wrong Answer",Toast.LENGTH_SHORT).show()
                 }
             }
-        }
-        binding.fabScan.setOnClickListener {
-            if(isPermissionsGranted){
-                setupScanner()
+            binding.fabScan.setOnClickListener {
+                if (isPermissionsGranted) {
+                    setupScanner()
+                } else {
+                    showSnackbar("Please Grant Permissions")
+                    checkPermissions()
+                }
             }
-            else {
-                showSnackbar("Please Grant Permissions")
-                checkPermissions()
+
+            binding.hint1Card.setOnClickListener {
+                openHintDialog(hintType = 1)
             }
-        }
+            binding.hint2Card.setOnClickListener {
+                openHintDialog(2)
+            }
+            binding.hint3Card.setOnClickListener {
+                openHintDialog(3)
+            }
 
-        binding.hint1Card.setOnClickListener {
-            openHintDialog(hintType = 1)
         }
-        binding.hint2Card.setOnClickListener {
-            openHintDialog(2)
-        }
-        binding.hint3Card.setOnClickListener {
-            openHintDialog(3)
-        }
-
     }
 
     override fun onDestroy() {
@@ -196,12 +196,13 @@ class ContestFragment : Fragment(), PermissionListener {
     private fun showMemeDialog() {
         val dialogBuilder = AlertDialog.Builder(requireContext(),R.style.AlertDialogTheme)
         val dialogView = layoutInflater.inflate(R.layout.layout_meme_dialog, null)
-        val meme_id = Random.nextInt(13)
+        val meme_id = Random.nextInt(memeList.size)
         dialogBuilder.setView(dialogView)
         val drawable = ContextCompat.getDrawable(requireContext(), memeList[meme_id])
         Log.w("sebesti0n drawable",drawable.toString())
         val memeImg = dialogView.findViewById<ImageView>(R.id.iv_meme)
         val alertDialog = dialogBuilder.create()
+        alertDialog.setCanceledOnTouchOutside(true)
         memeImg.setImageDrawable(drawable)
         alertDialog.show()
     }
