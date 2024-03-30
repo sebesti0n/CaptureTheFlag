@@ -225,6 +225,8 @@
         app:boxCornerRadiusBottomStart="19dp"
         app:boxCornerRadiusTopEnd="19dp"
         app:boxStrokeWidth="3dp"
+        app:counterMaxLength="10"
+        app:counterEnabled="true"
         android:textColorHint="@color/blue_darkest"
         app:hintTextColor="@color/blue_darkest"
         app:boxStrokeColor="@color/blue_darkest">
@@ -235,6 +237,7 @@
             android:textColorHint="@color/blue_darkest"
             android:textColor="@color/blue_darkest"
             android:textSize="15dp"
+            android:maxLength="10"
             android:id="@+id/et_waNumber"
             android:hint="WhatsApp Number*"
             android:inputType="phone"/>

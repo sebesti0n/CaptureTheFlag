@@ -258,6 +258,8 @@
                     app:boxStrokeWidth="0.5dp"
                     app:boxStrokeWidthFocused="2dp"
                     app:hintEnabled="false"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="10"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_sign_in_header"
@@ -270,6 +272,7 @@
                         android:hint="Mobile Number"
                         android:imeOptions="actionNext"
                         android:inputType="phone"
+                        android:maxLength="10"
                         android:textColor="@color/black"
                         android:textColorHint="@color/black" />
 

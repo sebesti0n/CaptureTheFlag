@@ -25,7 +25,6 @@
                 android:layout_marginEnd="10dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="6dp"
-                android:scaleType="centerCrop"
                 android:id="@+id/event_image"
                 app:shapeAppearanceOverlay="@style/EventImageView"
                 android:layout_height="200dp"
