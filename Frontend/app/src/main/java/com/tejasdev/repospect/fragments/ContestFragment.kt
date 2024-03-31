@@ -2,7 +2,6 @@ package com.tejasdev.repospect.fragments
 
 import android.Manifest
 import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -118,6 +117,7 @@ class ContestFragment : Fragment(), PermissionListener {
                                 binding.etUniqueCode.setText("")
                             } else {
                                 showSnackbar(message!!)
+                                showMemeDialog(message)
                                 hideProgressBar()
                                 binding.apply {
                                     tilCorrectAnswer.visibility =View.GONE
@@ -128,6 +128,7 @@ class ContestFragment : Fragment(), PermissionListener {
                         }
                     } else {
                         hideProgressBar()
+                        showMemeDialog(msg)
                         binding.apply {
                             tilCorrectAnswer.visibility = View.GONE
                             tilUnqCode.visibility = View.VISIBLE
@@ -148,7 +149,7 @@ class ContestFragment : Fragment(), PermissionListener {
                     binding.etCorrectAnswer.setText("")
                     binding.etUniqueCode.setText("")
                 } else {
-                    showMemeDialog()
+                    showMemeDialog("Wrong answer. Try again!")
                     hideProgressBar()
                     binding.apply {
                         tilCorrectAnswer.visibility = View.VISIBLE
@@ -195,14 +196,15 @@ class ContestFragment : Fragment(), PermissionListener {
     }
 
 
-    private fun showMemeDialog() {
+    private fun showMemeDialog(msg: String?) {
         val dialogBuilder = AlertDialog.Builder(requireContext(),R.style.AlertDialogTheme)
         val dialogView = layoutInflater.inflate(R.layout.layout_meme_dialog, null)
         val meme_id = Random.nextInt(memeList.size)
         dialogBuilder.setView(dialogView)
         val drawable = ContextCompat.getDrawable(requireContext(), memeList[meme_id])
-        Log.w("sebesti0n drawable",drawable.toString())
         val memeImg = dialogView.findViewById<ImageView>(R.id.iv_meme)
+        val tvWrongMessage = dialogView.findViewById<TextView>(R.id.tv_wrong_answer_message)
+        if(msg!=null) tvWrongMessage.text = msg
         val alertDialog = dialogBuilder.create()
         alertDialog.setCanceledOnTouchOutside(true)
         memeImg.setImageDrawable(drawable)
