@@ -6,35 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".fragments.ContestFragment">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-    <com.google.android.material.textview.MaterialTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="StoryLine"
-        android:textSize="17sp"
-        android:layout_weight="1"
-        android:layout_margin="5dp"
-        android:textStyle="bold"
-        android:textColor="@color/blue_darker"
-        android:id="@+id/tv_story"/>
-    <com.google.android.material.textview.MaterialTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sync with Team"
-        android:textSize="17sp"
-        android:layout_margin="5dp"
-        android:textStyle="bold"
-        android:textColor="@color/blue_darker"
-        android:id="@+id/tv_sync_now"/>
-    </LinearLayout>
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/swipeRefresLayout"
-    >
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -261,5 +232,4 @@
         android:layout_height="50dp"
         android:id="@+id/end_button"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </LinearLayout>

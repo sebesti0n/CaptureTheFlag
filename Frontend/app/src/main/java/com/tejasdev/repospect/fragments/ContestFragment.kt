@@ -13,10 +13,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -34,6 +36,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.material.divider.MaterialDivider
 import com.google.android.material.snackbar.Snackbar
 import com.google.zxing.integration.android.IntentIntegrator
+import kotlin.random.Random
 
 class ContestFragment : Fragment(), PermissionListener {
     private var _binding: FragmentContestBinding? = null
@@ -204,6 +207,20 @@ class ContestFragment : Fragment(), PermissionListener {
         memeImg.setImageDrawable(drawable)
         alertDialog.show()
     }
+    private fun makeMemeArray(){
+        memeList.add(R.drawable.meme_1)
+        memeList.add(R.drawable.meme_2)
+        memeList.add(R.drawable.meme_3)
+        memeList.add(R.drawable.meme_4)
+        memeList.add(R.drawable.meme_5)
+        memeList.add(R.drawable.meme_6)
+        memeList.add(R.drawable.meme_7)
+        memeList.add(R.drawable.meme_8)
+        memeList.add(R.drawable.meme_9)
+        memeList.add(R.drawable.meme_10)
+        memeList.add(R.drawable.meme_11)
+        memeList.add(R.drawable.meme_12)
+    }
 
     private fun setUpRefreshAnimator() {
         animator = ObjectAnimator.ofFloat(binding.refreshButton, "rotation", 0f, 360f)
@@ -363,7 +380,6 @@ class ContestFragment : Fragment(), PermissionListener {
             binding.fabScan.visibility=View.GONE
             binding.tilUnqCode.visibility = View.GONE
             binding.endButton.text = "End"
-            binding.swipeRefresLayout.isRefreshing = false
             binding.questionTv.text =
                 "Click on the button below to end the contest! Thanks for participating."
             binding.apply {
@@ -416,7 +432,6 @@ class ContestFragment : Fragment(), PermissionListener {
             }
 
         }
-        binding.swipeRefresLayout.isRefreshing = false
     }
 
     private fun setupRoomDatabase(callback: (String?, Boolean) -> Unit) {
