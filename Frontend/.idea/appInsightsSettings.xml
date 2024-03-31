@@ -9,9 +9,9 @@
               <option name="connection">
                 <ConnectionSetting>
                   <option name="appId" value="com.tejasdev.repospect" />
-                  <option name="mobileSdkAppId" value="1:612477614643:android:ea294a8265165a15b84146" />
-                  <option name="projectId" value="capturetheflag-8af0f" />
-                  <option name="projectNumber" value="612477614643" />
+                  <option name="mobileSdkAppId" value="1:441520880549:android:3aeced784f5789bb5d864c" />
+                  <option name="projectId" value="capturetheflag2-4667a" />
+                  <option name="projectNumber" value="441520880549" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

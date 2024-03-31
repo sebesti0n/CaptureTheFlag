@@ -36,6 +36,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.material.divider.MaterialDivider
 import com.google.android.material.snackbar.Snackbar
 import com.google.zxing.integration.android.IntentIntegrator
+import java.lang.StringBuilder
 import kotlin.random.Random
 
 class ContestFragment : Fragment(), PermissionListener {
@@ -392,11 +393,12 @@ class ContestFragment : Fragment(), PermissionListener {
         }
         when (question) {
             1 -> {
-                binding.questionTv.text = viewModel.getRiddles()[index].storyline
+                val storyline = StringBuilder().append(viewModel.getRiddles()[index].storyline)
+                binding.questionTv.text = storyline
                 binding.endButton.text = "Submit"
                 binding.fabScan.visibility = View.VISIBLE
                 binding.tilUnqCode.visibility = View.VISIBLE
-                binding.tilCorrectAnswer.visibility = View.INVISIBLE
+                binding.tilCorrectAnswer.visibility = View.GONE
                 val imgLink=viewModel.getRiddles()[index].imageLink
                 checkIfFragmentAttached{
                     if (imgLink != "null") {
@@ -483,6 +485,7 @@ class ContestFragment : Fragment(), PermissionListener {
 
     private fun setupScanner() {
         val integrator = IntentIntegrator.forSupportFragment(this)
+        integrator.setOrientationLocked(true)
         integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES)
         integrator.setPrompt("DEVELOPERS AND CODERS CLUB")
         integrator.setCameraId(0)
@@ -521,6 +524,7 @@ class ContestFragment : Fragment(), PermissionListener {
             hint3Card.visibility = View.GONE
             fabScan.visibility = View.GONE
             tilUnqCode.visibility = View.GONE
+            refreshButton.visibility = View.GONE
         }
     }
 
@@ -533,6 +537,7 @@ class ContestFragment : Fragment(), PermissionListener {
             hint1Card.visibility =View.VISIBLE
             hint2Card.visibility = View.VISIBLE
             hint3Card.visibility = View.VISIBLE
+            refreshButton.visibility = View.VISIBLE
         }
     }
 
