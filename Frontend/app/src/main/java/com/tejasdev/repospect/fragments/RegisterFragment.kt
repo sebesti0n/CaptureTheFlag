@@ -75,7 +75,7 @@ class RegisterFragment : Fragment() {
                 showToastMessage("Enter Correct Email")
             }
             else if(!cnfPassword.equals(password)) {
-                showToastMessage("Password's don't match")
+                showToastMessage("Oops! It seems like your password and confirm password don't match. Please double-check and try again")
             }
             else
              {if(!NetworkHelper.isInternetAvailable(requireContext()))showToastMessage("No Network Available")

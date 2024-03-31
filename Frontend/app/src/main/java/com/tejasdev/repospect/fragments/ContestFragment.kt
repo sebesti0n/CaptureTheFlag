@@ -34,10 +34,6 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.material.divider.MaterialDivider
 import com.google.android.material.snackbar.Snackbar
 import com.google.zxing.integration.android.IntentIntegrator
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class ContestFragment : Fragment(), PermissionListener {
     private var _binding: FragmentContestBinding? = null
@@ -50,6 +46,7 @@ class ContestFragment : Fragment(), PermissionListener {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var isPermissionsGranted = false
     private var firstPartAnswer=""
+    private lateinit var memeList:ArrayList<Int>
     private lateinit var animator: ObjectAnimator
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -66,6 +63,8 @@ class ContestFragment : Fragment(), PermissionListener {
 
         permissionHelper = PermissionHelper(this, this)
         viewModel = ViewModelProvider(this)[ContestViewModel::class.java]
+        memeList = ArrayList()
+        makeMemeArray()
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         checkPermissions()
         showProgressBar()
@@ -126,17 +125,17 @@ class ContestFragment : Fragment(), PermissionListener {
                     } else {
                         hideProgressBar()
                         binding.apply {
-                            tilCorrectAnswer.visibility =View.GONE
+                            tilCorrectAnswer.visibility = View.GONE
                             tilUnqCode.visibility = View.VISIBLE
                             fabScan.visibility = View.VISIBLE
                         }
                         if (msg != null) {
-                            showSnackbar(msg)
+//                            showSnackbar(msg)
                         }
                     }
 
                 }
-            }else {
+            } else {
                 if (checkWithQuestion(index, answer)) {
                     viewModel.questionState.postValue(
                         arrayOf(index, 1)
@@ -145,36 +144,65 @@ class ContestFragment : Fragment(), PermissionListener {
                     binding.etCorrectAnswer.setText("")
                     binding.etUniqueCode.setText("")
                 } else {
+                    showMemeDialog()
                     hideProgressBar()
                     binding.apply {
-                        tilCorrectAnswer.visibility =View.VISIBLE
+                        tilCorrectAnswer.visibility = View.VISIBLE
                         tilUnqCode.visibility = View.GONE
                         fabScan.visibility = View.GONE
                     }
-                    showSnackbar("Wrong Answer")
                 }
             }
-        }
-        binding.fabScan.setOnClickListener {
-            if(isPermissionsGranted){
-                setupScanner()
+            binding.fabScan.setOnClickListener {
+                if (isPermissionsGranted) {
+                    setupScanner()
+                } else {
+                    showSnackbar("Please Grant Permissions")
+                    checkPermissions()
+                }
             }
-            else {
-                showSnackbar("Please Grant Permissions")
-                checkPermissions()
+
+            binding.hint1Card.setOnClickListener {
+                openHintDialog(hintType = 1)
             }
-        }
+            binding.hint2Card.setOnClickListener {
+                openHintDialog(2)
+            }
+            binding.hint3Card.setOnClickListener {
+                openHintDialog(3)
+            }
 
-        binding.hint1Card.setOnClickListener {
-            openHintDialog(hintType = 1)
         }
-        binding.hint2Card.setOnClickListener {
-            openHintDialog(2)
-        }
-        binding.hint3Card.setOnClickListener {
-            openHintDialog(3)
-        }
+    }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.closeCtfSession()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel.closeCtfSession()
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        viewModel.closeCtfSession()
+    }
+
+
+    private fun showMemeDialog() {
+        val dialogBuilder = AlertDialog.Builder(requireContext(),R.style.AlertDialogTheme)
+        val dialogView = layoutInflater.inflate(R.layout.layout_meme_dialog, null)
+        val meme_id = Random.nextInt(memeList.size)
+        dialogBuilder.setView(dialogView)
+        val drawable = ContextCompat.getDrawable(requireContext(), memeList[meme_id])
+        Log.w("sebesti0n drawable",drawable.toString())
+        val memeImg = dialogView.findViewById<ImageView>(R.id.iv_meme)
+        val alertDialog = dialogBuilder.create()
+        alertDialog.setCanceledOnTouchOutside(true)
+        memeImg.setImageDrawable(drawable)
+        alertDialog.show()
     }
 
     private fun setUpRefreshAnimator() {
@@ -335,7 +363,7 @@ class ContestFragment : Fragment(), PermissionListener {
             binding.fabScan.visibility=View.GONE
             binding.tilUnqCode.visibility = View.GONE
             binding.endButton.text = "End"
-           // binding.swipeRefresLayout.isRefreshing = false
+            binding.swipeRefresLayout.isRefreshing = false
             binding.questionTv.text =
                 "Click on the button below to end the contest! Thanks for participating."
             binding.apply {
@@ -388,7 +416,7 @@ class ContestFragment : Fragment(), PermissionListener {
             }
 
         }
-            //   binding.swipeRefresLayout.isRefreshing = false
+        binding.swipeRefresLayout.isRefreshing = false
     }
 
     private fun setupRoomDatabase(callback: (String?, Boolean) -> Unit) {
