@@ -1,11 +1,14 @@
 package com.tejasdev.repospect.fragments
 
 import android.Manifest
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,30 +16,27 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationServices
-import com.google.android.material.divider.MaterialDivider
-import com.google.android.material.snackbar.Snackbar
-import com.google.zxing.integration.android.IntentIntegrator
 import com.tejasdev.repospect.R
 import com.tejasdev.repospect.databinding.FragmentContestBinding
 import com.tejasdev.repospect.helper.PermissionHelper
 import com.tejasdev.repospect.models.RiddleModel
 import com.tejasdev.repospect.ui.ContestViewModel
 import com.tejasdev.repospect.util.PermissionListener
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
+import com.google.android.material.divider.MaterialDivider
+import com.google.android.material.snackbar.Snackbar
+import com.google.zxing.integration.android.IntentIntegrator
 import kotlin.random.Random
-
 
 class ContestFragment : Fragment(), PermissionListener {
     private var _binding: FragmentContestBinding? = null
@@ -50,6 +50,7 @@ class ContestFragment : Fragment(), PermissionListener {
     private var isPermissionsGranted = false
     private var firstPartAnswer=""
     private lateinit var memeList:ArrayList<Int>
+    private lateinit var animator: ObjectAnimator
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -61,6 +62,8 @@ class ContestFragment : Fragment(), PermissionListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setUpRefreshAnimator()
+
         permissionHelper = PermissionHelper(this, this)
         viewModel = ViewModelProvider(this)[ContestViewModel::class.java]
         memeList = ArrayList()
@@ -77,10 +80,13 @@ class ContestFragment : Fragment(), PermissionListener {
             }
         }
         updateQuestionState()
-        binding.swipeRefresLayout.setOnRefreshListener {
+        binding.refreshButton.setOnClickListener {
+            startAnimationOnRefreshButton()
             refreshAction {
+              //  stopAnimationOnRefreshButton()
             }
         }
+
 
         binding.endButton.setOnClickListener {
             val answer = binding.etCorrectAnswer.text.toString()
@@ -96,16 +102,13 @@ class ContestFragment : Fragment(), PermissionListener {
                             eid = eid,
                             tid = viewModel.getTeamId(),
                             currRid = viewModel.getRiddles()[index].question_id,
-                            nextRid = if (index + 1 == viewModel.getRiddles().size) -1
-                            else viewModel.getRiddles()[index + 1].question_id,
+                            nextRid = if(index+1 == viewModel.getRiddles().size) -1
+                                      else viewModel.getRiddles()[index+1].question_id,
                             unqCode = viewModel.getRiddles()[index].unique_code,
                             answer = viewModel.getRiddles()[index].answer
-                        ) { success, message, nextRiddleNumber ->
-                            Log.d(
-                                "sebasti0n riddle submission",
-                                "${success} + ${message} + ${nextRiddleNumber}"
-                            )
-                            if (success!! && nextRiddleNumber != -1) {
+                        ){ success, message, nextRiddleNumber ->
+                            Log.d("sebasti0n riddle submission","${success} + ${message} + ${nextRiddleNumber}")
+                            if (success!! && nextRiddleNumber!=-1) {
                                 viewModel.questionState.postValue(
                                     arrayOf(nextRiddleNumber!!, 0)
                                 )
@@ -115,16 +118,14 @@ class ContestFragment : Fragment(), PermissionListener {
                             } else {
                                 showSnackbar(message!!)
                                 hideProgressBar()
-                                showMemeDialog()
                                 binding.apply {
-                                    tilCorrectAnswer.visibility = View.GONE
+                                    tilCorrectAnswer.visibility =View.GONE
                                     tilUnqCode.visibility = View.VISIBLE
                                     fabScan.visibility = View.VISIBLE
                                 }
                             }
                         }
                     } else {
-                        showMemeDialog()
                         hideProgressBar()
                         binding.apply {
                             tilCorrectAnswer.visibility = View.GONE
@@ -206,7 +207,33 @@ class ContestFragment : Fragment(), PermissionListener {
         memeImg.setImageDrawable(drawable)
         alertDialog.show()
     }
+    private fun makeMemeArray(){
+        memeList.add(R.drawable.meme_1)
+        memeList.add(R.drawable.meme_2)
+        memeList.add(R.drawable.meme_3)
+        memeList.add(R.drawable.meme_4)
+        memeList.add(R.drawable.meme_5)
+        memeList.add(R.drawable.meme_6)
+        memeList.add(R.drawable.meme_7)
+        memeList.add(R.drawable.meme_8)
+        memeList.add(R.drawable.meme_9)
+        memeList.add(R.drawable.meme_10)
+        memeList.add(R.drawable.meme_11)
+        memeList.add(R.drawable.meme_12)
+    }
 
+    private fun setUpRefreshAnimator() {
+        animator = ObjectAnimator.ofFloat(binding.refreshButton, "rotation", 0f, 360f)
+            .setDuration(2500)
+            .apply {
+                repeatCount = 1
+            }
+    }
+
+    private fun startAnimationOnRefreshButton(){
+        if(!animator.isRunning)
+            animator.start()
+    }
 
     private fun openHintDialog(hintType: Int){
         val index = viewModel.questionState.value!![0]
@@ -353,7 +380,6 @@ class ContestFragment : Fragment(), PermissionListener {
             binding.fabScan.visibility=View.GONE
             binding.tilUnqCode.visibility = View.GONE
             binding.endButton.text = "End"
-            binding.swipeRefresLayout.isRefreshing = false
             binding.questionTv.text =
                 "Click on the button below to end the contest! Thanks for participating."
             binding.apply {
@@ -406,7 +432,6 @@ class ContestFragment : Fragment(), PermissionListener {
             }
 
         }
-        binding.swipeRefresLayout.isRefreshing = false
     }
 
     private fun setupRoomDatabase(callback: (String?, Boolean) -> Unit) {
@@ -596,21 +621,6 @@ class ContestFragment : Fragment(), PermissionListener {
         context?.let{
             next(it)
         }
-    }
-
-    private fun makeMemeArray(){
-        memeList.add(R.drawable.meme_1)
-        memeList.add(R.drawable.meme_2)
-        memeList.add(R.drawable.meme_3)
-        memeList.add(R.drawable.meme_4)
-        memeList.add(R.drawable.meme_5)
-        memeList.add(R.drawable.meme_6)
-        memeList.add(R.drawable.meme_7)
-        memeList.add(R.drawable.meme_8)
-        memeList.add(R.drawable.meme_9)
-        memeList.add(R.drawable.meme_10)
-        memeList.add(R.drawable.meme_11)
-        memeList.add(R.drawable.meme_12)
     }
 
 }
