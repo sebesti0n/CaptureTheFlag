@@ -1,6 +1,8 @@
 package com.tejasdev.repospect.fragments
 
 import android.Manifest
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -32,6 +34,10 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.material.divider.MaterialDivider
 import com.google.android.material.snackbar.Snackbar
 import com.google.zxing.integration.android.IntentIntegrator
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class ContestFragment : Fragment(), PermissionListener {
     private var _binding: FragmentContestBinding? = null
@@ -44,6 +50,7 @@ class ContestFragment : Fragment(), PermissionListener {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var isPermissionsGranted = false
     private var firstPartAnswer=""
+    private lateinit var animator: ObjectAnimator
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -55,6 +62,8 @@ class ContestFragment : Fragment(), PermissionListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setUpRefreshAnimator()
+
         permissionHelper = PermissionHelper(this, this)
         viewModel = ViewModelProvider(this)[ContestViewModel::class.java]
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
@@ -69,10 +78,13 @@ class ContestFragment : Fragment(), PermissionListener {
             }
         }
         updateQuestionState()
-        binding.swipeRefresLayout.setOnRefreshListener {
+        binding.refreshButton.setOnClickListener {
+            startAnimationOnRefreshButton()
             refreshAction {
+              //  stopAnimationOnRefreshButton()
             }
         }
+
 
         binding.endButton.setOnClickListener {
             val answer = binding.etCorrectAnswer.text.toString()
@@ -165,6 +177,18 @@ class ContestFragment : Fragment(), PermissionListener {
 
     }
 
+    private fun setUpRefreshAnimator() {
+        animator = ObjectAnimator.ofFloat(binding.refreshButton, "rotation", 0f, 360f)
+            .setDuration(2500)
+            .apply {
+                repeatCount = 1
+            }
+    }
+
+    private fun startAnimationOnRefreshButton(){
+        if(!animator.isRunning)
+            animator.start()
+    }
 
     private fun openHintDialog(hintType: Int){
         val index = viewModel.questionState.value!![0]
@@ -311,7 +335,7 @@ class ContestFragment : Fragment(), PermissionListener {
             binding.fabScan.visibility=View.GONE
             binding.tilUnqCode.visibility = View.GONE
             binding.endButton.text = "End"
-            binding.swipeRefresLayout.isRefreshing = false
+           // binding.swipeRefresLayout.isRefreshing = false
             binding.questionTv.text =
                 "Click on the button below to end the contest! Thanks for participating."
             binding.apply {
@@ -364,7 +388,7 @@ class ContestFragment : Fragment(), PermissionListener {
             }
 
         }
-        binding.swipeRefresLayout.isRefreshing = false
+            //   binding.swipeRefresLayout.isRefreshing = false
     }
 
     private fun setupRoomDatabase(callback: (String?, Boolean) -> Unit) {
