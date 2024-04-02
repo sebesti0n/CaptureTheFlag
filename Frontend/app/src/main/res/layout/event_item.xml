@@ -104,7 +104,7 @@
                 </LinearLayout>
 
                 <com.google.android.material.button.MaterialButton
-                    android:text="Learn More"
+                    android:text="More Details"
                     android:layout_width="100dp"
                     android:textSize="12sp"
                     android:id="@+id/btn_learn_more"

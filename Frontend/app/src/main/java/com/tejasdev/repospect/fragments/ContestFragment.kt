@@ -81,8 +81,10 @@ class ContestFragment : Fragment(), PermissionListener {
         }
         updateQuestionState()
         binding.refreshButton.setOnClickListener {
-            startAnimationOnRefreshButton()
+            showProgressBar()
+//            startAnimationOnRefreshButton()
             refreshAction {
+
               //  stopAnimationOnRefreshButton()
             }
         }
@@ -102,13 +104,16 @@ class ContestFragment : Fragment(), PermissionListener {
                             eid = eid,
                             tid = viewModel.getTeamId(),
                             currRid = viewModel.getRiddles()[index].question_id,
-                            nextRid = if(index+1 == viewModel.getRiddles().size) -1
-                                      else viewModel.getRiddles()[index+1].question_id,
+                            nextRid = if (index + 1 == viewModel.getRiddles().size) -1
+                            else viewModel.getRiddles()[index + 1].question_id,
                             unqCode = viewModel.getRiddles()[index].unique_code,
                             answer = viewModel.getRiddles()[index].answer
-                        ){ success, message, nextRiddleNumber ->
-                            Log.d("sebasti0n riddle submission","${success} + ${message} + ${nextRiddleNumber}")
-                            if (success!! && nextRiddleNumber!=-1) {
+                        ) { success, message, nextRiddleNumber ->
+                            Log.d(
+                                "sebasti0n riddle submission",
+                                "${success} + ${message} + ${nextRiddleNumber}"
+                            )
+                            if (success!! && nextRiddleNumber != -1) {
                                 viewModel.questionState.postValue(
                                     arrayOf(nextRiddleNumber!!, 0)
                                 )
@@ -120,7 +125,7 @@ class ContestFragment : Fragment(), PermissionListener {
                                 showMemeDialog(message)
                                 hideProgressBar()
                                 binding.apply {
-                                    tilCorrectAnswer.visibility =View.GONE
+                                    tilCorrectAnswer.visibility = View.GONE
                                     tilUnqCode.visibility = View.VISIBLE
                                     fabScan.visibility = View.VISIBLE
                                 }
@@ -166,7 +171,7 @@ class ContestFragment : Fragment(), PermissionListener {
                     checkPermissions()
                 }
             }
-
+        }
             binding.hint1Card.setOnClickListener {
                 openHintDialog(hintType = 1)
             }
@@ -176,8 +181,6 @@ class ContestFragment : Fragment(), PermissionListener {
             binding.hint3Card.setOnClickListener {
                 openHintDialog(3)
             }
-
-        }
     }
 
     override fun onDestroy() {
@@ -353,7 +356,7 @@ class ContestFragment : Fragment(), PermissionListener {
     }
 
     private fun checkWithQuestion(index: Int, answer: String): Boolean {
-        return answer.lowercase() == viewModel.getRiddles()[index].answer.lowercase()
+        return answer.lowercase().trim() == viewModel.getRiddles()[index].answer.lowercase().trim()
     }
 
     private fun checkWithStoryLine(index: Int, answer: String, callback: (Boolean,String?) -> Unit) {
@@ -487,9 +490,8 @@ class ContestFragment : Fragment(), PermissionListener {
 
     private fun setupScanner() {
         val integrator = IntentIntegrator.forSupportFragment(this)
-        integrator.setOrientationLocked(true)
         integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES)
-        integrator.setPrompt("DEVELOPERS AND CODERS CLUB")
+        integrator.setPrompt(" QR code should be inside square box ")
         integrator.setCameraId(0)
         integrator.setBeepEnabled(true)
         integrator.setBarcodeImageEnabled(false)
