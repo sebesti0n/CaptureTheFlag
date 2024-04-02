@@ -1,6 +1,7 @@
 package com.tejasdev.repospect.apiServices
 
 import com.tejasdev.repospect.models.StatusModel
+import com.tejasdev.repospect.secrets.Secrets
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
@@ -12,8 +13,7 @@ import java.util.concurrent.TimeUnit
 class BackupInstances {
     companion object {
 
-        private val BASEURL="https://6469-106-67-32-63.ngrok-free.app/"
-//            "https://ctf-ndp3.onrender.com/"
+        private val BASEURL= Secrets.BASE_URL
 
         private val retrofit: Retrofit by lazy {
             val interceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)

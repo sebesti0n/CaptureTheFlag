@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         this.window.statusBarColor = resources.getColor(R.color.blue_darkest)
 
-//        isAllOkay()
+        isAllOkay()
         sharedPref =Session(this)
         if (sharedPref.isLogin()){
             val intent = Intent(this,HomeActivity::class.java)
@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
                 if(response.isSuccessful){
                     val isOkay = response.body()?.success
                     if(isOkay == false)
-                        moveToBackupPlan()
+                        moveToBackupPlan(response.body()?.message)
                 }
             }
 
@@ -64,8 +64,9 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun moveToBackupPlan() {
+    private fun moveToBackupPlan(message: String?) {
         val intent = Intent(this,WebViewActivity::class.java)
+        intent.putExtra("link",message)
         startActivity(intent)
         finish()
     }

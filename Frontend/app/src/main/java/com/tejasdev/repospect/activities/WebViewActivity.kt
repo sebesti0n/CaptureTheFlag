@@ -12,10 +12,13 @@ class WebViewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
+        val url = intent.getStringExtra("link")
         binding = ActivityWebViewBinding.inflate(layoutInflater)
         setContentView(binding.root)
         this.window.statusBarColor = resources.getColor(R.color.gray)
-        binding.webview.loadUrl("https://github.com/sebesti0n");
+        if (url != null){
+            binding.webview.loadUrl(url)
+        }
         binding.webview.settings.javaScriptEnabled = true;
     }
 }
