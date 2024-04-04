@@ -68,6 +68,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_gravity="center"
+                android:id="@+id/ll_hints"
                 android:layout_marginTop="12dp"
                 >
                 <com.google.android.material.card.MaterialCardView

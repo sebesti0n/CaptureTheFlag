@@ -128,6 +128,7 @@ class ContestFragment : Fragment(), PermissionListener {
                                     tilCorrectAnswer.visibility = View.GONE
                                     tilUnqCode.visibility = View.VISIBLE
                                     fabScan.visibility = View.VISIBLE
+                                    llHints.visibility = View.GONE
                                 }
                             }
                         }
@@ -138,6 +139,7 @@ class ContestFragment : Fragment(), PermissionListener {
                             tilCorrectAnswer.visibility = View.GONE
                             tilUnqCode.visibility = View.VISIBLE
                             fabScan.visibility = View.VISIBLE
+                            llHints.visibility = View.GONE
                         }
                         if (msg != null) {
 //                            showSnackbar(msg)
@@ -160,6 +162,8 @@ class ContestFragment : Fragment(), PermissionListener {
                         tilCorrectAnswer.visibility = View.VISIBLE
                         tilUnqCode.visibility = View.GONE
                         fabScan.visibility = View.GONE
+                        llHints.visibility = View.VISIBLE
+
                     }
                 }
             }
@@ -402,6 +406,7 @@ class ContestFragment : Fragment(), PermissionListener {
                 binding.questionTv.text = storyline
                 binding.endButton.text = "Submit"
                 binding.fabScan.visibility = View.VISIBLE
+                binding.llHints.visibility=View.GONE
                 binding.tilUnqCode.visibility = View.VISIBLE
                 binding.tilCorrectAnswer.visibility = View.GONE
                 val imgLink=viewModel.getRiddles()[index].imageLink
@@ -422,6 +427,7 @@ class ContestFragment : Fragment(), PermissionListener {
                 binding.questionTv.text = viewModel.getRiddles()[index].question
                 binding.endButton.text = "Next"
                 binding.fabScan.visibility = View.GONE
+                binding.llHints.visibility=View.VISIBLE
                 binding.tilUnqCode.visibility = View.GONE
                 binding.tilCorrectAnswer.visibility = View.VISIBLE
                 val imgLink=viewModel.getRiddles()[index].riddleImageLink

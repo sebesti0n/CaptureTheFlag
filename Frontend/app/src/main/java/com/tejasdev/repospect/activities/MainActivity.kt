@@ -66,9 +66,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun moveToBackupPlan(message: String?) {
         val intent = Intent(this,WebViewActivity::class.java)
-        intent.putExtra("link",message)
-        startActivity(intent)
-        finish()
+        if(message!=null) {
+            intent.putExtra("link", message)
+            startActivity(intent)
+            finish()
+        }
     }
 
 }
