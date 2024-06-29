@@ -2,30 +2,44 @@ name: Android CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4.1.1
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Setup Java JDK
-        uses: actions/setup-java@v4.0.0
-        with:
-          java-version: '17'
-          distribution: 'adopt'
-      - name: Change wrapper permissions
-        run: chmod +x ./Frontend/gradlew
-      - name: Build with Gradle
-        run: ./Frontend/gradlew build
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v3.1.3
-        with:
-          name: AndroidCICD.apk
-          path: Frontend/app/build/outputs/apk/debug/app-debug.apk
+    - name: Setup Java JDK
+      uses: actions/setup-java@v4.0.0
+      with:
+        java-version: '17'
+        distribution: 'adopt'
+
+    - name: Set up Android SDK
+      uses: android-actions/setup-android@v2
+      with:
+        api-level: 30
+        build-tools: 30.0.3
+        cmake: 3.10.2.4988404
+
+    - name: Cache Gradle packages
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: ${{ runner.os }}-gradle
+
+    - name: Build with Gradle
+      run: cd Frontend && ./gradlew build
+
+
+

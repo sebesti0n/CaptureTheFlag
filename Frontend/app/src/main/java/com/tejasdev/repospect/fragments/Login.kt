@@ -1,5 +1,6 @@
 package com.tejasdev.repospect.fragments
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -87,6 +88,7 @@ class Login : Fragment() {
         Navigation.findNavController(requireView()).navigate(R.id.action_login_to_registerFragment)
     }
 
+    @SuppressLint("SuspiciousIndentation")
     private fun actionLoginButton() {
         val loginDetails = UserLoginDetails(emailEditText.text.toString(), passwordEditText.text.toString())
             RetrofitInstances.service.login(loginDetails).enqueue(object : retrofit2.Callback<LoginReponse> {

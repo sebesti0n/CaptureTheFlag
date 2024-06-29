@@ -11,8 +11,7 @@ const knex = require("knex")(
 
 dotenv.config();
 router.get("/", async (req, res) => {
-  const data = await knex("user_event_participation").returning("*");
-  res.status(200).json({ datas: data });
+  res.status(200).send("capture the flag");
 });
 router.post(
   "/register",
